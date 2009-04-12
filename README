@@ -1,0 +1,17 @@
+This is a super pre-alpha release, so don't expect too much. :)
+
+You will need the following tools and libraries to build the game:
+
+* SCons
+* GLFW
+* OpenEXR
+
+Just build the game with "scons" in the current directory. If you have
+a dualcore CPU, you can use "scons -j2" for parallel building.
+
+To start the game, call "./Pony". You can control the first pony with
+the arrow-keys. ESC stops the game.
+
+You can configure a lot of things in the games config file
+"pony.options".
+You can supply an alternative config file as option in the "./Pony" call.
