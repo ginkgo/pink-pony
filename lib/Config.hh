@@ -28,6 +28,7 @@ class Config
     
     string sand_texture;
     string grass_texture;
+    string noise_texture;
 
     // Light properties:
 

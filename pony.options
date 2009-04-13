@@ -4,7 +4,7 @@ player_count = 1; // Number of players (1-4)
 
 swap_interval = 0; // 1 for vsync on, 0 for vsync off
 
-fsaa_samples = 0; // Fullscreen anti-aliasing samples, 0 for off
+fsaa_samples = 4; // Fullscreen anti-aliasing samples, 0 for off
 
 show_minimap = true; // Show minimap
 
@@ -20,14 +20,15 @@ polygon_mode = fill; // fill: fill polygons, line: wireframe
 // Level properties
 
 heightmap_file = "levels/heightmap-heart.exr";
-level_size = (1000 60 1000);
-water_level = 15;
+level_size = (1500 90 1500);
+water_level = 45;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;
 heightmap_velvet_coeff = 1.5;
 sand_texture = "textures/sand.tga";
 grass_texture = "textures/grass.tga";
+noise_texture = "textures/noise.tga";
 pony_start[0] = (0 15);
 pony_start_angle[0] = 0;
 pony_start[1] = (0 -15);

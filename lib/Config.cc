@@ -13,6 +13,7 @@ Config::Config(int argc, char** argv)
       water_level(15),
       sand_texture("textures/sand.tga"),
       grass_texture("textures/grass.tga"),
+      noise_texture("textures/noise.tga"),
       player_count(1),
       pony_start_speed(15.0),
       pony_min_speed(5.0),
@@ -166,6 +167,7 @@ void Config::set_value(string name, string value)
     else if (name == "heightmap_velvet_coeff") heightmap_velvet_coeff = fval;
     else if (name == "sand_texture") sand_texture = sval;
     else if (name == "grass_texture") grass_texture = sval;
+    else if (name == "noise_texture") noise_texture = sval;
     else if (name == "light_specular") light_specular = colorval;
     else if (name == "light_diffuse") light_diffuse = colorval;
     else if (name == "light_ambient") light_ambient = colorval;
@@ -293,6 +295,7 @@ bool Config::write_file(string filename)
     os << "heightmap_velvet_coeff = " << heightmap_velvet_coeff << ";" << endl;
     os << "sand_texture = \"" << sand_texture << "\";" << endl;
     os << "grass_texture = \"" << grass_texture << "\";" << endl;
+    os << "noise_texture = \"" << noise_texture << "\";" << endl;
     for (int i = 0; i < 4; i++) {
         os << "pony_start[" << i << "] = " << pony_start[i]
            << ";" << endl;

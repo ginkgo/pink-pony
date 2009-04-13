@@ -1,5 +1,6 @@
 uniform sampler2D sand;
 uniform sampler2D grass;
+uniform sampler2D noise;
 
 uniform float water_level;
 
@@ -66,23 +67,25 @@ void main (void)
 
     vec4 hemi = hemisphere (my_normal);
 
-    float t = smoothstep(water_level + 5.0,
-                         water_level + 7.0, world_coord.y);
+    float t = smoothstep(water_level + 4.0,
+                         water_level + 8.0,
+                         world_coord.y +
+                         2 * texture2D(noise, world_coord.xz * 0.025));
 
     
     gl_FragColor = vec4(0,0,0,0);
 
-    if (t > 0.0) {
+    if (world_coord.y > water_level + 2.0) {
         gl_FragColor = t * texture2D(grass, world_coord.xz * 0.05) 
                          * (diffuse(light, my_normal, -my_eye, 0)
                             + hemi * velvet(light, my_normal, -my_eye, 7.0)
                             + hemi);
     }
 
-    if (t < 1.0) {
+    if (world_coord.y < water_level + 8.0) {
         gl_FragColor = gl_FragColor + (1-t) * texture2D(sand, world_coord.xz * 0.05) 
                                             * (diffuse(light, my_normal, -my_eye, 0)
-                                               + hemi * 0.85);;
+                                               + hemi);
     }
 
     
