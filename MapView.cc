@@ -90,7 +90,8 @@ int main(int argc, char** argv)
                             config.level_size,
                             config.water_level,
                             config.sand_texture,
-                            config.grass_texture);
+                            config.grass_texture,
+                            config.noise_texture);
 
         glfwSetWindowSize(heightmap.size().x, heightmap.size().y);
         glViewport(0,0,heightmap.size().x, heightmap.size().y);

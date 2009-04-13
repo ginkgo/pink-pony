@@ -2,13 +2,14 @@
 
 Heightmap::Heightmap(string filename,
                      Box3f extent, float water_level,
-                     string sand, string grass)
+                     string sand, string grass, string noise)
     : heightmap(filename.c_str(),
                 GL_CLAMP, GL_CLAMP, GL_LINEAR, GL_LINEAR),
       terrain_shader("GLSL/heightmap"),
       water_shader("GLSL/water"),
       sand_texture(sand.c_str()),
       grass_texture(grass.c_str(), GL_REPEAT, GL_REPEAT),
+      noise_texture(noise.c_str(), GL_REPEAT, GL_REPEAT),
       extent(extent),
       water_level(water_level)
 {
@@ -138,6 +139,7 @@ void Heightmap::draw(Config* config)
 //     heightmap.bind(GL_TEXTURE0);
     sand_texture.bind(GL_TEXTURE1);
     grass_texture.bind(GL_TEXTURE2);
+    noise_texture.bind(GL_TEXTURE0);
 
     terrain_shader.bind();
 
@@ -147,6 +149,7 @@ void Heightmap::draw(Config* config)
 //     terrain_shader.set_uniform("heightmap", 0);
     terrain_shader.set_uniform("sand", 1);
     terrain_shader.set_uniform("grass", 2);
+    terrain_shader.set_uniform("noise", 0);
 
     terrain_shader.set_uniform("water_level", water_level);
 
@@ -185,6 +188,7 @@ void Heightmap::draw(Config* config)
 //     heightmap.unbind(GL_TEXTURE0);
     sand_texture.unbind(GL_TEXTURE1);
     grass_texture.unbind(GL_TEXTURE2);
+    noise_texture.unbind(GL_TEXTURE0);
 
 //     glDisable(GL_CLIP_PLANE0);
     
