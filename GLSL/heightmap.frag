@@ -70,7 +70,7 @@ void main (void)
     float t = smoothstep(water_level + 4.0,
                          water_level + 8.0,
                          world_coord.y +
-                         2 * texture2D(noise, world_coord.xz * 0.025));
+                         2 * texture2D(noise, world_coord.xz * 0.025).r);
 
     
     gl_FragColor = vec4(0,0,0,0);
