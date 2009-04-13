@@ -1,4 +1,6 @@
-This is a super pre-alpha release, so don't expect too much. :)
+Pink Pony is super pre-alpha, so don't expect too much. :)
+
+== COMPILING ==
 
 You will need the following tools and libraries to build the game:
 
@@ -9,9 +11,46 @@ You will need the following tools and libraries to build the game:
 Just build the game with "scons" in the current directory. If you have
 a dualcore CPU, you can use "scons -j2" for parallel building.
 
+== PLAYING ==
+
 To start the game, call "./Pony". You can control the first pony with
 the arrow-keys. ESC stops the game.
+
+== CONFIGURATION ==
 
 You can configure a lot of things in the games config file
 "pony.options".
 You can supply an alternative config file as option in the "./Pony" call.
+
+== LICENSE ==
+
+Different parts of Pink Pony are available under different terms.
+
+Unless otherwise noted in this file (see below), everything is Copyright
+(C) 2009 by ginkgo and availeble under the terms of the GNU General Public
+License of the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+
+A copy of the GNU General Public License is avaliable in doc/GPL3 or
+<http://www.gnu.org/licenses/>.
+
+* Following files are also available under terms of the GPL v3 or later:
+  
+Copyright (C) 2009 by tornado <j.sjolund@gmail.com>:
+models/Pony.mesh.xml
+models/pony.blend
+textures/pony.tga
+
+* Following files are available under terms of the Creative Commons
+  Attribution 3.0 license (see docs/CCBY3 or
+  <http://creativecommons.org/licenses/by/3.0/>):
+
+Copyright (C) brisingre <http://brisingre.deviantart.com/>:
+textures/sky.tga (modified by Iwan Gabovitch)
+
+* Following files are released into the public domain or if you prefer,
+  licensed under cc0 <http://creativecommons.org/publicdomain/zero/1.0/>:
+
+By Iwan Gabovitch <qubodup@gmail.com>:
+textures/grass.tga
+textures/sand.tga
