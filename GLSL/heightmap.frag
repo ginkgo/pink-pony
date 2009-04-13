@@ -75,14 +75,14 @@ void main (void)
     
     gl_FragColor = vec4(0,0,0,0);
 
-    if (t > 0.0) {
+    if (world_coord.y > water_level + 2.0) {
         gl_FragColor = t * texture2D(grass, world_coord.xz * 0.05) 
                          * (diffuse(light, my_normal, -my_eye, 0)
                             + hemi * velvet(light, my_normal, -my_eye, 7.0)
                             + hemi);
     }
 
-    if (t < 1.0) {
+    if (world_coord.y < water_level + 8.0) {
         gl_FragColor = gl_FragColor + (1-t) * texture2D(sand, world_coord.xz * 0.05) 
                                             * (diffuse(light, my_normal, -my_eye, 0)
                                                + hemi);

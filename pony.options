@@ -8,7 +8,7 @@ fsaa_samples = 4; // Fullscreen anti-aliasing samples, 0 for off
 
 show_minimap = true; // Show minimap
 
-pony_slope_acceleration = 4; // Speed change on steep terrain (4 is a good value) 
+pony_slope_acceleration = 0; // Speed change on steep terrain (4 is a good value) 
 
 // Window properties
 
