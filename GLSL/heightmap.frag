@@ -67,10 +67,10 @@ void main (void)
 
     vec4 hemi = hemisphere (my_normal);
 
-    float t = smoothstep(water_level + 4.0,
-                         water_level + 8.0,
+    float t = smoothstep(water_level + 5.65,
+                         water_level + 6.35,
                          world_coord.y +
-                         2 * texture2D(noise, world_coord.xz * 0.025).r);
+                         3 * texture2D(noise, world_coord.xz * 0.005).r);
 
     
     gl_FragColor = vec4(0,0,0,0);
@@ -83,9 +83,12 @@ void main (void)
     }
 
     if (world_coord.y < water_level + 8.0) {
-        gl_FragColor = gl_FragColor + (1-t) * texture2D(sand, world_coord.xz * 0.05) 
-                                            * (diffuse(light, my_normal, -my_eye, 0)
-                                               + hemi);
+        gl_FragColor = gl_FragColor
+            + (1-t)
+            * texture2D(sand, world_coord.xz * 0.05) 
+            * (diffuse(light, my_normal, -my_eye, 0) * 0.75
+               + hemi * velvet(light, my_normal, -my_eye, 25.0) * 0.25
+               + hemi * 1.0);
     }
 
     
