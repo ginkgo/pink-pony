@@ -256,6 +256,8 @@ bool Config::read_file(string filename)
 
         set_value(name, value);
     }
+
+    return true;
 }
 
 bool Config::write_file(string filename)

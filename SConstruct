@@ -2,7 +2,7 @@ import os
 
 env = Environment()
 env['CC'] = 'g++'
-env['CCFLAGS'] = '-Os -msse3 -I/usr/include/OpenEXR -I./lib -I./external/tinyXML'
+env['CCFLAGS'] = '-g -O3 -msse3 -I/usr/include/OpenEXR -I./lib -I./external/tinyXML'
 env['LIBS'] = ['GLU', 'GL']
 env.ParseConfig("pkg-config OpenEXR --cflags --libs")
 env.ParseConfig("pkg-config libglfw --cflags --libs")
