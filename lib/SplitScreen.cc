@@ -127,8 +127,8 @@ void SplitScreen::set_map()
                     0);
         break;
     case 4:
-        end = size/2 + V2i(shorter,shorter)/8;
-        start = size/2 - V2i(shorter,shorter)/8;
+        end = size/2 + V2i(shorter,shorter)/4;
+        start = size/2 - V2i(shorter,shorter)/4;
         break;
     default:
         cerr << "No known subdivision scheme for " << subscreen_count

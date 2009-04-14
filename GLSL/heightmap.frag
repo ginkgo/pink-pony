@@ -87,7 +87,7 @@ void main (void)
             + (1-t)
             * texture2D(sand, world_coord.xz * 0.05) 
             * (diffuse(light, my_normal, -my_eye, 0) * 0.75
-               + hemi * velvet(light, my_normal, -my_eye, 25.0) * 0.25
+               + hemi * velvet(light, my_normal, -my_eye, 25.0) * -0.25
                + hemi * 1.0);
     }
 

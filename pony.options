@@ -1,12 +1,12 @@
 // Interesting properties
 
-player_count = 4; // Number of players (1-4)
+player_count = 1; // Number of players (1-4)
 
 swap_interval = 0; // 1 for vsync on, 0 for vsync off
 
 fsaa_samples = 4; // Fullscreen anti-aliasing samples, 0 for off
 
-show_minimap = false; // Show minimap
+show_minimap = true; // Show minimap
 
 pony_slope_acceleration = 0; // Speed change on steep terrain (4 is a good value) 
 
