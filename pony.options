@@ -2,7 +2,7 @@
 
 player_count = 1; // Number of players (1-4)
 
-swap_interval = 0; // 1 for vsync on, 0 for vsync off
+swap_interval = 1; // 1 for vsync on, 0 for vsync off
 
 fsaa_samples = 4; // Fullscreen anti-aliasing samples, 0 for off
 
@@ -43,16 +43,16 @@ pony_start_angle[3] = 270;
 light_specular = (1 1 1 1);
 light_diffuse = (1 1 1 1);
 light_ambient = (0.05 0.05 0.05 1);
-light_dir = (-0.742781 0.371391 -0.557086);
+light_dir = (0.742781 0.371391 -0.107086);
 hemilight_pole = (0 1 0);
-hemilight_sky = (0.5 0.5 0.5 1);
+hemilight_sky = (0.75 0.75 0.75 1);
 hemilight_ground = (0.25 0.25 0.25 1);
 
 // Camera properties
 
 camera_fov = 45;
 camera_near = 1;
-camera_far = 2000;
+camera_far = 8000;
 camera_distance = 15;
 camera_height = 6;
 pony_height = 3;

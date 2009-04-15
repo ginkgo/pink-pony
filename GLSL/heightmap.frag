@@ -78,19 +78,30 @@ void main (void)
     if (world_coord.y > water_level + 2.0) {
         gl_FragColor = t * texture2D(grass, world_coord.xz * 0.05) 
                          * (diffuse(light, my_normal, -my_eye, 0)
-                            + hemi * velvet(light, my_normal, -my_eye, 7.0)
+                            + hemi * velvet(light, my_normal, -my_eye, 7.0) * 0.5
                             + hemi);
     }
+/*     else { */
+/*         gl_FragColor = vec4(1,0,0,1); */
+/*     } */
 
-    if (world_coord.y < water_level + 8.0) {
+    if (world_coord.y < water_level + 7.0) {
         gl_FragColor = gl_FragColor
             + (1-t)
             * texture2D(sand, world_coord.xz * 0.05) 
             * (diffuse(light, my_normal, -my_eye, 0) * 0.75
-               + hemi * velvet(light, my_normal, -my_eye, 25.0) * -0.25
+               + hemi * velvet(light, my_normal, -my_eye, 25.0) * -0.2 
                + hemi * 1.0);
     }
+/*     else { */
+/*         gl_FragColor += vec4(0,0,1,1); */
+/*     } */
 
+    if (world_coord.y < water_level) {
+        gl_FragColor = 
+            mix(gl_FragColor, vec4(65.0/255.0,105.0/255.0,225.0/255.0,1), 
+                pow((water_level - world_coord.y) / water_level, 0.5));
+    }
     
 
 /*     gl_FragColor = basecolor() * (diffuse(light, my_normal, -my_eye, 0) */

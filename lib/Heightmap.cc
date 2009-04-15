@@ -123,6 +123,12 @@ V3f Heightmap::get_pos(V2f position, bool with_water)
 void Heightmap::draw(Config* config)
 {
 
+    V2f center((extent.min.x + extent.max.x)/2,
+               (extent.min.z + extent.max.z)/2);
+    V2f size(extent.size().x, extent.size().z);        
+               
+    Box2f area(center - size * 6, center + size * 6);
+
 //     glEnable(GL_LIGHTING);
 
 //     GLdouble clip_equation[4] = {0,1,0,-water_level};
@@ -176,6 +182,17 @@ void Heightmap::draw(Config* config)
                    index_cnt,    
                    GL_UNSIGNED_INT,
                    0);
+
+
+    glBegin(GL_QUADS);
+
+    glNormal3f(0.0,1.0,0.0);
+    glVertex3f(area.min.x, 0, area.max.y); // front left
+    glVertex3f(area.max.x, 0, area.max.y); // front right
+    glVertex3f(area.max.x, 0, area.min.y); // back  right
+    glVertex3f(area.min.x, 0, area.min.y); // back left
+    
+    glEnd();
     
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
@@ -193,12 +210,6 @@ void Heightmap::draw(Config* config)
 //     glDisable(GL_CLIP_PLANE0);
     
     // Draw ocean
-
-    V2f center((extent.min.x + extent.max.x)/2,
-               (extent.min.z + extent.max.z)/2);
-    V2f size(extent.size().x, extent.size().z);        
-               
-    Box2f area(center - size * 2, center + size * 2);
     
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -213,11 +224,11 @@ void Heightmap::draw(Config* config)
     glBegin(GL_QUADS);
 
     glNormal3f(0.0,1.0,0.0);
-    glColor4f(0.2,0.4,0.75,0.75);
-    glVertex3f(area.min.x, water_level, area.max.y); // front left
-    glVertex3f(area.max.x, water_level, area.max.y); // front right
-    glVertex3f(area.max.x, water_level, area.min.y); // back  right
-    glVertex3f(area.min.x, water_level, area.min.y); // back left
+    glColor4f(0.2,0.4,0.85,0.125);
+    glVertex3f(0.125 * area.min.x, water_level, 0.125 * area.max.y); // front left
+    glVertex3f(0.125 * area.max.x, water_level, 0.125 * area.max.y); // front right
+    glVertex3f(0.125 * area.max.x, water_level, 0.125 * area.min.y); // back  right
+    glVertex3f(0.125 * area.min.x, water_level, 0.125 * area.min.y); // back left
     
     glEnd();
 
