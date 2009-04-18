@@ -10,6 +10,14 @@ show_minimap = true; // Show minimap
 
 pony_slope_acceleration = 0; // Speed change on steep terrain (4 is a good value) 
 
+permute_start_positions = false; // Swap the start positions each round.
+ 
+randomize_start_positions = true; // Generate random start positions.
+			          // This uses min_start_distance to
+				  // define the minimum distance of the 
+				  // ponies to each other and the level
+				  // border.
+
 // Window properties
 
 width = 800;
@@ -37,6 +45,7 @@ pony_start[2] = (15 0);
 pony_start_angle[2] = 90;
 pony_start[3] = (-15 0);
 pony_start_angle[3] = 270;
+min_start_distance = 200;
 
 // Light properties
 

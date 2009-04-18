@@ -22,6 +22,9 @@ Config::Config(int argc, char** argv)
       pony_turn_speed(1.25),
       water_tolerance(1.0),
       show_minimap(true),
+      permute_start_positions(false),
+      randomize_start_positions(false),
+      min_start_distance(200),
       camera_fov(45.0),
       camera_near(1.0),
       camera_far(2000.0),
@@ -226,6 +229,9 @@ void Config::set_value(string name, string value)
     else if (name == "pony_texture") pony_texture = sval;
     else if (name == "pony_mesh") pony_mesh = sval;
     else if (name == "pony_slope_acceleration") pony_slope_acceleration = fval;
+    else if (name == "permute_start_positions") permute_start_positions = bval;
+    else if (name == "randomize_start_positions") randomize_start_positions = bval;
+    else if (name == "min_start_distance") min_start_distance = fval;
 }
 
 bool Config::read_file(string filename)
@@ -341,6 +347,9 @@ bool Config::write_file(string filename)
     }
     os << "pony_slope_acceleration = " << pony_slope_acceleration << ";" << endl;
 
+    os << "permute_start_positions = " << permute_start_positions << ";" << endl;
+    os << "randomize_start_positions = " << randomize_start_positions << ";" << endl;
+    os << "min_start_distance = " << min_start_distance << ";" << endl;
     
 
     os << endl << "// Pony appearance" << endl << endl;   

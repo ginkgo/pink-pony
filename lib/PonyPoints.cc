@@ -4,6 +4,20 @@
 namespace local
 {
 
+    void draw_heart(float x)
+    {
+            glVertex2f(0 * x,2 * x);
+            glVertex2f(1 * x,3 * x);
+            glVertex2f(2 * x,3 * x);
+            glVertex2f(3 * x,2 * x);
+            glVertex2f(3 * x,0 * x);
+            glVertex2f(0 * x,-3 * x);
+            glVertex2f(-3 * x,0 * x);
+            glVertex2f(-3 * x,2 * x);
+            glVertex2f(-2 * x,3 * x);
+            glVertex2f(-1 * x,3 * x);
+    }
+
     void draw_floret_colors(float c, list<Color4f>& colors) {
         int count = colors.size();
 
@@ -30,21 +44,16 @@ namespace local
             glRotated(phi,0,0,1);
             glTranslated(0,r,0);
             glRotated(-phi,0,0,1);
+
+            float x = size / 3.0;
     
             glBegin(GL_TRIANGLE_FAN);
-            float x = size / 3.0;
+            draw_heart(x);
+            glEnd();
 
-            glVertex2f(0 * x,2 * x);
-            glVertex2f(1 * x,3 * x);
-            glVertex2f(2 * x,3 * x);
-            glVertex2f(3 * x,2 * x);
-            glVertex2f(3 * x,0 * x);
-            glVertex2f(0 * x,-3 * x);
-            glVertex2f(-3 * x,0 * x);
-            glVertex2f(-3 * x,2 * x);
-            glVertex2f(-2 * x,3 * x);
-            glVertex2f(-1 * x,3 * x);
-            
+            glColor3f(1,1,1);
+            glBegin(GL_LINE_LOOP);
+            draw_heart(x);
             glEnd();
 
 //             gluDisk(q,0,size,16,1);

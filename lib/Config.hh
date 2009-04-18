@@ -69,6 +69,10 @@ class Config
     bool show_minimap;
     float pony_slope_acceleration;
 
+    bool permute_start_positions;
+    bool randomize_start_positions;
+    float min_start_distance;
+
     // Pony appearance:
     Color4f pony_color[4];
     string pony_shader;
