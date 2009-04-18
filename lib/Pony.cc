@@ -47,7 +47,6 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
             - game->terrain()->get_pos(pos,false).y;
         accel -= game->config()->pony_slope_acceleration * slope;
 
-
         // TODO: Modify dir and speed
 
         float min = game->config()->pony_min_speed;
@@ -63,11 +62,9 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
 
         V2f dir(sin(angle), cos(angle));
     
-        // TODO: Step simulation
-
-        pos += dir * speed * timeDiff;
+	pos += dir * speed * timeDiff;
     
-        // Calculate new camera position
+	// Calculate new camera position
     
         V2f offset = pos - camera_pos;
         camera_pos = pos - offset * (game->config()->camera_distance

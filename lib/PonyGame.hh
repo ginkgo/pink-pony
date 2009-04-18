@@ -10,6 +10,7 @@ class PonyGame;
 #include "Pony.hh"
 #include "Skydome.hh"
 #include "LineList.hh"
+#include "PonyPoints.hh"
 
 
 class PonyGame
@@ -29,6 +30,8 @@ class PonyGame
              Config* config,
              Skydome* skydome);
 
+    ~PonyGame();
+
     Heightmap* terrain()
     {
         return m_heightmap;
@@ -44,7 +47,7 @@ class PonyGame
         return m_config;
     }
 
-    bool start();
+    bool start(PonyPoints& points);
 };
 
 #endif

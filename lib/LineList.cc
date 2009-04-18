@@ -12,7 +12,7 @@ bool LineList::add_point(int i, V2f point) {
         v->push_back(point);
         v->push_back(point);
         return false;
-    } else if (((*v)[v->size()-2] - point).length() > 2.0) {
+    } else if (((*v)[v->size()-2] - point).length() > 1.0) {
         Line new_line((*v)[v->size()-2], point);
         
         v->back() = point;

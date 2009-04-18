@@ -34,9 +34,18 @@ vec4 hemisphere (vec3 n)
     return mix(hemi_ground, hemi_sky, i);
 }
 
-float velvet (vec3 l, vec3 n, vec3 v, int light_no)
+float velvet (vec3 l, vec3 n, vec3 v, float exp)
 {    
-    return velvet_coeff * 2.0 * pow(1.0 - max(0.0, dot(v, n)), 7.0);
+    return velvet_coeff * 2.0 * pow(1.0 - max(0.0, dot(v, n)), exp);
+}
+
+float velvet2 (vec3 l, vec3 n, vec3 v, float exp)
+{
+    vec4 color = gl_LightSource[0].diffuse;
+
+    return (velvet_coeff 
+            * pow(1.0 - max(0.0, dot(v, n)), exp) 
+            * dot(l, n) * -1.0);            
 }
 
 void main (void)
@@ -45,8 +54,9 @@ void main (void)
     vec3 my_eye = normalize(eye);
 
     vec4 hemi = hemisphere (my_normal);
+    vec4 diff = diffuse(light, my_normal, -my_eye, 0);
+    vec4 col = hemi + diff;
     
-    gl_FragColor = basecolor() * (diffuse(light, my_normal, -my_eye, 0)
-                                  + hemi * velvet(light, my_normal, -my_eye, 0)
-                                  + hemi);
+    gl_FragColor = basecolor() * (col + 
+                                  0.5 * velvet2(light, my_normal, -my_eye, 3.0));
 }

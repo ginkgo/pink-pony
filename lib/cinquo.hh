@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <list>
 #include <map>
 
 #include <ImathColor.h>
@@ -21,6 +22,7 @@ using std::cout;
 using std::endl;
 using std::cerr;
 using std::vector;
+using std::list;
 using std::map;
 
 using namespace Imath;

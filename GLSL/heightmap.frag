@@ -88,7 +88,7 @@ void main (void)
     if (world_coord.y < water_level + 7.0) {
         gl_FragColor = gl_FragColor
             + (1-t)
-            * texture2D(sand, world_coord.xz * 0.05) 
+            * texture2D(sand, world_coord.xz * 0.025) 
             * (diffuse(light, my_normal, -my_eye, 0) * 0.75
                + hemi * velvet(light, my_normal, -my_eye, 25.0) * -0.2 
                + hemi * 1.0);

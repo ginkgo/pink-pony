@@ -11,6 +11,7 @@ class SplitScreen
     int subscreen_count;
     vector<Box2i> subscreens;
     vector<Camera> cameras;
+    vector<Box2i> point_huds;
 
     int current;
     
@@ -36,6 +37,7 @@ class SplitScreen
         return &cameras[i];
     }
     
+    void set_point_hud(int i);
 };
 
 #endif

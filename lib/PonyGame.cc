@@ -57,7 +57,16 @@ PonyGame::PonyGame(SplitScreen* screen,
     }
 }
 
-bool PonyGame::start()
+PonyGame::~PonyGame()
+{
+    for (int i = 0; i < m_config->player_count; i++) {
+        delete ponies[i];
+    }
+
+    ponies.clear();
+}
+
+bool PonyGame::start(PonyPoints& points)
 {
     // TODO: Write game's main loop.
     bool run_game = true;
@@ -107,7 +116,13 @@ bool PonyGame::start()
                     } else {
                         cout << "it ran in the water." << endl;
                     }
-                    ponies[i]->set_out(true);                
+                    ponies[i]->set_out(true);
+
+                    for (int j = 0; j < m_config->player_count; j++) {
+                        if (!ponies[j]->is_out()) {
+                            points.add_point(j, m_config->pony_color[i]);
+                        }
+                    } 
                 };
             }
         }
@@ -139,6 +154,15 @@ bool PonyGame::start()
             line_list.draw_trails(this);
             
             m_heightmap->draw(m_config);
+        }
+
+        // Draw point HUD
+
+        for (int i = 0; i < m_config->player_count; i++) {
+            m_screen->set_point_hud(i);
+            glDisable(GL_DEPTH_TEST);
+            glDisable(GL_CULL_FACE);
+            points.draw_hud(i);
         }
 
         // Draw minimap

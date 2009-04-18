@@ -40,6 +40,8 @@ int main(int argc, char** argv)
 
         Skydome skydome("textures/sky.tga");
     
+        PonyPoints points(config.player_count);
+
         while (run_game){
             // TODO: Menu screen
 
@@ -52,7 +54,7 @@ int main(int argc, char** argv)
                           &config,
                           &skydome);
 
-            run_game = game.start();
+            run_game = game.start(points);
         }
 
     }

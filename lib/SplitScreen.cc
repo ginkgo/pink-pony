@@ -45,31 +45,56 @@ void SplitScreen::resize(int width, int height)
     size = V2i(width, height);
 
     subscreens.clear();
+    point_huds.clear();
+
+    
+    Box2i box;
+    V2i p1,p2;
     
     switch (subscreen_count) {
     case 1:
         //+----+
         //|1111|
-        //|1111|
+        //|p111|
         //+----+
         subscreens.push_back(Box2i(V2i(0,0),
                                    V2i(0,0) + size));
+
+        
+        p1 = V2i(size.y/12, size.y/12);
+        p2 = V2i(size.y/4, size.y/4);
+        box.makeEmpty();
+        box.extendBy(V2i(0,0) + p1 * V2i(+1,+1));
+        box.extendBy(V2i(0,0) + p2 * V2i(+1,+1));
+        point_huds.push_back(box);
         break;
     case 2:
         //+----+
-        //|1111|
-        //|2222|
+        //|p111|
+        //|p222|
         //+----+
         subscreens.push_back(Box2i(V2i(0,height/2),
                                    V2i(0,height/2) + V2i(width,height/2)));
         subscreens.push_back(Box2i(V2i(0,0),
                                    V2i(0,0) + V2i(width,height/2)));
+
+        p1 = V2i(size.y/24, size.y/24);
+        p2 = V2i(size.y/4, size.y/4);
+        box.makeEmpty();
+        box.extendBy(V2i(0,height) + p1 * V2i(+1,-1));
+        box.extendBy(V2i(0,height) + p2 * V2i(+1,-1));
+        point_huds.push_back(box);
+        box.makeEmpty();
+        box.extendBy(V2i(0,0) + p1 * V2i(+1,+1));
+        box.extendBy(V2i(0,0) + p2 * V2i(+1,+1));
+        point_huds.push_back(box);
+
         break;
     case 3:
     case 4:
         //+----+
-        //|1122|
-        //|3344|
+        //|p12p|
+        //|p34p|
         //+----+
         subscreens.push_back(Box2i(V2i(0,height/2),
                                    V2i(0,height/2) + size/2));
@@ -79,6 +104,31 @@ void SplitScreen::resize(int width, int height)
                                    V2i(0,0) + size/2));
         subscreens.push_back(Box2i(V2i(width/2,0),
                                    V2i(width/2,0) + size/2));
+
+
+
+        p1 = V2i(size.y/48, size.y/48);
+        p2 = V2i(size.y/8, size.y/8);
+        // 1
+        box.makeEmpty();
+        box.extendBy(V2i(0,height) + p1 * V2i(+1,-1));
+        box.extendBy(V2i(0,height) + p2 * V2i(+1,-1));
+        point_huds.push_back(box);
+        // 2
+        box.makeEmpty();
+        box.extendBy(V2i(width,height) + p1 * V2i(-1,-1));
+        box.extendBy(V2i(width,height) + p2 * V2i(-1,-1));
+        point_huds.push_back(box);
+        // 3
+        box.makeEmpty();
+        box.extendBy(V2i(0,0) + p1 * V2i(+1,+1));
+        box.extendBy(V2i(0,0) + p2 * V2i(+1,+1));
+        point_huds.push_back(box);
+        // 4
+        box.makeEmpty();
+        box.extendBy(V2i(width,0) + p1 * V2i(-1,+1));
+        box.extendBy(V2i(width,0) + p2 * V2i(-1,+1));
+        point_huds.push_back(box);;
         break;
     
     default:
@@ -102,6 +152,27 @@ void SplitScreen::set_subscreen(int i)
     
     glViewport(screen.min.x, screen.min.y,
                screen.size().x, screen.size().y);
+}
+
+void SplitScreen::set_point_hud(int i)
+{
+    current = i;
+
+    Box2i hud = point_huds[i];
+    
+    glViewport(0, 0,
+               size.x, size.y);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glTranslatef(2.0 * hud.center().x/(float)size.x - 1.0,
+                 2.0 * hud.center().y/(float)size.y - 1.0,
+                 0);
+    glScalef(hud.size().x/((float)size.x * 2.0),
+             hud.size().y/((float)size.y * 2.0),
+             1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 void SplitScreen::set_map()
