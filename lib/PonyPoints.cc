@@ -27,7 +27,7 @@ namespace local
 
         double off = .25;
         
-        int n = 10;
+        int n = 20;
         for (list<Color4f>::iterator i = colors.begin();
              i != colors.end(); i++, n++) {
             glPushMatrix();
@@ -97,7 +97,6 @@ void PonyPoints::draw_hud(int i)
     
     glDisable(GL_LIGHTING);
 
-    local::draw_floret_colors(0.33, points[i]);
 
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
@@ -105,7 +104,9 @@ void PonyPoints::draw_hud(int i)
     
     glColor4f(1,1,1,1);
 
-    glScalef(1,1,1);
+    glPushMatrix();
+
+    glScalef(2,2,1);
 
     glBegin(GL_QUADS);
 
@@ -120,5 +121,8 @@ void PonyPoints::draw_hud(int i)
 
     glEnd();
 
+    glPopMatrix();
+
     digits[rank]->unbind(GL_TEXTURE0);
+    local::draw_floret_colors(0.33, points[i]);
 }
