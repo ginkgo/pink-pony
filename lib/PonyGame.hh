@@ -11,6 +11,7 @@ class PonyGame;
 #include "Skydome.hh"
 #include "LineList.hh"
 #include "PonyPoints.hh"
+#include "Mesh.hh"
 
 
 class PonyGame
@@ -21,7 +22,12 @@ class PonyGame
     Skydome* skydome;
     
     LineList line_list;
-    vector<Pony*> ponies;    
+    vector<Pony*> ponies;
+
+    Mesh heart;
+    Shader heart_shader;
+
+    list<V2f> heart_positions;
 
     public:
 

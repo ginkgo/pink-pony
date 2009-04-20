@@ -25,6 +25,11 @@ Config::Config(int argc, char** argv)
       permute_start_positions(false),
       randomize_start_positions(false),
       min_start_distance(200),
+      digit_one("textures/one.tga"),
+      digit_two("textures/two.tga"),
+      digit_three("textures/three.tga"),
+      digit_four("textures/four.tga"),
+      heart_mesh("models/Heart.mesh.xml"),
       camera_fov(45.0),
       camera_near(1.0),
       camera_far(2000.0),
@@ -232,6 +237,11 @@ void Config::set_value(string name, string value)
     else if (name == "permute_start_positions") permute_start_positions = bval;
     else if (name == "randomize_start_positions") randomize_start_positions = bval;
     else if (name == "min_start_distance") min_start_distance = fval;
+    else if (name == "digit_one") digit_one = sval;
+    else if (name == "digit_two") digit_two = sval;
+    else if (name == "digit_three") digit_three = sval;
+    else if (name == "digit_four") digit_four = sval;
+    else if (name == "heart_mesh") heart_mesh = sval;
 }
 
 bool Config::read_file(string filename)
@@ -351,6 +361,13 @@ bool Config::write_file(string filename)
     os << "randomize_start_positions = " << randomize_start_positions << ";" << endl;
     os << "min_start_distance = " << min_start_distance << ";" << endl;
     
+
+    os << endl << "// General appearance" << endl << endl;
+    os << "digit_one = \"" << digit_one << "\";" << endl;
+    os << "digit_two = \"" << digit_two << "\";" << endl;
+    os << "digit_three = \"" << digit_three << "\";" << endl;
+    os << "digit_four = \"" << digit_four << "\";" << endl;
+    os << "heart_mesh = \"" << heart_mesh << "\";" << endl;
 
     os << endl << "// Pony appearance" << endl << endl;   
     os << "pony_shader = \"" << pony_shader << "\";" << endl;

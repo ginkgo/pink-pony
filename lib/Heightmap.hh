@@ -6,7 +6,7 @@ class Heightmap;
 #include "cinquo.hh"
 #include "Texture2D.hh"
 #include "Shader.hh"
-#include "PonyGame.hh"
+#include "Config.hh"
 #include <vector>
 
 class Heightmap

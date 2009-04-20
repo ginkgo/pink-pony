@@ -73,6 +73,13 @@ class Config
     bool randomize_start_positions;
     float min_start_distance;
 
+    // General appearance:
+    string digit_one;
+    string digit_two;
+    string digit_three;
+    string digit_four;
+    string heart_mesh;
+
     // Pony appearance:
     Color4f pony_color[4];
     string pony_shader;

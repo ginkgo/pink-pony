@@ -244,11 +244,12 @@ bool load_OgreXMLGeometry(Mesh& mesh, TiXmlElement* elem) {
             if (e->QueryFloatAttribute("z", v) != TIXML_SUCCESS)
                 return false;
             v++;
-
-            e = e->NextSibling()->ToElement();
         }
 
         if (has_normal) {
+
+            e = e->NextSibling()->ToElement();
+
             if (e == NULL || string(e->Value()) != "normal") {
                 return false;
             }
@@ -263,10 +264,12 @@ bool load_OgreXMLGeometry(Mesh& mesh, TiXmlElement* elem) {
                 return false;
             n++;
 
-            e = e->NextSibling()->ToElement();
         }
         
         if (has_texcoord) {
+
+            e = e->NextSibling()->ToElement();
+
             if (e == NULL || string(e->Value()) != "texcoord") {
                 return false;
             }

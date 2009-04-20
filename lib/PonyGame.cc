@@ -1,4 +1,5 @@
 #include "PonyGame.hh"
+#include <ImathRandom.h>
 
 PonyGame::PonyGame(SplitScreen* screen,
                    Heightmap* heightmap,
@@ -7,7 +8,8 @@ PonyGame::PonyGame(SplitScreen* screen,
     : m_screen(screen),
       m_heightmap(heightmap),
       m_config(config),
-      skydome(skydome)
+      skydome(skydome),
+      heart_shader("GLSL/heart")
 {
     // Init OpenGL states
 
@@ -54,6 +56,38 @@ PonyGame::PonyGame(SplitScreen* screen,
                          m_screen->get_size().y);
 
         line_list.add_point(i, m_config->pony_start[i]);
+    }
+
+
+    if (!Mesh::load_OgreXML(heart, config->heart_mesh)) {
+        cerr << "Could not load " << config->heart_mesh << "." << endl;
+    };
+
+    heart_shader.bind();
+    heart_shader.set_uniform("hemi_pole", config->hemilight_pole);
+    heart_shader.set_uniform("hemi_sky", config->hemilight_sky);
+    heart_shader.set_uniform("hemi_ground", config->hemilight_ground);
+    heart_shader.unbind();
+
+    Rand32 rand((long)(glfwGetTime() * 1000));
+
+    for (int i = 0; i < 3; i++) {
+        V2f size = V2f(config->level_size.size().x, 
+                       config->level_size.size().z);
+
+        bool found = false;
+
+        while (!found) {
+            V2f pos = V2f(rand.nextf(-size.x/2, size.x/2),
+                          rand.nextf(-size.y/2, size.y/2));
+
+            if (!heightmap->below_water(pos, config->water_tolerance)) {
+                heart_positions.push_back(pos);
+                
+                found = true;
+            }
+                    
+        }
     }
 }
 
@@ -124,6 +158,15 @@ bool PonyGame::start(PonyPoints& points)
                         }
                     } 
                 };
+
+                for (list<V2f>::iterator j = heart_positions.begin();
+                     j != heart_positions.end(); ++j) {
+                    if ((*j - ponies[i]->get_pos()).length() < 3.0) {
+                        points.add_point(i, Color4f(1,0,0,1));
+                        heart_positions.erase(j);
+                        --j;
+                    }
+                }
             }
         }
 
@@ -149,6 +192,25 @@ bool PonyGame::start(PonyPoints& points)
             
             for (int j = 0; j < m_config->player_count; j++) {
                 ponies[j]->draw(this,j);
+            }
+
+            for (list<V2f>::iterator j = heart_positions.begin();
+                 j != heart_positions.end(); ++j) {
+                V3f pos = m_heightmap->get_pos(*j, false);
+
+                heart_shader.bind();
+
+                glPushMatrix();
+                
+                glTranslate(pos + V3f(0,1,0));
+                glRotatef(-90,1,0,0);
+                glRotatef(glfwGetTime() * 30, 0, 0, 1);
+
+                heart.draw();                
+                
+                glPopMatrix();
+
+                heart_shader.unbind();
             }
 
             line_list.draw_trails(this);
@@ -215,6 +277,7 @@ bool PonyGame::start(PonyPoints& points)
             glMatrixMode(GL_MODELVIEW);
 
             line_list.draw_lines(m_config);
+
 
             glEnable(GL_CULL_FACE);
         }

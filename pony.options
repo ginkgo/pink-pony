@@ -91,6 +91,13 @@ pony_down[3] = 75;
 pony_left[3] = 74;
 pony_right[3] = 76;
 
+// General appearance properties
+digit_one = "textures/one.tga";
+digit_two = "textures/two.tga";
+digit_three = "textures/three.tga";
+digit_four = "textures/four.tga";
+heart_mesh = "models/Heart.mesh.xml";
+
 // Pony appearance
 
 pony_shader = "GLSL/pony";
