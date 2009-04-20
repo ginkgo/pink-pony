@@ -61,11 +61,13 @@ void SplitScreen::resize(int width, int height)
                                    V2i(0,0) + size));
 
         
+
+        // We hide the points-HUD by moving it out of the screen.
         p1 = V2i(size.y/12, size.y/12);
         p2 = V2i(size.y/4, size.y/4);
         box.makeEmpty();
-        box.extendBy(V2i(0,0) + p1 * V2i(+1,+1));
-        box.extendBy(V2i(0,0) + p2 * V2i(+1,+1));
+        box.extendBy(V2i(0,0) - p1 * V2i(+1,+1));
+        box.extendBy(V2i(0,0) - p2 * V2i(+1,+1));
         point_huds.push_back(box);
         break;
     case 2:
@@ -74,7 +76,7 @@ void SplitScreen::resize(int width, int height)
         //|p222|
         //+----+
         subscreens.push_back(Box2i(V2i(0,height/2),
-                                   V2i(0,height/2) + V2i(width,height/2)));
+                                   V2i(0,0) + V2i(width,height)));
         subscreens.push_back(Box2i(V2i(0,0),
                                    V2i(0,0) + V2i(width,height/2)));
 
@@ -97,9 +99,9 @@ void SplitScreen::resize(int width, int height)
         //|p34p|
         //+----+
         subscreens.push_back(Box2i(V2i(0,height/2),
-                                   V2i(0,height/2) + size/2));
+                                   V2i(0,height) + V2i(size.x/2,0)));
         subscreens.push_back(Box2i(V2i(width/2,height/2),
-                                   V2i(width/2,height/2) + size/2));
+                                   V2i(width/2,height) + V2i(size.x/2,0)));
         subscreens.push_back(Box2i(V2i(0,0),
                                    V2i(0,0) + size/2));
         subscreens.push_back(Box2i(V2i(width/2,0),

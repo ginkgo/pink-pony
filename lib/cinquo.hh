@@ -8,6 +8,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <memory>
 
 #include <ImathColor.h>
 #include <ImathVec.h>
@@ -24,6 +25,8 @@ using std::cerr;
 using std::vector;
 using std::list;
 using std::map;
+using std::auto_ptr;
+
 
 using namespace Imath;
 

@@ -3,14 +3,18 @@
 
 #include "cinquo.hh"
 #include "Config.hh"
+#include "Texture2D.hh"
 
 class PonyPoints
 {
     vector<list<Color4f> > points;
 
+    vector<Texture2D*> digits;
+
     public:
 
-    PonyPoints(int i) : points(i) {};
+    PonyPoints(int i);
+    ~PonyPoints();
 
     void add_point(int i, Color4f color);
     void draw_hud(int i);

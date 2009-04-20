@@ -30,6 +30,7 @@ int main(int argc, char** argv)
                    16, 0,                        // depth, stencil
                    config.window_mode);         // GLFW_WINDOW | GLFW_FULLSCREEN
 
+    glfwSetWindowTitle("Pink Pony <3");
     glfwSwapInterval(config.swap_interval);
     
     // We put everything between glfwOpenWindow & glfwTerminate
