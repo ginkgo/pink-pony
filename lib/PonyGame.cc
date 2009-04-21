@@ -55,7 +55,7 @@ PonyGame::PonyGame(SplitScreen* screen,
         m_screen->resize(m_screen->get_size().x,
                          m_screen->get_size().y);
 
-        line_list.add_point(i, m_config->pony_start[i]);
+        line_list.add_point(i, m_config->pony_start[i], *heightmap);
     }
 
 
@@ -126,7 +126,7 @@ bool PonyGame::start(PonyPoints& points)
 
             if (!ponies[i]->is_out()) {
                 bool has_intersected =
-                    line_list.add_point(i, ponies[i]->get_pos());
+                    line_list.add_point(i, ponies[i]->get_pos(), *m_heightmap);
                 bool below_water =
                     m_heightmap->below_water(ponies[i]->get_pos(),
                                              m_config->water_tolerance);
@@ -159,12 +159,13 @@ bool PonyGame::start(PonyPoints& points)
                     } 
                 };
 
-                for (list<V2f>::iterator j = heart_positions.begin();
-                     j != heart_positions.end(); ++j) {
+                list<V2f>::iterator j = heart_positions.begin();
+                while(j != heart_positions.end()) {
                     if ((*j - ponies[i]->get_pos()).length() < 3.0) {
                         points.add_point(i, Color4f(1,0,0,1));
-                        heart_positions.erase(j);
-                        --j;
+                        j = heart_positions.erase(j);
+                    } else {
+                        ++j;
                     }
                 }
             }
