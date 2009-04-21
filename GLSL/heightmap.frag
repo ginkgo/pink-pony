@@ -98,9 +98,10 @@ void main (void)
 /*     } */
 
     if (world_coord.y < water_level) {
-        gl_FragColor = 
-            mix(gl_FragColor, vec4(65.0/255.0,105.0/255.0,225.0/255.0,1), 
+        gl_FragColor =
+            mix(gl_FragColor, vec4(65.0/255.0,105.0/255.0,225.0/255.0,1),
                 pow((water_level - world_coord.y) / water_level, 0.5));
+        
     }
     
 

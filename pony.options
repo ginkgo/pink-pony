@@ -27,9 +27,9 @@ polygon_mode = fill; // fill: fill polygons, line: wireframe
 
 // Level properties
 
-heightmap_file = "levels/heightmap-heart.exr";
+heightmap_file = "levels/heightmap-ring.exr";
 level_size = (1500 90 1500);
-water_level = 45;
+water_level = 30;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;

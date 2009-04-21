@@ -205,6 +205,7 @@ bool PonyGame::start(PonyPoints& points)
                 glTranslate(pos + V3f(0,1,0));
                 glRotatef(-90,1,0,0);
                 glRotatef(glfwGetTime() * 30, 0, 0, 1);
+                glScalef(1,2,1);
 
                 heart.draw();                
                 
