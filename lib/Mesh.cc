@@ -118,11 +118,7 @@ void Mesh::draw()
         return;
     }
 
-    glEnableClientState(GL_VERTEX_ARRAY);
     Layer* v = &layers[vertex_layer];
-    glVertexPointer(v->columns,
-                    GL_FLOAT, 0,
-                    &(v->data[0]));
 
     if (normal_layer != "") {
         glEnableClientState(GL_NORMAL_ARRAY);
@@ -152,6 +148,11 @@ void Mesh::draw()
     }
 
     // TODO: implement attrib layers.
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(v->columns,
+                    GL_FLOAT, 0,
+                    &(v->data[0]));
 
     if (indices.size() > 0) {
         glDrawElements(primitive_type,
