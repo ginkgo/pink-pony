@@ -69,18 +69,21 @@ bool LineList::intersects(Line& line, V2f* intersection) {
 
 void LineList::draw_lines(Config* config)
 {
-    for (int i; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
+		if (line_strips[i].size() < 1)
+			continue;
+
         int pony_no = i;
         int point_cnt = line_strips[i].size();
 
         glColor(config->pony_color[pony_no]);
         
-        glEnable(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(2, GL_FLOAT, 0, &(line_strips[i][0]));
 
         glDrawArrays(GL_LINE_STRIP, 0, line_strips[i].size());
 
-        glDisable(GL_VERTEX_ARRAY); 
+        glDisableClientState(GL_VERTEX_ARRAY); 
     }
 }
 
@@ -89,18 +92,18 @@ void LineList::draw_trails(PonyGame* game)
     glDisable(GL_LIGHTING);
     glDisable(GL_CULL_FACE);
 
-    for (int i; i < 4; i++) {
-        int pony_no = i;
-        int point_cnt = trails[i].size();
+    for (int i = 0; i < 4; i++) {
+		if (trails[i].size() < 1)
+			continue;
 
-        glColor(game->config()->pony_color[pony_no]);
+        glColor(game->config()->pony_color[i]);
         
-        glEnable(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, 0, &(trails[i][0]));
 
         glDrawArrays(GL_QUAD_STRIP, 0, trails[i].size());
 
-        glDisable(GL_VERTEX_ARRAY); 
+        glDisableClientState(GL_VERTEX_ARRAY); 
     }
 
     glEnable(GL_LIGHTING);
