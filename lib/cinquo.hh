@@ -9,6 +9,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <algorithm>
 
 #include <ImathColor.h>
 #include <ImathVec.h>
@@ -26,6 +27,8 @@ using std::vector;
 using std::list;
 using std::map;
 using std::auto_ptr;
+using std::max;
+using std::min;
 
 
 using namespace Imath;

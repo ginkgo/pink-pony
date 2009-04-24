@@ -1,0 +1,16 @@
+package mesh;
+
+message Mesh {
+    
+	message Layer {
+        required string name    = 1;
+        required int32  columns = 2;
+        required int32  rows    = 3;
+        repeated float  data    = 4;
+    }
+
+    repeated Layer layers = 1;
+    repeated uint32 indices = 2;
+    
+    required int32 primitive_type = 3;
+}

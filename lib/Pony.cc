@@ -15,10 +15,12 @@ Pony::Pony(V2f pos, float angle,
       left(left),
       right(right),
       shader(config->pony_shader),
+      mesh(),
+      mesh_drawer(&mesh),
       texture(config->pony_texture.c_str()),
 	  out(false)
 {
-    bool loaded = Mesh::load_OgreXML(mesh, config->pony_mesh);
+    bool loaded = load_mesh(mesh, config->pony_mesh);
 
     if (!loaded) {
         cerr << "Failed to load mesh file " << config->pony_mesh << endl;
@@ -121,7 +123,7 @@ void Pony::draw(PonyGame* game, int i)
 
         glRotatef(slope_angle,1,0,0);
     
-        mesh.draw();
+        mesh_drawer.draw();
 
         glPopMatrix();
 

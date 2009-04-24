@@ -36,21 +36,21 @@ inline void glColor ( const Imath::Color4f &c )
     glColor4f(c.r,c.g,c.b,c.a);
 };
 
-template <class T> T min(T a, T b)
-{
-    if (a <= b)
-        return a;
-    else
-        return b;
-};
+// template <class T> T min(T a, T b)
+// {
+//     if (a <= b)
+//         return a;
+//     else
+//         return b;
+// };
 
-template <class T> T max(T a, T b)
-{
-    if (a >= b)
-        return a;
-    else
-        return b;
-};
+// template <class T> T max(T a, T b)
+// {
+//     if (a >= b)
+//         return a;
+//     else
+//         return b;
+// };
 
 std::istream& operator>>(std::istream& is, V2f& v);
 std::istream& operator>>(std::istream& is, V3f& v);

@@ -107,11 +107,7 @@ Shader::~Shader()
 
 void Shader::bind()
 {
-    if (glIsProgram(program)) {
-        glUseProgram(program);
-    } else {
-        cerr << "program is no valid GLSL program" << endl;
-    }
+    glUseProgram(program);
 };
 
 void Shader::unbind()

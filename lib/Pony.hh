@@ -8,11 +8,13 @@ class Pony;
 #include "Camera.hh"
 #include "Texture2D.hh"
 #include "Mesh.hh"
+#include "MeshDrawer.hh"
 
 class Pony
 {
     Shader shader;
     Mesh mesh;
+    MeshDrawer mesh_drawer;
     Texture2D texture;
     
     V2f pos;

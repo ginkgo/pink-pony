@@ -8,8 +8,8 @@ Heightmap::Heightmap(string filename,
       terrain_shader("GLSL/heightmap"),
       water_shader("GLSL/water"),
       sand_texture(sand.c_str()),
-      grass_texture(grass.c_str(), GL_REPEAT, GL_REPEAT),
-      noise_texture(noise.c_str(), GL_REPEAT, GL_REPEAT),
+      grass_texture(grass.c_str()),
+      noise_texture(noise.c_str()),
       extent(extent),
       water_level(water_level)
 {

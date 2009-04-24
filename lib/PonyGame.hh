@@ -12,6 +12,7 @@ class PonyGame;
 #include "LineList.hh"
 #include "PonyPoints.hh"
 #include "Mesh.hh"
+#include "MeshDrawer.hh"
 
 
 class PonyGame
@@ -25,6 +26,7 @@ class PonyGame
     vector<Pony*> ponies;
 
     Mesh heart;
+    MeshDrawer heart_drawer;
     Shader heart_shader;
 
     list<V2f> heart_positions;

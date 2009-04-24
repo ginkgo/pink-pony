@@ -9,6 +9,8 @@ PonyGame::PonyGame(SplitScreen* screen,
       m_heightmap(heightmap),
       m_config(config),
       skydome(skydome),
+      heart(),
+      heart_drawer(&heart),
       heart_shader("GLSL/heart")
 {
     // Init OpenGL states
@@ -59,7 +61,7 @@ PonyGame::PonyGame(SplitScreen* screen,
     }
 
 
-    if (!Mesh::load_OgreXML(heart, config->heart_mesh)) {
+    if (!load_mesh(heart, config->heart_mesh)) {
         cerr << "Could not load " << config->heart_mesh << "." << endl;
     };
 
@@ -208,7 +210,7 @@ bool PonyGame::start(PonyPoints& points)
                 glRotatef(glfwGetTime() * 30, 0, 0, 1);
                 glScalef(1,2,1);
 
-                heart.draw();                
+                heart_drawer.draw();                
                 
                 glPopMatrix();
 

@@ -1,6 +1,7 @@
 #include "cinquo.hh"
 #include "Config.hh"
 #include "Mesh.hh"
+#include "MeshDrawer.hh"
 
 void init(Config& config)
 {
@@ -49,7 +50,7 @@ void init(Config& config)
 
 }
 
-void draw(Config& config, Mesh& mesh)
+void draw(Config& config, MeshDrawer& mesh)
 {
     glPushMatrix();
 
@@ -90,7 +91,9 @@ int main(int argc, char** argv)
         
         Mesh mesh;
         
-        bool loaded = Mesh::load_OgreXML(mesh, "models/Pony.mesh.xml");
+        bool loaded = load_mesh(mesh, "Pony.pmesh");
+        
+        MeshDrawer mesh_drawer(&mesh);
 
         if (!loaded) {
             cerr << "Could not load mesh file! :<" << endl;
@@ -103,7 +106,7 @@ int main(int argc, char** argv)
  
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-            draw(config, mesh);
+            draw(config, mesh_drawer);
 
             getErrors();
             calc_fps();
