@@ -3,7 +3,9 @@
 Heightmap::Heightmap(string filename,
                      Box3f extent, float water_level,
                      string sand, string grass, string noise)
-    : heightmap(filename.c_str(),
+    : mesh(),
+      mesh_drawer(&mesh),
+      heightmap(filename.c_str(),
                 GL_CLAMP, GL_CLAMP, GL_LINEAR, GL_LINEAR),
       terrain_shader("GLSL/heightmap"),
       water_shader("GLSL/water"),
@@ -14,39 +16,45 @@ Heightmap::Heightmap(string filename,
       water_level(water_level)
 {
     heightmap.normalize();
-    buffers[0] = 0;
-    buffers[1] = 0;
     set_resolution (heightmap.get_size() / 2);
 }
 
 Heightmap::~Heightmap()
 {
-    glDeleteBuffers(2, buffers);
 }
 
 void Heightmap::set_resolution(V2u new_resolution)
 {
+    mesh.set_primitive_type(GL_TRIANGLE_STRIP);
+
+    mesh.mutable_layers()->Clear();
+    mesh.mutable_indices()->Clear();
+
     resolution = new_resolution;
 
-    glDeleteBuffers(2, buffers);
-    glGenBuffers(2,buffers);
-
-    glBindBuffer(GL_ARRAY_BUFFER,buffers[0]);
+    Mesh_Layer* normal_layer = mesh.add_layers();
+    Mesh_Layer* vertex_layer = mesh.add_layers();
 
     int cnt = resolution.x * resolution.y;
-    
-    glBufferData(GL_ARRAY_BUFFER, sizeof(V3f) * cnt * 2,
-                 NULL, GL_STATIC_DRAW);;
 
-    void* buffer = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
-    V3f* vertices = (V3f*)buffer;
-    V3f* normals = ((V3f*)buffer)+cnt;
+    normal_layer->set_name("normal");
+    normal_layer->set_columns(3);
+    normal_layer->set_rows(cnt);
+    normal_layer->mutable_data()->Reserve(3 * cnt);
+
+    vertex_layer->set_name("vertex");
+    vertex_layer->set_columns(3);
+    vertex_layer->set_rows(cnt);
+    vertex_layer->mutable_data()->Reserve(3 * cnt);
+
+    V3f* normals = (V3f*)normal_layer->mutable_data()->data();
+    V3f* vertices = (V3f*)vertex_layer->mutable_data()->data();
 
     V2f m = V2f(extent.min.x,extent.min.z);
     V2f range = V2f(extent.size().x,extent.size().z);
     
-    for (int x = 0; x < resolution.x; ++x) {
-        for (int z = 0; z < resolution.y; ++z) {
+    for (int z = 0; z < resolution.y; ++z) {
+        for (int x = 0; x < resolution.x; ++x) {
             V2f uv = V2f((float)x/resolution.x,
                          1-(float)z/resolution.y);
             
@@ -71,32 +79,14 @@ void Heightmap::set_resolution(V2u new_resolution)
         }
     }
 
-    
-    glUnmapBuffer(GL_ARRAY_BUFFER);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-
-   std::vector<GLuint> indices;
-    
     for (int z = 1; z < resolution.y - 2; z++) {
-        indices.push_back (1 + z * resolution.x);
+        mesh.add_indices (1 + z * resolution.x);
         for (int x = 1; x < resolution.x - 1; x++) {
-            indices.push_back (x +   z   * resolution.x);
-            indices.push_back (x + (z+1) * resolution.x);
+            mesh.add_indices (x +   z   * resolution.x);
+            mesh.add_indices (x + (z+1) * resolution.x);
         }
-        indices.push_back (resolution.x - 2 + (z+1) * resolution.x);
+        mesh.add_indices (resolution.x - 2 + (z+1) * resolution.x);
     }
-
-    index_cnt = indices.size();
-
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 indices.size() * sizeof(GLuint),
-                 &indices[0],
-                 GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    
 }        
 
 V3f Heightmap::get_pos(V2f position, bool with_water)
@@ -129,20 +119,6 @@ void Heightmap::draw(Config* config)
                
     Box2f area(center - size * 6, center + size * 6);
 
-//     glEnable(GL_LIGHTING);
-
-//     GLdouble clip_equation[4] = {0,1,0,-water_level};
-//     glPushMatrix();
-//     glLoadIdentity();
-//     glClipPlane(GL_CLIP_PLANE0, clip_equation);
-//     glPopMatrix();
-//     glEnable(GL_CLIP_PLANE0);
-    // Draw terrain.
-    
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-
-//     heightmap.bind(GL_TEXTURE0);
     sand_texture.bind(GL_TEXTURE1);
     grass_texture.bind(GL_TEXTURE2);
     noise_texture.bind(GL_TEXTURE0);
@@ -152,7 +128,6 @@ void Heightmap::draw(Config* config)
     terrain_shader.set_uniform("start", extent.min);
     terrain_shader.set_uniform("end",   extent.max);
 
-//     terrain_shader.set_uniform("heightmap", 0);
     terrain_shader.set_uniform("sand", 1);
     terrain_shader.set_uniform("grass", 2);
     terrain_shader.set_uniform("noise", 0);
@@ -167,21 +142,8 @@ void Heightmap::draw(Config* config)
                                config->hemilight_ground);
     terrain_shader.set_uniform("velvet_coeff",
                                config->heightmap_velvet_coeff);
-    
-    
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
 
-    int cnt = resolution.x * resolution.y;
-    
-    glVertexPointer(3, GL_FLOAT, 0, 0);
-    glNormalPointer(GL_FLOAT, 0, ((V3f*)0)+cnt);
-
-    
-    glDrawElements(GL_TRIANGLE_STRIP,
-                   index_cnt,    
-                   GL_UNSIGNED_INT,
-                   0);
+    mesh_drawer.draw();
 
 
     glBegin(GL_QUADS);
@@ -193,12 +155,6 @@ void Heightmap::draw(Config* config)
     glVertex3f(area.min.x, 0, area.min.y); // back left
     
     glEnd();
-    
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     terrain_shader.unbind();
 

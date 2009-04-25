@@ -70,7 +70,10 @@ GLuint compile_shader(const char* source, string name, GLenum type)
 
 Shader::Shader(string fileName)
 {
-
+    program = 0;
+    vertex_shader = 0;
+    fragment_shader = 0;
+ 
     GLint status = GL_FALSE;
 
     free();
@@ -98,6 +101,8 @@ Shader::Shader(string fileName)
         cout << "Linking failed." << endl;
         program_log(program);
     };
+
+    getErrors();
 };
 
 Shader::~Shader()
@@ -108,6 +113,7 @@ Shader::~Shader()
 void Shader::bind()
 {
     glUseProgram(program);
+    getErrors();
 };
 
 void Shader::unbind()
@@ -117,13 +123,11 @@ void Shader::unbind()
 
 void Shader::free()
 {
-    if (glIsProgram(program)) {
-        glDeleteProgram(program);
-        glDeleteShader(vertex_shader);
-        glDeleteShader(fragment_shader);
+    glDeleteProgram(program);
+    glDeleteShader(vertex_shader);
+    glDeleteShader(fragment_shader);
 
-        program = 0;
-    }
+    program = 0;
 };
 
 void Shader::print_fragment_source()

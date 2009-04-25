@@ -2,6 +2,23 @@
 
 using std::ios_base;
 
+
+void getErrors()
+{
+    static GLenum lastError = GL_NO_ERROR;
+    GLenum errCode = GL_NO_ERROR;
+    const GLubyte * errString;
+
+    errCode = glGetError();
+        
+    if (errCode != lastError && errCode != GL_NO_ERROR) {
+        errString = gluErrorString(errCode);
+        std::cout << "OpenGL Error: " << errString << std::endl;
+    }
+    
+    lastError = errCode;
+}
+
 void calc_fps()
 {
     static double last = -1.0;

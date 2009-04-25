@@ -4,6 +4,8 @@ using namespace google::protobuf;
 
 void MeshDrawer::draw()
 {
+    getErrors();
+
     int count = -1;
 
     for (RepeatedPtrField<Mesh_Layer>::iterator i = mesh->mutable_layers()->begin();
@@ -52,4 +54,6 @@ void MeshDrawer::draw()
             glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
     }
+    
+    getErrors();
 }

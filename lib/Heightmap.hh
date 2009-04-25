@@ -8,9 +8,14 @@ class Heightmap;
 #include "Shader.hh"
 #include "Config.hh"
 #include <vector>
+#include "Mesh.hh"
+#include "MeshDrawer.hh"
 
 class Heightmap
 {
+    Mesh mesh;
+    MeshDrawer mesh_drawer;
+
     Shader terrain_shader;
     Shader water_shader;
     
@@ -22,9 +27,6 @@ class Heightmap
     
     Box3f extent;
     float water_level;
-    
-    GLuint buffers[2];
-    int index_cnt;
     
     V2u resolution;
     
