@@ -45,10 +45,8 @@ void Heightmap::set_resolution(V2u new_resolution)
     vertex_layer->set_name("vertex");
     vertex_layer->set_columns(3);
     vertex_layer->set_rows(cnt);
-    vertex_layer->mutable_data()->Reserve(3 * cnt);
+    //vertex_layer->mutable_data()->Reserve(3 * cnt);
 
-    V3f* normals = (V3f*)normal_layer->mutable_data()->data();
-    V3f* vertices = (V3f*)vertex_layer->mutable_data()->data();
 
     V2f m = V2f(extent.min.x,extent.min.z);
     V2f range = V2f(extent.size().x,extent.size().z);
@@ -57,14 +55,19 @@ void Heightmap::set_resolution(V2u new_resolution)
         for (unsigned int x = 0; x < resolution.x; ++x) {
             V2f uv = V2f((float)x/resolution.x,
                          1-(float)z/resolution.y);
-            
-            vertices[x + resolution.x * z] = get_pos(uv * range + m, false);
+            V3f v = get_pos(uv * range + m, false); 
+            vertex_layer->add_data(v.x);
+            vertex_layer->add_data(v.y);
+            vertex_layer->add_data(v.z);
         }
     }
 
+    V3f* vertices = (V3f*)vertex_layer->mutable_data()->data();
+    V3f* normals = (V3f*)normal_layer->mutable_data()->data();
+
     Box<V2u> win(V2u(0,0), resolution-V2u(1,1));
-    for (unsigned int x = 0; x < resolution.x; ++x) {
-        for (unsigned int z = 0; z < resolution.y; ++z) {
+    for (unsigned int z = 0; z < resolution.y; ++z) {
+        for (unsigned int x = 0; x < resolution.x; ++x) {
             V2u p1 = clip(V2u(x,z) - V2u(1,0),win);
             V2u p2 = clip(V2u(x,z) + V2u(1,0),win);
             V3f du = (vertices[p2.x + resolution.x * p2.y] -
@@ -75,7 +78,11 @@ void Heightmap::set_resolution(V2u new_resolution)
             V3f dv = (vertices[p2.x + resolution.x * p2.y] -
                       vertices[p1.x + resolution.x * p1.y]);
 
-            normals[x+resolution.x * z] = (du % dv).normalize();
+            V3f n = (du % dv).normalize();
+            normal_layer->add_data(n.x);
+            normal_layer->add_data(n.y);
+            normal_layer->add_data(n.z);
+            
         }
     }
 
@@ -87,6 +94,8 @@ void Heightmap::set_resolution(V2u new_resolution)
         }
         mesh.add_indices (resolution.x - 2 + (z+1) * resolution.x);
     }
+
+    mesh_drawer.make_vbo();
 }        
 
 V3f Heightmap::get_pos(V2f position, bool with_water)
