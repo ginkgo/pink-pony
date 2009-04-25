@@ -74,7 +74,6 @@ void LineList::draw_lines(Config* config)
 			continue;
 
         int pony_no = i;
-        int point_cnt = line_strips[i].size();
 
         glColor(config->pony_color[pony_no]);
         

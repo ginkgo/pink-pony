@@ -5,7 +5,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    Config config(argc, argv);
+    Config config;
 
     if (argc < 3) {
         cout << "Usage: " << argv[0] << " ifile ofile" << endl;

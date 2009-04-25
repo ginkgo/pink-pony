@@ -5,10 +5,10 @@ Heightmap::Heightmap(string filename,
                      string sand, string grass, string noise)
     : mesh(),
       mesh_drawer(&mesh),
-      heightmap(filename.c_str(),
-                GL_CLAMP, GL_CLAMP, GL_LINEAR, GL_LINEAR),
       terrain_shader("GLSL/heightmap"),
       water_shader("GLSL/water"),
+      heightmap(filename.c_str(),
+                GL_CLAMP, GL_CLAMP, GL_LINEAR, GL_LINEAR),
       sand_texture(sand.c_str()),
       grass_texture(grass.c_str()),
       noise_texture(noise.c_str()),
@@ -53,8 +53,8 @@ void Heightmap::set_resolution(V2u new_resolution)
     V2f m = V2f(extent.min.x,extent.min.z);
     V2f range = V2f(extent.size().x,extent.size().z);
     
-    for (int z = 0; z < resolution.y; ++z) {
-        for (int x = 0; x < resolution.x; ++x) {
+    for (unsigned int z = 0; z < resolution.y; ++z) {
+        for (unsigned int x = 0; x < resolution.x; ++x) {
             V2f uv = V2f((float)x/resolution.x,
                          1-(float)z/resolution.y);
             
@@ -63,8 +63,8 @@ void Heightmap::set_resolution(V2u new_resolution)
     }
 
     Box<V2u> win(V2u(0,0), resolution-V2u(1,1));
-    for (int x = 0; x < resolution.x; ++x) {
-        for (int z = 0; z < resolution.y; ++z) {
+    for (unsigned int x = 0; x < resolution.x; ++x) {
+        for (unsigned int z = 0; z < resolution.y; ++z) {
             V2u p1 = clip(V2u(x,z) - V2u(1,0),win);
             V2u p2 = clip(V2u(x,z) + V2u(1,0),win);
             V3f du = (vertices[p2.x + resolution.x * p2.y] -
@@ -79,9 +79,9 @@ void Heightmap::set_resolution(V2u new_resolution)
         }
     }
 
-    for (int z = 1; z < resolution.y - 2; z++) {
+    for (unsigned int z = 1; z < resolution.y - 2; z++) {
         mesh.add_indices (1 + z * resolution.x);
-        for (int x = 1; x < resolution.x - 1; x++) {
+        for (unsigned int x = 1; x < resolution.x - 1; x++) {
             mesh.add_indices (x +   z   * resolution.x);
             mesh.add_indices (x + (z+1) * resolution.x);
         }

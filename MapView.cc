@@ -63,8 +63,7 @@ void draw(Config& config, Heightmap& heightmap)
 
 int main(int argc, char** argv)
 {
-    char* noargv[] = {};
-    Config config(0, noargv); 
+    Config config; 
 
     if (argc > 1) {
         config.heightmap_file = string(argv[1]);

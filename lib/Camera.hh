@@ -48,7 +48,7 @@ class Camera
         return near_plane;
     }
 
-    float set_near_plane(float near_plane)
+    void set_near_plane(float near_plane)
     {
         this->near_plane = near_plane;
     }
@@ -58,7 +58,7 @@ class Camera
         return far_plane;
     }
 
-    float set_far_plane(float far_plane)
+    void set_far_plane(float far_plane)
     {
         this->far_plane = far_plane;
     }
@@ -78,7 +78,7 @@ class Camera
         return fov;
     }
 
-    float set_fov(float fov)
+    void set_fov(float fov)
     {
         this->fov = fov;
     }

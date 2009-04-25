@@ -73,9 +73,9 @@ bool load_OgreXMLGeometry(Mesh& mesh, TiXmlElement* elem) {
     bool has_texcoord =(string(vertexbuffer->Attribute("texture_coords"))=="1");
 
 
-    Mesh_Layer* v;
-    Mesh_Layer* n;
-    Mesh_Layer* tc;
+    Mesh_Layer* v = 0;
+    Mesh_Layer* n = 0;
+    Mesh_Layer* tc = 0;
     
     if (has_vertex) {
         v = mesh.add_layers();

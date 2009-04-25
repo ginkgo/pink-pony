@@ -70,8 +70,7 @@ void draw(Config& config, MeshDrawer& mesh)
 
 int main(int argc, char** argv)
 {
-    char* noargv[] = {};
-    Config config(argc, argv); 
+    Config config; 
     
     glfwInit();
     glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 16);

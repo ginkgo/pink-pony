@@ -19,8 +19,7 @@ namespace local
     }
 
     void draw_floret_colors(float c, list<Color4f>& colors) {
-        int count = colors.size();
-
+      
         GLUquadric *q = gluNewQuadric();
 
         static double golden_angle = 360. / ((1.+sqrt(5.)) * (1.+sqrt(5.))/4.);
@@ -77,7 +76,7 @@ PonyPoints::PonyPoints(int i) : points(i)
 
 PonyPoints::~PonyPoints()
 {
-    for (int i; i < digits.size(); i++)
+    for (unsigned int i = 0; i < digits.size(); i++)
         delete digits[i];
 }
 
@@ -90,7 +89,7 @@ void PonyPoints::draw_hud(int i)
 {
     int rank = 0;
 
-    for (int j = 0; j < points.size(); j++) {
+    for (unsigned int j = 0; j < points.size(); j++) {
         if (points[i].size() < points[j].size())
             rank++;
     }

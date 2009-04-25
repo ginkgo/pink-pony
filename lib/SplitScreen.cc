@@ -179,7 +179,7 @@ void SplitScreen::set_point_hud(int i)
 
 void SplitScreen::set_map()
 {
-    V2i start, end;
+    V2i start(0,0), end(0,0);
 
     int shorter = min(size.x, size.y);
     int longer = max(size.x, size.y);

@@ -58,6 +58,8 @@ std::istream& operator>>(std::istream& is, V2f& v)
     if (is.peek() != ')')
         throw ios_base::failure("Missing closing parentheses");
     is.ignore(1);
+
+    return is;
 }
  
 std::istream& operator>>(std::istream& is, V3f& v)
@@ -79,6 +81,8 @@ std::istream& operator>>(std::istream& is, V3f& v)
     if (is.peek() != ')')
         throw ios_base::failure("Missing closing parentheses");
     is.ignore(1);
+
+    return is;
 }
 
 std::istream& operator>>(std::istream& is, Color4f& v)
@@ -101,5 +105,6 @@ std::istream& operator>>(std::istream& is, Color4f& v)
     if (is.peek() != ')')
         throw ios_base::failure("Missing closing parentheses");
     is.ignore(1);
-
+    
+    return is;
 }

@@ -11,20 +11,19 @@ class Pony;
 #include "MeshDrawer.hh"
 
 class Pony
-{
+{    
+    V2f pos;
+    float angle;
+    float speed;
+    float slope_angle;
+    V2f camera_pos;
+
+    int up, down, left, right;
+
     Shader shader;
     Mesh mesh;
     MeshDrawer mesh_drawer;
     Texture2D texture;
-    
-    V2f pos;
-    float angle;
-    V2f camera_pos;
-
-    float speed;
-    float slope_angle;
-
-    int up, down, left, right;
 
     bool out;
     

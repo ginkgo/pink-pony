@@ -87,7 +87,7 @@ class Config
     string pony_texture;
     string pony_mesh;
 
-    Config(int argc, char** argv);
+    Config();
 
     bool write_file(string filename);
     bool read_file(string filename);

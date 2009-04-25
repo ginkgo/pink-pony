@@ -1,19 +1,37 @@
 #include "Config.hh"
 #include <fstream>
 
-Config::Config(int argc, char** argv)
+Config::Config()
     : width(800),
       height(600),
       window_mode(GLFW_FULLSCREEN),
       fsaa_samples(4),
       swap_interval(1),
+      polygon_mode(GL_FILL),
       heightmap_file("levels/heightmap-heart.exr"),
       level_size(V3f(-500, 0,-500),
                  V3f( 500,60, 500)),
       water_level(15),
+      heightmap_specular(1,1,1,1),
+      heightmap_diffuse(1,1,1,1),
+      heightmap_shininess(50.0),
+      heightmap_velvet_coeff(1.5),
       sand_texture("textures/sand.tga"),
       grass_texture("textures/grass.tga"),
       noise_texture("textures/noise.tga"),
+      light_specular(1,1,1,1),
+      light_diffuse(1,1,1,1),
+      light_ambient(0.05,0.05,0.05,1),
+      light_dir(V3f(-1,0.5,-0.75).normalized()),
+      hemilight_pole(0,1,0),
+      hemilight_sky(1/3.0,1/3.0,1/3.0,1),
+      hemilight_ground(1/8.0,1/8.0,1/8.0,1),
+      camera_fov(45.0),
+      camera_near(1.0),
+      camera_far(2000.0),
+      camera_distance(15.0),
+      camera_height(6.0),
+      pony_height(3.0),
       player_count(1),
       pony_start_speed(15.0),
       pony_min_speed(5.0),
@@ -22,6 +40,7 @@ Config::Config(int argc, char** argv)
       pony_turn_speed(1.25),
       water_tolerance(1.0),
       show_minimap(true),
+      pony_slope_acceleration(0),
       permute_start_positions(false),
       randomize_start_positions(false),
       min_start_distance(200),
@@ -30,28 +49,10 @@ Config::Config(int argc, char** argv)
       digit_three("textures/three.tga"),
       digit_four("textures/four.tga"),
       heart_mesh("models/Heart.pmesh"),
-      camera_fov(45.0),
-      camera_near(1.0),
-      camera_far(2000.0),
-      camera_distance(15.0),
-      pony_height(3.0),
-      camera_height(6.0),
-      heightmap_specular(1,1,1,1),
-      heightmap_diffuse(1,1,1,1),
-      heightmap_shininess(50.0),
-      heightmap_velvet_coeff(1.5),
-      light_specular(1,1,1,1),
-      light_diffuse(1,1,1,1),
-      light_ambient(0.05,0.05,0.05,1),
-      light_dir(V3f(-1,0.5,-0.75).normalized()),
       pony_shader("GLSL/pony"),
-      pony_texture("textures/pony.tga"),
-      pony_mesh("models/Pony.pmesh"),
       pony_velvet_coeff(2.0),
-      hemilight_pole(0,1,0),
-      hemilight_sky(1/3.0,1/3.0,1/3.0,1),
-      hemilight_ground(1/8.0,1/8.0,1/8.0,1),
-      polygon_mode(GL_FILL)
+      pony_texture("textures/pony.tga"),
+      pony_mesh("models/Pony.pmesh")
 {
     pony_up[0] = GLFW_KEY_UP;
     pony_down[0] = GLFW_KEY_DOWN;
@@ -149,8 +150,8 @@ void Config::set_value(string name, string value)
     }
 
     if (value.find('"') != string::npos) {
-        int p1 = value.find('"');
-        int p2 = value.find('"', p1+1);
+        string::size_type p1 = value.find('"');
+        string::size_type p2 = value.find('"', p1+1);
 
         if (p2 != string::npos) {
             sval = value.substr(p1+1,(p2 - p1) - 1);

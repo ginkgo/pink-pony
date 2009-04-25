@@ -11,7 +11,7 @@ int main(int argc, char** argv)
     string config_file = "pony.options";    
     bool run_game = true;
     
-    Config config(argc, argv);
+    Config config;
 
     if (argc > 1) {
         config_file = string(argv[1]);
