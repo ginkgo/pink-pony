@@ -41,6 +41,10 @@ class MeshDrawer
           index_buffer(0),
           index_count(0),
           layer_buffer(0) {};
+
+    ~MeshDrawer() {
+        free_vbo();
+    }
     
     bool has_vbo() { return using_vbo;};
     void make_vbo();

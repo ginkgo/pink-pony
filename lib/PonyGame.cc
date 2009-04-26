@@ -84,11 +84,35 @@ PonyGame::PonyGame(SplitScreen* screen,
                           rand.nextf(-size.y/2, size.y/2));
 
             if (!heightmap->below_water(pos, config->water_tolerance)) {
+                // Valid position found.
+                // Searching local maximum..
+                bool found_maximum = false;
+                float delta = 1;
+                while (!found_maximum) {
+                    float height = heightmap->get_pos(pos).y;
+                    if (height < heightmap->get_pos(pos+V2f(delta,0)).y) {
+                        pos += V2f(delta,0);
+                        continue;
+                    }
+                    if (height < heightmap->get_pos(pos+V2f(-delta,0)).y) {
+                        pos += V2f(-delta,0);
+                        continue;
+                    }
+                    if (height < heightmap->get_pos(pos+V2f(0,delta)).y) {
+                        pos += V2f(0,delta);
+                        continue;
+                    }
+                    if (height < heightmap->get_pos(pos+V2f(0,-delta)).y) {
+                        pos += V2f(0,-delta);
+                        continue;
+                    }
+                    found_maximum = true;
+                }
                 heart_positions.push_back(pos);
+
                 
                 found = true;
-            }
-                    
+            }                    
         }
     }
 }
