@@ -1,4 +1,5 @@
 #include "Heightmap.hh"
+#include <ImathBoxAlgo.h>
 
 Heightmap::Heightmap(string filename,
                      Box3f extent, float water_level,
@@ -63,7 +64,6 @@ void Heightmap::set_resolution(V2u new_resolution)
     }
 
     V3f* vertices = (V3f*)vertex_layer->mutable_data()->data();
-    V3f* normals = (V3f*)normal_layer->mutable_data()->data();
 
     Box<V2u> win(V2u(0,0), resolution-V2u(1,1));
     for (unsigned int z = 0; z < resolution.y; ++z) {
@@ -104,7 +104,7 @@ V3f Heightmap::get_pos(V2f position, bool with_water)
                                          0,
                                          position.y));
 
-    float value = heightmap.get_color(V2f(unmapped.x, 1-unmapped.z)).r;
+    float value = heightmap.get_value(V2f(unmapped.x, 1-unmapped.z));
     float y;
 
     if (with_water)

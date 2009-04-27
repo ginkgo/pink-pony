@@ -17,7 +17,7 @@ bool load_mesh(Mesh& mesh, string filename)
       return false;
     }
 
-    cout << "done." << endl;
+    cout << "done. " << mesh.layers(0).rows() << " vertices." << endl;
 
     return true;
 }

@@ -89,20 +89,20 @@ PonyGame::PonyGame(SplitScreen* screen,
                 bool found_maximum = false;
                 float delta = 1;
                 while (!found_maximum) {
-                    float height = heightmap->get_pos(pos).y;
-                    if (height < heightmap->get_pos(pos+V2f(delta,0)).y) {
+                    float height = heightmap->get_pos(pos, true).y;
+                    if (height < heightmap->get_pos(pos+V2f(delta,0), true).y) {
                         pos += V2f(delta,0);
                         continue;
                     }
-                    if (height < heightmap->get_pos(pos+V2f(-delta,0)).y) {
+                    if (height < heightmap->get_pos(pos+V2f(-delta,0), true).y) {
                         pos += V2f(-delta,0);
                         continue;
                     }
-                    if (height < heightmap->get_pos(pos+V2f(0,delta)).y) {
+                    if (height < heightmap->get_pos(pos+V2f(0,delta), true).y) {
                         pos += V2f(0,delta);
                         continue;
                     }
-                    if (height < heightmap->get_pos(pos+V2f(0,-delta)).y) {
+                    if (height < heightmap->get_pos(pos+V2f(0,-delta), true).y) {
                         pos += V2f(0,-delta);
                         continue;
                     }

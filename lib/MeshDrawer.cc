@@ -12,7 +12,7 @@ void MeshDrawer::make_vbo()
     glGenBuffers(1,&index_buffer);
     glGenBuffers(1,&layer_buffer);
 
-    unsigned int total = 0;
+    int total = 0;
 
     for (int i = 0; i < mesh->layers_size(); ++i) {
         total += mesh->layers(i).data_size();
@@ -102,7 +102,7 @@ void MeshDrawer::draw_vertex_buffer_object()
     glBindBuffer(GL_ARRAY_BUFFER, layer_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 
-    for (int i = 0; i < layers.size(); ++i) {
+    for (unsigned int i = 0; i < layers.size(); ++i) {
 
         if (layers[i].name == "vertex") {
             glEnableClientState(GL_VERTEX_ARRAY);
@@ -129,7 +129,7 @@ void MeshDrawer::draw_vertex_buffer_object()
         glDrawArrays(mesh->primitive_type(), 0, vertex_count);
     }
 
-    for (int i = 0; i < layers.size(); ++i) {
+    for (unsigned int i = 0; i < layers.size(); ++i) {
 
         if (layers[i].name == "vertex") {
             glDisableClientState(GL_VERTEX_ARRAY);

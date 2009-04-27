@@ -1,96 +1,10 @@
 #include "Texture2D.hh"
-#include <ImfRgbaFile.h>
-#include <ImfArray.h>
 #include <memory>
+#include <ImathBoxAlgo.h>
 
-using namespace Imf;
+using namespace Imath;
 
-
-void read_exr(const char* path, Array2D<Color4f> &pixels, V2u &size)
-{
-    RgbaInputFile file(	path);
-
-    Box2i dw = file.dataWindow();
-
-    Array2D<Color4h> halfPixels;
-
-    size.x = dw.max.x - dw.min.x + 1;
-    size.y = dw.max.y - dw.min.y + 1;
-    halfPixels.resizeErase(size.x, size.y);
-    pixels.resizeErase(size.x, size.y);
-
-    file.setFrameBuffer((Rgba*)&halfPixels[0][0]
-                        - dw.min.x - dw.min.y * size.x,
-                        1, size.y);
-    file.readPixels (dw.min.y, dw.max.y);
-
-    for (int y = 0; y < size.y; y++) {
-        for (int x = 0; x < size.x; x++) {
-            pixels[y][x] = Color4f(halfPixels[y][x].r,
-                                   halfPixels[y][x].g,
-                                   halfPixels[y][x].b,
-                                   halfPixels[y][x].a);	  
-        }
-    }
-
-};
-
-void write_exr(const char* path, Array2D<Color4f> &pixels, V2u &size)
-{
-    RgbaOutputFile file(path, size.x, size.y, WRITE_RGBA);
-
-    Array2D<Color4h> half_pixels;
-    half_pixels.resizeErase(size.x, size.y);
-
-    for (int y = 0; y < size.y; y++) {
-        for (int x = 0; x < size.x; x++) {
-            half_pixels[y][x] = Color4h(pixels[y][x].r,
-                                        pixels[y][x].g,
-                                        pixels[y][x].b,
-                                        pixels[y][x].a);
-                                        
-        }
-    }
-
-    file.setFrameBuffer((Rgba*)&half_pixels[0][0],1,size.x);
-    file.writePixels(size.y);       
-}
-
-void read_tga(const char* path, Array2D<Color4f> &pixels, V2u &size)
-{
-    GLFWimage image;
-
-    glfwReadImage(path, &image, GLFW_NO_RESCALE_BIT);
-
-    size.x = image.Width;
-    size.y = image.Height;
-    pixels.resizeErase(size.y, size.x);
-
-    switch (image.Format){
-    case GL_RGB:
-        for (int x = 0; x < image.Width; x++)
-            for (int y = 0; y < image.Height; y++)
-                pixels[y][x] =
-                    Color4f(((float)image.Data[y*image.Width*3+x*3+0])/255.0f,
-                            ((float)image.Data[y*image.Width*3+x*3+1])/255.0f,
-                            ((float)image.Data[y*image.Width*3+x*3+2])/255.0f,
-                            1.0f);
-        break;
-    case GL_RGBA:
-        for (int x = 0; x < image.Width; x++)
-            for (int y = 0; y < image.Height; y++)
-                pixels[y][x] =
-                    Color4f(((float)image.Data[y*image.Width*4+x*4+0])/255.0f,
-                            ((float)image.Data[y*image.Width*4+x*4+1])/255.0f,
-                            ((float)image.Data[y*image.Width*4+x*4+2])/255.0f,
-                            ((float)image.Data[y*image.Width*4+x*4+3])/255.0f);
-        break;
-    };
-
-    glfwFreeImage(&image);
-
-};
-
+bool Texture2D::initialized_IL = false;
 
 void Texture2D::bind(GLenum texUnit)
 {
@@ -114,47 +28,60 @@ Texture2D::Texture2D(const char* path,
                      GLenum wrapT,
                      GLenum mag_filter,
                      GLenum min_filter)
-  : pixels(),
+  : pixels(0),
     min_filter(min_filter),
     mag_filter(mag_filter)
 {
+    if (!initialized_IL) {
+        initialized_IL = true;
+        ilInit();
+    }
+
     cout << "Loading file \"" << path << "\"";
     cout.flush();
+
+    ILuint image;
+
+    ilGenImages(1, &image);
+    ilBindImage(image);
+
+    bool success = ilLoadImage(path);
+
+    if (!success) {
+        cerr << " Failed";
+    }
     
-    std::string path_string;
-    path_string = std::string(path);
-    std::string::size_type start = path_string.rfind(".");
-    
-    if (path_string.substr(start) == ".exr")
-      read_exr(path, pixels, size);
-    else if (path_string.substr(start) == ".tga")
-      read_tga(path, pixels, size);
+    size.x = ilGetInteger(IL_IMAGE_WIDTH);
+    size.y = ilGetInteger(IL_IMAGE_HEIGHT);
+    ILenum il_format = ilGetInteger(IL_IMAGE_FORMAT);
+
+    if (il_format == IL_LUMINANCE) {
+        pixels = new float[size.x * size.y];
+        ilCopyPixels(0,0,0,
+                     size.x,size.y,1,
+                     IL_LUMINANCE, IL_FLOAT,
+                     pixels);
+        format = GL_LUMINANCE;
+    } else {
+        pixels = new float[size.x * size.y * 4];
+        ilCopyPixels(0,0,0,
+                     size.x,size.y,1,
+                     IL_RGBA, IL_FLOAT,
+                     pixels);
+        format = GL_RGBA;
+    }
+
+    ilDeleteImages(1, &image);
     
     setup(wrapS, wrapT, mag_filter, min_filter);
 
     cout << " - Done: " << size.x << "x" << size.y << " pixels." << endl;
 };
 
-Texture2D::Texture2D(V2u size,
-                     Color4f color,
-                     GLenum wrapS,
-                     GLenum wrapT,
-                     GLenum mag_filter,
-                     GLenum min_filter)
-    : pixels(),
-      min_filter(min_filter),
-      mag_filter(mag_filter),
-      size(size)
+Texture2D::~Texture2D()
 {
-    pixels.resizeErase(size.x, size.y);
-  
-    for (unsigned int x = 0; x < size.x; x++) {
-        for (unsigned int y = 0; y < size.y; y++) {
-            pixels[y][x] = color;
-        }
-    }
-  
-    setup(wrapS, wrapT, mag_filter, min_filter);
+    glDeleteTextures(1, &texture_name);
+    delete pixels;
 };
 
 void Texture2D::setup( GLenum wrapS,
@@ -193,19 +120,19 @@ void Texture2D::send_to_GPU()
                           GL_RGBA8,  // internalFormat
                           size.x,          // width
                           size.y,          // height
-                          GL_RGBA,         // format
+                          format,         // format
                           GL_FLOAT,        // type
-                          &pixels[0][0]);  // *pixels
+                          pixels);  // *pixels
     } else {
         glTexImage2D(GL_TEXTURE_2D,   // target
                      0,               // level
-                     GL_RGBA8,  // internalFormat
+                     GL_LUMINANCE16,  // internalFormat
                      size.x,          // width
                      size.y,          // height
                      0,               // border
-                     GL_RGBA,         // format
+                     format,         // format
                      GL_FLOAT,        // type
-                     &pixels[0][0]);  // *pixels
+                     pixels);  // *pixels
     }
     
     glBindTexture(GL_TEXTURE_2D, active_texture);
@@ -216,10 +143,6 @@ void Texture2D::build_mipmaps()
     GLint active_texture;
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &active_texture);
 
-//     glMatrixMode(GL_COLOR);
-//     glLoadIdentity();
-//     glMatrixMode(GL_MODELVIEW);
-
     if (active_texture == (GLint)texture_name) {
         glGenerateMipmapEXT(GL_TEXTURE_2D);
     } else {
@@ -229,13 +152,28 @@ void Texture2D::build_mipmaps()
     }
 };
 
-Texture2D::~Texture2D()
+
+Color4f Texture2D::get_color(V2u pos)
 {
-    glDeleteTextures(1, &texture_name);
+    Box<V2u> box(V2u(0,0), size - V2u(1,1));
+    pos = clip(pos, box);
+    return ((Color4f*)pixels)[pos.y * size.x + pos.x];
+};
+
+float Texture2D::get_value(V2u pos)
+{
+    Box<V2u> box(V2u(0,0), size - V2u(1,1));
+    pos = clip(pos, box);
+    return pixels[pos.y * size.x + pos.x];
 };
 
 Color4f Texture2D::get_color(V2f pos)
 {
+    if (format == GL_LUMINANCE) {
+        float v = get_value(pos);
+        return Color4f(v,v,v,v);
+    }
+
     V2f p = V2f(pos.x * size.x, pos.y * size.y);
     V2f i = p - V2f(floor(p.x), floor(p.y));
 
@@ -252,28 +190,57 @@ Color4f Texture2D::get_color(V2f pos)
     return r;
 }
 
+float Texture2D::get_value(V2f pos)
+{
+    if (format == GL_RGBA) {
+        return get_color(pos).r;
+    }
+
+    V2f p = V2f(pos.x * size.x, pos.y * size.y);
+    V2f i = p - V2f(floor(p.x), floor(p.y));
+
+    float ll = get_value(V2u(floor(p.x), floor(p.y)));
+    float lr = get_value(V2u(1+floor(p.x), floor(p.y)));
+    float ul = get_value(V2u(floor(p.x), 1+floor(p.y)));
+    float ur = get_value(V2u(1+floor(p.x), 1+floor(p.y)));
+    
+    float r = (ll * ((1 - i.x) * (1 - i.y)) +
+               lr * (  (i.x) *   (1 - i.y)) +
+               ul * ((1 - i.x) * (i.y)) +
+               ur * (  (i.x) *   (i.y)));
+    
+    return r;
+}
+
 void Texture2D::normalize()
 {
 
-    Color4f max_color(0,0,0,0);
+    if (format == GL_RGBA) {
+        Color4f max_color(0,0,0,0);
+        Color4f* rgba_pixels = (Color4f*)pixels;
     
-    for (unsigned int x = 0; x < size.x; x++) {
-        for (unsigned int y = 0; y < size.y; y++) {
-
-            max_color.r = max(max_color.r, pixels[y][x].r);
-            max_color.g = max(max_color.g, pixels[y][x].g);
-            max_color.b = max(max_color.b, pixels[y][x].b);
-            max_color.a = max(max_color.a, pixels[y][x].a);
+        for (unsigned int i = 0; i < size.x * size.y; i++) {
+            max_color.r = max(max_color.r, rgba_pixels[i].r);
+            max_color.g = max(max_color.g, rgba_pixels[i].g);
+            max_color.b = max(max_color.b, rgba_pixels[i].b);
+            max_color.a = max(max_color.a, rgba_pixels[i].a);
         }
-    }
     
-    for (unsigned int x = 0; x < size.x; x++) {
-        for (unsigned int y = 0; y < size.y; y++) {
-
-            pixels[y][x].r = pixels[y][x].r / max_color.r;
-            pixels[y][x].g = pixels[y][x].g / max_color.g;
-            pixels[y][x].b = pixels[y][x].b / max_color.b;
-            pixels[y][x].a = pixels[y][x].a / max_color.a;
+        for (unsigned int i = 0; i < size.x * size.y; i++) {                
+            rgba_pixels[i].r = rgba_pixels[i].r / max_color.r;
+            rgba_pixels[i].g = rgba_pixels[i].g / max_color.g;
+            rgba_pixels[i].b = rgba_pixels[i].b / max_color.b;
+            rgba_pixels[i].a = rgba_pixels[i].a / max_color.a;
+        }
+    } else {
+        float max_value = 0;
+    
+        for (unsigned int i = 0; i < size.x * size.y; i++) {
+            max_value = max(max_value, pixels[i]);
+        }
+    
+        for (unsigned int i = 0; i < size.x * size.y; i++) {                
+            pixels[i] = pixels[i] / max_value;
         }
     }
     
