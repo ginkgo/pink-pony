@@ -46,7 +46,7 @@ int main(int argc, char** argv)
                             config.grass_texture,
                             config.noise_texture);
 
-        Skydome skydome("textures/sky.tga");
+        Skydome skydome("textures/sky.png");
     
         PonyPoints points(config.player_count);
 

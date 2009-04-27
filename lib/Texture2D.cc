@@ -35,6 +35,8 @@ Texture2D::Texture2D(const char* path,
     if (!initialized_IL) {
         initialized_IL = true;
         ilInit();
+        ilEnable(IL_ORIGIN_SET);
+        ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
     }
 
     cout << "Loading file \"" << path << "\"";

@@ -68,10 +68,10 @@ namespace local
 PonyPoints::PonyPoints(int i) : points(i)
 {
 
-    digits.push_back(new Texture2D("textures/one.tga"));
-    digits.push_back(new Texture2D("textures/two.tga"));
-    digits.push_back(new Texture2D("textures/three.tga"));
-    digits.push_back(new Texture2D("textures/four.tga"));
+    digits.push_back(new Texture2D("textures/one.png"));
+    digits.push_back(new Texture2D("textures/two.png"));
+    digits.push_back(new Texture2D("textures/three.png"));
+    digits.push_back(new Texture2D("textures/four.png"));
 }
 
 PonyPoints::~PonyPoints()

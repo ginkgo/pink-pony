@@ -1,6 +1,6 @@
 // Interesting properties
 
-player_count = 2; // Number of players (1-4)
+player_count = 4; // Number of players (1-4)
 
 swap_interval = 0; // 1 for vsync on, 0 for vsync off
 
@@ -27,16 +27,16 @@ polygon_mode = fill; // fill: fill polygons, line: wireframe
 
 // Level properties
 
-heightmap_file = "levels/heightmap-ring.exr";
+heightmap_file = "levels/heart.png";
 level_size = (1500 90 1500);
-water_level = 30;
+water_level = 45;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;
 heightmap_velvet_coeff = 1.5;
-sand_texture = "textures/sand.tga";
-grass_texture = "textures/grass.tga";
-noise_texture = "textures/noise.tga";
+sand_texture = "textures/sand.png";
+grass_texture = "textures/grass.png";
+noise_texture = "textures/noise.png";
 pony_start[0] = (0 15);
 pony_start_angle[0] = 0;
 pony_start[1] = (0 -15);
@@ -92,17 +92,17 @@ pony_left[3] = 74;
 pony_right[3] = 76;
 
 // General appearance properties
-digit_one = "textures/one.tga";
-digit_two = "textures/two.tga";
-digit_three = "textures/three.tga";
-digit_four = "textures/four.tga";
+digit_one = "textures/one.png";
+digit_two = "textures/two.png";
+digit_three = "textures/three.png";
+digit_four = "textures/four.png";
 heart_mesh = "models/Heart.pmesh";
 
 // Pony appearance
 
 pony_shader = "GLSL/pony";
 pony_velvet_coeff = 2;
-pony_texture = "textures/pony.tga";
+pony_texture = "textures/pony.png";
 pony_mesh = "models/Pony.pmesh";
 pony_color[0] = (1 0.75 0.792968 1);
 pony_color[1] = (0.25 0.875 0.8125 1);
