@@ -103,7 +103,6 @@ void main (void)
                 pow((water_level - world_coord.y) / water_level, 0.5));
         
     }
-    
 
 /*     gl_FragColor = basecolor() * (diffuse(light, my_normal, -my_eye, 0) */
 /*                                   + hemi * velvet(light, my_normal, -my_eye, 0) */

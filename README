@@ -6,7 +6,9 @@ You will need the following tools and libraries to build the game:
 
 * SCons
 * GLFW
-* OpenEXR
+* IlmBase
+* DevIL
+* google protobuf
 
 Just build the game with "scons" in the current directory. If you have
 a dualcore CPU, you can use "scons -j2" for parallel building.

@@ -5,9 +5,11 @@
 class Shader
 {
     std::string vertex_source;
+    std::string geometry_source;
     std::string fragment_source;
 
     GLuint vertex_shader;
+    GLuint geometry_shader;
     GLuint fragment_shader;
     GLuint program;
 
@@ -15,16 +17,26 @@ class Shader
 
     Shader(std::string file_name);
 
+    Shader(std::string vertex_shader_file,
+           std::string fragment_shader_file);
+
+    Shader(std::string vertex_shader_file,
+           std::string geometry_shader_file,
+           std::string fragment_shader_file,
+           GLenum geometry_input_type,
+           GLenum geometry_output_type,
+           GLint  geometry_max_vertex_out);
+
     ~Shader();
 
     void print_fragment_source();
+
+    void print_geometry_source();
 
     void print_vertex_source();
 
     void bind();
     void unbind();
-
-    void free();
 
     void print_info()
     {
@@ -107,5 +119,7 @@ class Shader
         GLint uniformLocation = glGetUniformLocation(program, uniform);
         glUniform4fv(uniformLocation, count, elements);
     };
+
+    operator GLuint() { return program;};
 
 };

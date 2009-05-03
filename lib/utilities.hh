@@ -22,6 +22,10 @@ inline void glColor ( const Imath::Color4f &c )
     glColor4f(c.r,c.g,c.b,c.a);
 }
 
+void type_convert( GLenum in_type, GLsizei in_size,
+                   GLenum& out_type, GLsizei& out_size,
+                   GLsizei& byte_size);
+
 std::istream& operator>>(std::istream& is, V2f& v);
 std::istream& operator>>(std::istream& is, V3f& v);
 std::istream& operator>>(std::istream& is, Color4f& v);
