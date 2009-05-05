@@ -210,7 +210,7 @@ Shader::Shader(string vertex_shader_file,
     glGetProgramiv(program, GL_LINK_STATUS, &status);
 
     if (!status || !glIsProgram(program)) {
-        cout << "Linking failed." << endl;
+        cerr << "Linking failed." << endl;
         program_log(program);
     };
 

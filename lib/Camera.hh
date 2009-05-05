@@ -43,6 +43,10 @@ class Camera
         return focus;
     }
 
+    // Returns the up and right axis of the camera in world space
+    // This is needed for billboards.
+    void get_billboard_axes(V3f& up, V3f& right);
+
     float get_near_plane()
     {
         return near_plane;

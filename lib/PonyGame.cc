@@ -1,4 +1,5 @@
 #include "PonyGame.hh"
+#include "ParticleSystem.hh"
 #include <ImathRandom.h>
 
 PonyGame::PonyGame(SplitScreen* screen,
@@ -137,6 +138,13 @@ bool PonyGame::start(PonyPoints& points)
     int ponies_alive = m_config->player_count;
 
     cout << m_config->player_count << " ponies." << endl;
+
+
+    ParticleSystem particle_system(2000000, m_config);
+    StaticParticleSource
+        particle_source (&particle_system,
+                         m_heightmap->get_pos(V2f(0,0)) + V3f(0,50,0),
+                         5000, Color4f(1,0,1,0));
     
     while (running) {
 
@@ -145,6 +153,9 @@ bool PonyGame::start(PonyPoints& points)
         then = now;
 
         // Step simulation
+
+        particle_source.add_time(timeDiff);
+        particle_system.step_simulation(timeDiff);
 
         for (int i = 0; i < m_config->player_count; i++) {
             ponies[i]->move(this, timeDiff,i);
@@ -215,8 +226,11 @@ bool PonyGame::start(PonyPoints& points)
             
             glLightfv(GL_LIGHT0, GL_POSITION, light_dir);
 
+            glPushMatrix();
+            glTranslate(m_screen->camera(i)->get_position());
             skydome->draw();
-            
+            glPopMatrix();
+
             for (int j = 0; j < m_config->player_count; j++) {
                 ponies[j]->draw(this,j);
             }
@@ -242,8 +256,11 @@ bool PonyGame::start(PonyPoints& points)
             }
 
             line_list.draw_trails(this);
-            
+
             m_heightmap->draw(m_config);
+
+            particle_system.draw(*(m_screen->camera(i)));
+            
         }
 
         // Draw point HUD
@@ -320,6 +337,10 @@ bool PonyGame::start(PonyPoints& points)
            !glfwGetWindowParam( GLFW_OPENED )) {
             running = false;
             run_game = false;
+        }
+
+        if(glfwGetKey( GLFW_KEY_SPACE)) {
+            particle_source.add_time(1.0);
         }
         
     }

@@ -98,6 +98,8 @@ void PonyPoints::draw_hud(int i)
 
 
     glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
     glEnable(GL_TEXTURE_2D);
     digits[rank]->bind(GL_TEXTURE0);
     
@@ -121,6 +123,8 @@ void PonyPoints::draw_hud(int i)
     glEnd();
 
     glPopMatrix();
+
+    glDisable(GL_BLEND);
 
     digits[rank]->unbind(GL_TEXTURE0);
     local::draw_floret_colors(0.33, points[i]);

@@ -20,3 +20,9 @@ void Camera::set_matrices()
               0, 1, 0);
 }
     
+void Camera::get_billboard_axes(V3f& up, V3f& right)
+{
+    V3f n = (focus - position).normalize();
+    right = -(V3f(0,1,0) % n).normalize();
+    up = right % n;
+}
