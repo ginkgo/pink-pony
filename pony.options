@@ -1,6 +1,6 @@
 // Interesting properties
 
-player_count = 1; // Number of players (1-4)
+player_count = 4; // Number of players (1-4)
 
 swap_interval = 0; // 1 for vsync on, 0 for vsync off
 

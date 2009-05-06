@@ -176,18 +176,19 @@ Color4f Texture2D::get_color(V2f pos)
         return Color4f(v,v,v,v);
     }
 
-    V2f p = V2f(pos.x * size.x, pos.y * size.y);
-    V2f i = p - V2f(floor(p.x), floor(p.y));
+    V2f uv(pos.x * size.x, pos.y * size.y);
+    V2f ab(frac(uv.x - 0.5), frac(uv.y - 0.5));
+    V2u ij(floor(uv.x - 0.5), floor(uv.y - 0.5));
 
-    Color4f ll = get_color(V2u(floor(p.x), floor(p.y)));
-    Color4f lr = get_color(V2u(1+floor(p.x), floor(p.y)));
-    Color4f ul = get_color(V2u(floor(p.x), 1+floor(p.y)));
-    Color4f ur = get_color(V2u(1+floor(p.x), 1+floor(p.y)));
+    Color4f ll = get_color(ij+V2u(0,0));
+    Color4f lr = get_color(ij+V2u(1,0));
+    Color4f ul = get_color(ij+V2u(0,1));
+    Color4f ur = get_color(ij+V2u(1,1));
     
-    Color4f r = (ll * ((1 - i.x) * (1 - i.y)) +
-                 lr * (  (i.x) *   (1 - i.y)) +
-                 ul * ((1 - i.x) * (i.y)) +
-                 ur * (  (i.x) *   (i.y)));
+    Color4f r = (ll * ((1 - ab.x) * (1 - ab.y)) +
+               lr * (  (ab.x) *   (1 - ab.y)) +
+               ul * ((1 - ab.x) * (ab.y)) +
+               ur * (  (ab.x) *   (ab.y)));
     
     return r;
 }
@@ -198,18 +199,19 @@ float Texture2D::get_value(V2f pos)
         return get_color(pos).r;
     }
 
-    V2f p = V2f(pos.x * size.x, pos.y * size.y);
-    V2f i = p - V2f(floor(p.x), floor(p.y));
+    V2f uv(pos.x * size.x, pos.y * size.y);
+    V2f ab(frac(uv.x - 0.5), frac(uv.y - 0.5));
+    V2u ij(floor(uv.x - 0.5), floor(uv.y - 0.5));
 
-    float ll = get_value(V2u(floor(p.x), floor(p.y)));
-    float lr = get_value(V2u(1+floor(p.x), floor(p.y)));
-    float ul = get_value(V2u(floor(p.x), 1+floor(p.y)));
-    float ur = get_value(V2u(1+floor(p.x), 1+floor(p.y)));
+    float ll = get_value(ij+V2u(0,0));
+    float lr = get_value(ij+V2u(1,0));
+    float ul = get_value(ij+V2u(0,1));
+    float ur = get_value(ij+V2u(1,1));
     
-    float r = (ll * ((1 - i.x) * (1 - i.y)) +
-               lr * (  (i.x) *   (1 - i.y)) +
-               ul * ((1 - i.x) * (i.y)) +
-               ur * (  (i.x) *   (i.y)));
+    float r = (ll * ((1 - ab.x) * (1 - ab.y)) +
+               lr * (  (ab.x) *   (1 - ab.y)) +
+               ul * ((1 - ab.x) * (ab.y)) +
+               ur * (  (ab.x) *   (ab.y)));
     
     return r;
 }

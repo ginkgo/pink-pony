@@ -22,7 +22,7 @@ vec3 calc_normal(vec2 uv, vec3 pos, vec3 level_size) {
 
 void main (void)
 {
-    vec3 g = vec3(0.0,-9.81 * 2.0,0.0);
+    vec3 g = vec3(0.0,-9.81 * 4.0,0.0);
 
     in_vel = vel + time_diff * g;
     

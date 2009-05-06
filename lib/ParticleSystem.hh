@@ -25,6 +25,8 @@ class ParticleSystem
 {
     friend class ParticleSource;
 
+    double last_stat_print;
+
     std::set<ParticleSource*> sources;
 
     bool calculating;

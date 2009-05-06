@@ -143,7 +143,7 @@ bool PonyGame::start(PonyPoints& points)
     ParticleSystem particle_system(2000000, m_config);
     StaticParticleSource
         particle_source (&particle_system,
-                         m_heightmap->get_pos(V2f(0,0)) + V3f(0,50,0),
+                         m_heightmap->get_pos(V2f(0,0)) + V3f(0,10,0),
                          5000, Color4f(1,0,1,0));
     
     while (running) {

@@ -7,7 +7,7 @@ using std::set;
 
 ParticleSystem::ParticleSystem(GLuint max_particles,
                                Config* config)
-    : sources(), calculating(false),
+    : last_stat_print(glfwGetTime()),sources(), calculating(false),
       step_shader("GLSL/step_particles",
                   "GLSL/step_particles",
                   "GLSL/step_particles",
@@ -49,6 +49,7 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::step_simulation(float time_diff)
 {
+
     step_shader.bind();
     step_shader.set_uniform("time_diff", time_diff);
 
@@ -84,6 +85,15 @@ void ParticleSystem::step_simulation(float time_diff)
     step_shader.unbind();
 
     calculating = true;
+
+
+    // Statistics output
+
+    if (glfwGetTime() - last_stat_print > 10.0) {
+        last_stat_print = glfwGetTime();
+
+        cout << feedback.get_primitive_count() << " particles." << endl;
+    }
 }
 
 void ParticleSystem::draw(Camera& camera)
@@ -149,17 +159,17 @@ bool StaticParticleSource::has_particle()
 void StaticParticleSource::get_particle(Particle& p) {
     time -= rate;
 
-    p.pos = position;
+    p.pos = position + Imath::solidSphereRand<V3f, Rand32>(rand) * 10;
     V3f c = hsv2rgb(V3f(rand.nextf(0.75,0.95),
                         rand.nextf(0.8,1.0),
                         rand.nextf(0.4,0.6)));
     p.color = Color4f(c.x,c.y,c.z,1);
-    p.life = 10.0f;
+    p.life = 15.0f;
     
     p.vel = V3f(0,0,0);
 
     p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
-             * fabs(Imath::gaussRand(rand) + 2.0)
+             * (fabs(Imath::gaussRand(rand)) + 2)
              * 25);
 
 

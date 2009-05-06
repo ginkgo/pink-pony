@@ -14,6 +14,11 @@ template <class T> T box_unmap (Box<T> box, T pos)
     return (pos - box.min) / box.size();
 };
 
+template <class T> T frac (T x)
+{
+    return x - floor(x);
+}
+
 void getErrors();
 
 
