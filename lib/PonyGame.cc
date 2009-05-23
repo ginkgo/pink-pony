@@ -2,11 +2,14 @@
 #include "ParticleSystem.hh"
 #include <ImathRandom.h>
 
+#include <IL/ilut.h>
+
 PonyGame::PonyGame(SplitScreen* screen,
                    Heightmap* heightmap,
                    Config* config,
                    Skydome* skydome)
-    : m_screen(screen),
+    : particle_system(2000000, config),
+      m_screen(screen),
       m_heightmap(heightmap),
       m_config(config),
       skydome(skydome),
@@ -48,7 +51,8 @@ PonyGame::PonyGame(SplitScreen* screen,
                                   m_config->pony_down[i],
                                   m_config->pony_left[i],
                                   m_config->pony_right[i],
-                                  m_config));         
+                                  m_config,
+                                  &particle_system));         
         
         m_screen->camera(i)->init(1.0,
                                   m_config->camera_fov,
@@ -90,20 +94,20 @@ PonyGame::PonyGame(SplitScreen* screen,
                 bool found_maximum = false;
                 float delta = 1;
                 while (!found_maximum) {
-                    float height = heightmap->get_pos(pos, true).y;
-                    if (height < heightmap->get_pos(pos+V2f(delta,0), true).y) {
+                    float height = heightmap->get_pos(pos, false).y;
+                    if (height < heightmap->get_pos(pos+V2f(delta,0), false).y) {
                         pos += V2f(delta,0);
                         continue;
                     }
-                    if (height < heightmap->get_pos(pos+V2f(-delta,0), true).y) {
+                    if (height < heightmap->get_pos(pos+V2f(-delta,0), false).y) {
                         pos += V2f(-delta,0);
                         continue;
                     }
-                    if (height < heightmap->get_pos(pos+V2f(0,delta), true).y) {
+                    if (height < heightmap->get_pos(pos+V2f(0,delta), false).y) {
                         pos += V2f(0,delta);
                         continue;
                     }
-                    if (height < heightmap->get_pos(pos+V2f(0,-delta), true).y) {
+                    if (height < heightmap->get_pos(pos+V2f(0,-delta), false).y) {
                         pos += V2f(0,-delta);
                         continue;
                     }
@@ -133,28 +137,28 @@ bool PonyGame::start(PonyPoints& points)
     bool run_game = true;
 
     bool running = true;
+    double delay = 10.0;
+
     double then = glfwGetTime();
 
     int ponies_alive = m_config->player_count;
 
     cout << m_config->player_count << " ponies." << endl;
 
-
-    ParticleSystem particle_system(2000000, m_config);
-    StaticParticleSource
-        particle_source (&particle_system,
-                         m_heightmap->get_pos(V2f(0,0)) + V3f(0,10,0),
-                         5000, Color4f(1,0,1,0));
+    GLboolean space_pressed = glfwGetKey(GLFW_KEY_SPACE);
     
-    while (running) {
+    while (running || delay > 0.0) {
 
         double now = glfwGetTime();
         double timeDiff = now - then;
         then = now;
 
+        if (!running) {
+            delay -= timeDiff;
+        }
+
         // Step simulation
 
-        particle_source.add_time(timeDiff);
         particle_system.step_simulation(timeDiff);
 
         for (int i = 0; i < m_config->player_count; i++) {
@@ -337,12 +341,17 @@ bool PonyGame::start(PonyPoints& points)
            !glfwGetWindowParam( GLFW_OPENED )) {
             running = false;
             run_game = false;
+            delay = 0.0;
         }
 
-        if(glfwGetKey( GLFW_KEY_SPACE)) {
-            particle_source.add_time(1.0);
+        if (glfwGetKey(GLFW_KEY_SPACE) && !space_pressed) {
+            glViewport(0,0,
+                       m_screen->get_size().x, 
+                       m_screen->get_size().y);
+            ilutGLScreenie(); // Take screenshot;
         }
-        
+
+        space_pressed = glfwGetKey(GLFW_KEY_SPACE);
     }
 
     return run_game;

@@ -12,22 +12,22 @@ void main()
 
 	gl_Position = (gl_ModelViewProjectionMatrix 
                    * (gl_PositionIn[0] 
-                      + -0.5 * vec4(right,0) +  0.5 * vec4(up,0)));
+                      + -0.25 * vec4(right,0) +  0.25 * vec4(up,0)));
 	uv = vec2(0,1);
     EmitVertex();
 	gl_Position = (gl_ModelViewProjectionMatrix 
                    * (gl_PositionIn[0] 
-                      + -0.5 * vec4(right,0) + -0.5 * vec4(up,0)));
+                      + -0.25 * vec4(right,0) + -0.25 * vec4(up,0)));
 	uv = vec2(0,0);
     EmitVertex();
 	gl_Position = (gl_ModelViewProjectionMatrix 
                    * (gl_PositionIn[0] 
-                      +  0.5 * vec4(right,0) +  0.5 * vec4(up,0)));
+                      +  0.25 * vec4(right,0) +  0.25 * vec4(up,0)));
 	uv = vec2(1,1);
     EmitVertex();
 	gl_Position = (gl_ModelViewProjectionMatrix 
                    * (gl_PositionIn[0] 
-                      +  0.5 * vec4(right,0) + -0.5 * vec4(up,0)));
+                      +  0.25 * vec4(right,0) + -0.25 * vec4(up,0)));
 	uv = vec2(1,0);
     EmitVertex();
 	EndPrimitive();

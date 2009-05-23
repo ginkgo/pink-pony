@@ -13,10 +13,13 @@ class PonyGame;
 #include "PonyPoints.hh"
 #include "Mesh.hh"
 #include "MeshDrawer.hh"
+#include "ParticleSystem.hh"
 
 
 class PonyGame
 {
+    ParticleSystem particle_system;
+
     SplitScreen* m_screen;
     Heightmap* m_heightmap;
     Config* m_config;

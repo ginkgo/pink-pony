@@ -22,7 +22,7 @@ vec3 calc_normal(vec2 uv, vec3 pos, vec3 level_size) {
 
 void main (void)
 {
-    vec3 g = vec3(0.0,-9.81 * 4.0,0.0);
+    vec3 g = vec3(0.0,-9.81 * 10,0.0);
 
     in_vel = vel + time_diff * g;
     
@@ -39,13 +39,13 @@ void main (void)
     if (water_level > pos.y && in_pos.y < water_level ) {
         in_pos.y = water_level;
         
-        in_vel = reflect(in_vel, vec3(0,1,0)) * vec3(0.5,0.25,0.5);
+        in_vel = reflect(in_vel, vec3(0,1,0)) * 0.25;//vec3(0.5,0.25,0.5);
     } else if (in_pos.y < pos.y) {
         in_pos.y = pos.y;
         
         vec3 normal = calc_normal(uv, pos, level_size);
         
-        in_vel = reflect(in_vel, normal) * vec3(0.8,0.75,0.8);
+        in_vel = reflect(in_vel, normal) * 0.75;//vec3(0.999,0.75,0.999);
     }
     
     gl_Position = gl_Vertex;

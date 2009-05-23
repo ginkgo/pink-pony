@@ -9,6 +9,7 @@ class Pony;
 #include "Texture2D.hh"
 #include "Mesh.hh"
 #include "MeshDrawer.hh"
+#include "ParticleSystem.hh"
 
 class Pony
 {    
@@ -26,6 +27,9 @@ class Pony
     Texture2D texture;
 
     bool out;
+    bool out_delay;
+
+    PonyParticleSource particle_source;
     
     public:
 
@@ -33,7 +37,7 @@ class Pony
     
     Pony(V2f pos, float angle, float speed,
          int up, int down, int left, int right,
-         Config* config);         
+         Config* config, ParticleSystem* particle_system);         
 
     V2f get_pos()
     {
@@ -45,6 +49,8 @@ class Pony
     void draw(PonyGame* game, int i);
 
     void set_out(bool out) {
+        particle_source.explode(50000);
+        particle_source.set_rate(0);
         this->out = out;
     }
     

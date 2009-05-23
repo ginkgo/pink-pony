@@ -4,7 +4,7 @@ Pony::Pony(V2f pos, float angle,
            float speed,
            int up, int down,
            int left, int right,
-           Config* config)
+           Config* config, ParticleSystem* particle_system)
     : pos(pos),
       angle(angle),
       speed(speed),
@@ -18,7 +18,7 @@ Pony::Pony(V2f pos, float angle,
       mesh(),
       mesh_drawer(&mesh),
       texture(config->pony_texture.c_str()),
-	  out(false)
+	  out(false), out_delay(false), particle_source(particle_system)
 {
     bool loaded = load_mesh(mesh, config->pony_mesh);
 
@@ -64,14 +64,24 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
 
         V2f dir(sin(angle), cos(angle));
     
-	pos += dir * speed * timeDiff;
-    
-	// Calculate new camera position
+        pos += dir * speed * timeDiff;
+        
+        // Calculate new camera position
     
         V2f offset = pos - camera_pos;
         camera_pos = pos - offset * (game->config()->camera_distance
                                      / offset.length());
-    }    
+    
+        V3f pos3 = game->terrain()->get_pos(pos,false);
+        V3f dir3 = game->terrain()->get_pos(pos+dir)-pos3;
+
+        particle_source.set_pos(pos3 + V3f(0,2,0) + dir3 * 4);
+        particle_source.set_dir(dir3);
+        particle_source.set_rate(pow(speed/5.0,3));
+        particle_source.set_color(game->config()->pony_color[i]);
+
+        particle_source.add_time(timeDiff);
+    }
 }
 
 void Pony::set_camera(PonyGame* game, Camera* camera, int i)
@@ -88,7 +98,7 @@ void Pony::set_camera(PonyGame* game, Camera* camera, int i)
 
 void Pony::draw(PonyGame* game, int i)
 {
-    if (!out) {
+    if (!out_delay) {
         
         V3f position = game->terrain()->get_pos(pos,false);
 
@@ -129,6 +139,8 @@ void Pony::draw(PonyGame* game, int i)
 
         shader.unbind();
         texture.unbind(GL_TEXTURE0);
+
+        if (out) out_delay = true;
     }
     
 }

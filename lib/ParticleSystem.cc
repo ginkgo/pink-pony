@@ -49,7 +49,6 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::step_simulation(float time_diff)
 {
-
     step_shader.bind();
     step_shader.set_uniform("time_diff", time_diff);
 
@@ -164,14 +163,87 @@ void StaticParticleSource::get_particle(Particle& p) {
                         rand.nextf(0.8,1.0),
                         rand.nextf(0.4,0.6)));
     p.color = Color4f(c.x,c.y,c.z,1);
-    p.life = 15.0f;
+    p.life = 10.0f + rand.nextf(0.0,20.0);
     
     p.vel = V3f(0,0,0);
 
     p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
              * (fabs(Imath::gaussRand(rand)) + 2)
-             * 25);
+             * 50);
 
 
 } 
 
+PonyParticleSource::PonyParticleSource(ParticleSystem* system)
+    : ParticleSource(system),
+      time(0.0), rate(1.0/rate),
+      pos(0,0,0), dir(0,1,0), color(1,0,0,1),
+      explosion_particles(0),
+      rand((unsigned long)(100000*glfwGetTime())){}
+
+bool PonyParticleSource::has_particle()
+{
+    return (explosion_particles > 0 || 
+            (rate > 0.0 && time > rate));
+}
+
+void PonyParticleSource::get_particle(Particle& p) {
+    if (explosion_particles > 0) {
+        --explosion_particles;
+
+        p.pos = pos + Imath::solidSphereRand<V3f, Rand32>(rand) * 2;
+        V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
+        
+        V3f c = hsv2rgb(V3f(frac(rand.nextf(hsv.x-0.05,hsv.x+0.05)),
+                            1.0,
+                            rand.nextf(0.4,0.6)));
+        p.color = Color4f(c.x,c.y,c.z,1);
+        p.life = 10.0f + rand.nextf(0.0,20.0);
+        
+        p.vel = V3f(0,0,0);
+        
+        p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
+                 * (fabs(Imath::gaussRand(rand)) + 2)
+                 * 25);
+    } else if (rate > 0.0) {
+        time -= rate;
+        
+        V3f offset = Imath::solidSphereRand<V3f, Rand32>(rand) * 3;
+
+        p.pos = pos + offset;   
+        V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
+        
+        V3f c = hsv2rgb(V3f(frac(rand.nextf(hsv.x-0.05,hsv.x+0.05)),
+                            1.0,
+                            rand.nextf(0.4,0.6)));
+        p.color = Color4f(c.x,c.y,c.z,1);
+        p.life = 10.0f + rand.nextf(0.0,20.0);
+    
+        p.vel = -dir * 50 + offset * 5;
+
+    }
+}
+
+void PonyParticleSource::set_pos(V3f pos) {
+    this->pos = pos;
+}
+
+void PonyParticleSource::set_dir(V3f dir) {
+    this->dir = dir;
+}
+
+void PonyParticleSource::set_color(Color4f color) {
+    this->color = color;
+}
+
+void PonyParticleSource::set_rate(double rate) {
+    if (rate > 0.0) {
+        this->rate = 1.0/rate;
+    } else {
+        this->rate = -1.0;
+    }
+}
+
+void PonyParticleSource::explode(int particles) {
+    explosion_particles += particles;
+}

@@ -100,4 +100,35 @@ class StaticParticleSource : ParticleSource
     virtual void get_particle(Particle& p);
 };
 
+class PonyParticleSource : ParticleSource
+{
+    double time;
+    double rate;
+
+    V3f pos, dir;
+    Color4f color;
+
+    int explosion_particles;
+
+    Imath::Rand32 rand;
+
+    public:
+
+    PonyParticleSource(ParticleSystem* system);
+
+    void set_pos(V3f pos);
+    void set_dir(V3f dir);
+    void set_rate(double rate);
+    void set_color(Color4f color);
+
+    void explode(int particles);
+
+    virtual void add_time(double time) {this->time += time;}
+
+    protected:
+
+    virtual bool has_particle();
+    virtual void get_particle(Particle& p);
+};
+
 #endif

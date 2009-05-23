@@ -1,5 +1,7 @@
 #pragma once
 
+#define ILUT_USE_OPENGL
+
 #include "GL/GLee.h"
 #include <GL/gl.h>
 #include <GL/glfw.h>

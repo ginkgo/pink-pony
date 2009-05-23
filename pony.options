@@ -1,8 +1,8 @@
 // Interesting properties
 
-player_count = 4; // Number of players (1-4)
+player_count = 2; // Number of players (1-4)
 
-swap_interval = 0; // 1 for vsync on, 0 for vsync off
+swap_interval = 1; // 1 for vsync on, 0 for vsync off
 
 fsaa_samples = 4; // Fullscreen anti-aliasing samples, 0 for off
 
@@ -27,9 +27,9 @@ polygon_mode = fill; // fill: fill polygons, line: wireframe
 
 // Level properties
 
-heightmap_file = "levels/heart.png";
+heightmap_file = "levels/ring.png";
 level_size = (1500 90 1500);
-water_level = 45;
+water_level = 30;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;
