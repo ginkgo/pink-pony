@@ -43,6 +43,25 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
         if (glfwGetKey(right) == GLFW_PRESS)
             steer -= 1.0;
 
+        if (glfwGetJoystickParam(i,GLFW_PRESENT) == GL_TRUE) {
+            
+            float axes[10];
+
+            int n = glfwGetJoystickPos(i,axes,10);
+
+            if (n > 2) {
+                
+                accel += axes[1];
+                steer -= axes[0];
+            }
+
+            if (accel > 1.0) accel = 1.0;
+            if (accel < -1.0) accel = -1.0;
+            if (steer > 1.0) steer = 1.0;
+            if (steer < -1.0) steer = -1.0;
+
+        }
+
         float slope =
             game->terrain()->get_pos(pos + V2f(sin(angle),
                                                cos(angle)),false).y

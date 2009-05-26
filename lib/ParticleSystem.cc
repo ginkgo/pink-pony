@@ -190,11 +190,10 @@ bool PonyParticleSource::has_particle()
 void PonyParticleSource::get_particle(Particle& p) {
     if (explosion_particles > 0) {
         --explosion_particles;
-
         p.pos = pos + Imath::solidSphereRand<V3f, Rand32>(rand) * 2;
         V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
         
-        V3f c = hsv2rgb(V3f(frac(rand.nextf(hsv.x-0.05,hsv.x+0.05)),
+        V3f c = hsv2rgb(V3f(frac(rand.nextf(hsv.x-0.2,hsv.x+0.2)),
                             1.0,
                             rand.nextf(0.4,0.6)));
         p.color = Color4f(c.x,c.y,c.z,1);
@@ -204,22 +203,22 @@ void PonyParticleSource::get_particle(Particle& p) {
         
         p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
                  * (fabs(Imath::gaussRand(rand)) + 2)
-                 * 25);
+                 * 50);
     } else if (rate > 0.0) {
         time -= rate;
         
         V3f offset = Imath::solidSphereRand<V3f, Rand32>(rand) * 3;
 
-        p.pos = pos + offset;   
+        p.pos   = pos + offset;   
         V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
         
-        V3f c = hsv2rgb(V3f(frac(rand.nextf(hsv.x-0.05,hsv.x+0.05)),
+        V3f c   = hsv2rgb(V3f(frac(rand.nextf(hsv.x-0.05,hsv.x+0.05)),
                             1.0,
                             rand.nextf(0.4,0.6)));
         p.color = Color4f(c.x,c.y,c.z,1);
-        p.life = 10.0f + rand.nextf(0.0,20.0);
+        p.life  = 10.0f + rand.nextf(0.0,20.0);
     
-        p.vel = -dir * 50 + offset * 5;
+        p.vel   = -dir * 50 + offset * 5;
 
     }
 }
