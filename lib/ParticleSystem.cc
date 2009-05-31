@@ -123,9 +123,10 @@ void ParticleSystem::draw(Camera& camera)
 
     feedback.draw(draw_shader);
 
+    draw_shader.unbind();
+
     particle_tex.unbind(GL_TEXTURE0);
 
-    draw_shader.unbind();
 
     glDisable(GL_BLEND);
 
@@ -190,12 +191,12 @@ bool PonyParticleSource::has_particle()
 void PonyParticleSource::get_particle(Particle& p) {
     if (explosion_particles > 0) {
         --explosion_particles;
-        p.pos = pos + Imath::solidSphereRand<V3f, Rand32>(rand) * 2;
+        p.pos = pos - V3f(0,4,0) + Imath::solidSphereRand<V3f, Rand32>(rand) * 2;
         V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
         
-        V3f c = hsv2rgb(V3f(frac(rand.nextf(hsv.x-0.2,hsv.x+0.2)),
-                            1.0,
-                            rand.nextf(0.4,0.6)));
+        V3f c   = hsv2rgb(V3f(frac(hsv.x + gaussRand(rand) / 8.0),
+                              1.0,
+                              rand.nextf(0.4,0.6)));
         p.color = Color4f(c.x,c.y,c.z,1);
         p.life = 10.0f + rand.nextf(0.0,20.0);
         
@@ -203,7 +204,8 @@ void PonyParticleSource::get_particle(Particle& p) {
         
         p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
                  * (fabs(Imath::gaussRand(rand)) + 2)
-                 * 50);
+                 * 10);
+
     } else if (rate > 0.0) {
         time -= rate;
         
@@ -212,13 +214,13 @@ void PonyParticleSource::get_particle(Particle& p) {
         p.pos   = pos + offset;   
         V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
         
-        V3f c   = hsv2rgb(V3f(frac(rand.nextf(hsv.x-0.05,hsv.x+0.05)),
-                            1.0,
-                            rand.nextf(0.4,0.6)));
+        V3f c   = hsv2rgb(V3f(frac(hsv.x + gaussRand(rand) / 8.0),
+                              1.0,
+                              rand.nextf(0.4,0.6)));
         p.color = Color4f(c.x,c.y,c.z,1);
         p.life  = 10.0f + rand.nextf(0.0,20.0);
     
-        p.vel   = -dir * 50 + offset * 5;
+        p.vel   = -dir * 10 + offset * 1;
 
     }
 }

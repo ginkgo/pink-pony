@@ -300,4 +300,7 @@ void TransformFeedback::draw(GLuint program)
         }
     }
     getErrors();
+
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

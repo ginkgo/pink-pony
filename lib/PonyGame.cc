@@ -259,11 +259,11 @@ bool PonyGame::start(PonyPoints& points)
                 heart_shader.unbind();
             }
 
-            line_list.draw_trails(this);
-
             m_heightmap->draw(m_config);
 
             particle_system.draw(*(m_screen->camera(i)));
+
+            line_list.draw_trails(this);
             
         }
 

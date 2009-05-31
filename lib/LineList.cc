@@ -90,12 +90,18 @@ void LineList::draw_trails(PonyGame* game)
 {
     glDisable(GL_LIGHTING);
     glDisable(GL_CULL_FACE);
+    glDepthMask(GL_TRUE);
+    
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
     for (int i = 0; i < 4; i++) {
 		if (trails[i].size() < 1)
 			continue;
 
-        glColor(game->config()->pony_color[i]);
+        Color4f c = game->config()->pony_color[i];
+
+        glColor4f(c.r, c.g, c.b, 0.75);
         
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, 0, &(trails[i][0]));
@@ -105,6 +111,9 @@ void LineList::draw_trails(PonyGame* game)
         glDisableClientState(GL_VERTEX_ARRAY); 
     }
 
+    glDisable(GL_BLEND);
+
     glEnable(GL_LIGHTING);
     glEnable(GL_CULL_FACE);
+    glDepthMask(GL_TRUE);
 }

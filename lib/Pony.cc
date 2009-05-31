@@ -49,10 +49,22 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
 
             int n = glfwGetJoystickPos(i,axes,10);
 
-            if (n > 2) {
+            if (n >= 2) {
                 
-                accel += axes[1];
-                steer -= axes[0];
+                if (fabs(axes[0]) < 0.2) axes[0] = 0.0;
+                //accel += axes[1];
+                steer -= axes[0]*2;
+            }
+
+            unsigned char buttons[20];
+
+            int button_count = glfwGetJoystickButtons(i, buttons, 20);
+
+            if (button_count >= 2) {
+                if (buttons[0] == GLFW_PRESS)
+                    accel += 1.0;
+                if (buttons[1] == GLFW_PRESS)
+                    accel -= 1.0;
             }
 
             if (accel > 1.0) accel = 1.0;
@@ -67,8 +79,6 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
                                                cos(angle)),false).y
             - game->terrain()->get_pos(pos,false).y;
         accel -= game->config()->pony_slope_acceleration * slope;
-
-        // TODO: Modify dir and speed
 
         float min = game->config()->pony_min_speed;
         float max = game->config()->pony_max_speed;

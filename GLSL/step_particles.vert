@@ -12,9 +12,9 @@ varying vec3 in_vel;
 varying float in_life;
 
 vec3 calc_normal(vec2 uv, vec3 pos, vec3 level_size) {
-    vec3 dx = texture2D(heightmap, uv + vec2(0.01,0.0)).rgb * level_size - pos;
+    vec3 dx = texture2DLod(heightmap, uv + vec2(0.01,0.0),0.0).rgb * level_size - pos;
     dx.xz = (uv + vec2(0.01,0.0)) * level_size.xz - pos.xz;
-    vec3 dy = texture2D(heightmap, uv + vec2(0.0,0.01)).rgb * level_size - pos;    
+    vec3 dy = texture2DLod(heightmap, uv + vec2(0.0,0.01),0.0).rgb * level_size - pos;    
     dy.xz = (uv + vec2(0.0,-0.01)) * level_size.xz - pos.xz;
 
     return normalize(cross(dx,dy));
@@ -22,7 +22,7 @@ vec3 calc_normal(vec2 uv, vec3 pos, vec3 level_size) {
 
 void main (void)
 {
-    vec3 g = vec3(0.0,-9.81 * 10,0.0);
+    vec3 g = vec3(0.0,-9.81 * 2,0.0);
 
     in_vel = vel + time_diff * g;
     
