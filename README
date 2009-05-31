@@ -15,8 +15,23 @@ a dualcore CPU, you can use "scons -j2" for parallel building.
 
 == PLAYING ==
 
-To start the game, call "./Pony". You can control the first pony with
-the arrow-keys. ESC stops the game.
+To start the game, call "./Pony". ESC stops the game.
+
+Controls:
+
+Pony 1: Arrow Keys
+Pony 2: WASD
+Pony 3: 8456 on the Numpad
+Pony 4: IJKL
+
+Additionally you can use gamepads. Joystick 1 controls Pony 1, etc.
+You steer the ponies with the left/right axis of the main stick and
+accelerate/decelerate with Button 1 and 2. 
+
+Many keyboards have problems with too many simultaneous keystrokes. If
+you have problems with more than two players, you can attach an
+additional USB keyboard or use Gamepads for some players.
+
 
 == CONFIGURATION ==
 
