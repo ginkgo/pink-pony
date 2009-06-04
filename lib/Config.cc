@@ -44,15 +44,19 @@ Config::Config()
       permute_start_positions(false),
       randomize_start_positions(false),
       min_start_distance(200),
+      use_particles(true),
       digit_one("textures/one.png"),
       digit_two("textures/two.png"),
       digit_three("textures/three.png"),
       digit_four("textures/four.png"),
       heart_mesh("models/Heart.pmesh"),
+      heart_explosion_particles(10000),
       pony_shader("GLSL/pony"),
       pony_velvet_coeff(2.0),
       pony_texture("textures/pony.png"),
-      pony_mesh("models/Pony.pmesh")
+      pony_mesh("models/Pony.pmesh"),
+      pony_particle_rate(100.0),
+      pony_explosion_particles(50000)
 {
     pony_up[0] = GLFW_KEY_UP;
     pony_down[0] = GLFW_KEY_DOWN;
@@ -243,6 +247,10 @@ void Config::set_value(string name, string value)
     else if (name == "digit_three") digit_three = sval;
     else if (name == "digit_four") digit_four = sval;
     else if (name == "heart_mesh") heart_mesh = sval;
+    else if (name == "pony_explosion_particles") pony_explosion_particles = ival;
+    else if (name == "heart_explosion_particles") heart_explosion_particles = ival;
+    else if (name == "pony_particle_rate") pony_particle_rate = fval;
+    else if (name == "use_particles") use_particles = bval;
 }
 
 bool Config::read_file(string filename)

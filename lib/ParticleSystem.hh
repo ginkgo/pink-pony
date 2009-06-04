@@ -131,4 +131,36 @@ class PonyParticleSource : ParticleSource
     virtual void get_particle(Particle& p);
 };
 
+class ParticleExplosionSource : ParticleSource
+{
+    struct Explosion {
+        V3f pos;
+        Color4f color;
+        int count;
+        float var;
+
+        Explosion() {};
+        Explosion(V3f p, Color4f c, int n, float v)
+            : pos(p), color(c), count(n) ,var(v){};
+    };
+
+    vector<Explosion> explosions;
+
+    Imath::Rand32 rand;
+
+    public:
+
+    ParticleExplosionSource(ParticleSystem* system);
+
+    void explode(V3f pos,
+                 Color4f color,
+                 int count,
+                 float var);
+
+    protected:
+
+    virtual bool has_particle();
+    virtual void get_particle(Particle& p);
+};
+
 #endif

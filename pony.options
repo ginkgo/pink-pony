@@ -13,10 +13,15 @@ pony_slope_acceleration = 0; // Speed change on steep terrain (4 is a good value
 permute_start_positions = false; // Swap the start positions each round.
  
 randomize_start_positions = true; // Generate random start positions.
-			          // This uses min_start_distance to
-				  // define the minimum distance of the 
-				  // ponies to each other and the level
-				  // border.
+                                  // This uses min_start_distance to
+                                  // define the minimum distance of the 
+                                  // ponies to each other and the level
+                                  // border.
+
+use_particles = true;
+heart_explosion_particles = 10000;
+pony_explosion_particles = 50000;
+pony_particle_rate = 100.0;
 
 // Window properties
 

@@ -74,11 +74,13 @@ class Config
     float min_start_distance;
 
     // General appearance:
+    bool use_particles;
     string digit_one;
     string digit_two;
     string digit_three;
     string digit_four;
     string heart_mesh;
+    int heart_explosion_particles;
 
     // Pony appearance:
     Color4f pony_color[4];
@@ -86,6 +88,9 @@ class Config
     float pony_velvet_coeff;
     string pony_texture;
     string pony_mesh;
+    float pony_particle_rate;
+    int pony_explosion_particles;
+    
 
     Config();
 

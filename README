@@ -17,6 +17,8 @@ a dualcore CPU, you can use "scons -j2" for parallel building.
 
 To start the game, call "./Pony". ESC stops the game.
 
+You can take screenshots with the SPACE bar.
+
 Controls:
 
 Pony 1: Arrow Keys

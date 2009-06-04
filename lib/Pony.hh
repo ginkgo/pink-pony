@@ -49,7 +49,6 @@ class Pony
     void draw(PonyGame* game, int i);
 
     void set_out(bool out) {
-        particle_source.explode(50000);
         particle_source.set_rate(0);
         this->out = out;
     }

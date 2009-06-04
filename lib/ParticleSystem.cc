@@ -98,7 +98,7 @@ void ParticleSystem::step_simulation(float time_diff)
 void ParticleSystem::draw(Camera& camera)
 {
     if (calculating) {
-        GLuint i = feedback.finish();
+        feedback.finish();
         feedback.swap();
         calculating = false;
     }
@@ -247,4 +247,55 @@ void PonyParticleSource::set_rate(double rate) {
 
 void PonyParticleSource::explode(int particles) {
     explosion_particles += particles;
+}
+
+ParticleExplosionSource::ParticleExplosionSource(ParticleSystem* system)
+    : ParticleSource(system),
+      rand((unsigned long)(100000*glfwGetTime())){};
+
+bool ParticleExplosionSource::has_particle()
+{
+    return explosions.size() > 0;
+}
+
+void ParticleExplosionSource::get_particle(Particle& p)
+{
+    int s = explosions.size() - 1;
+
+    if (s >= 0) {
+        V3f&     pos   = explosions[s].pos;
+        Color4f& color = explosions[s].color;
+        int&     count = explosions[s].count;
+        float&   var   = explosions[s].var;
+
+
+        p.pos = pos - V3f(0,4,0) + Imath::solidSphereRand<V3f, Rand32>(rand) * 2;
+        V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
+        
+        V3f c   = hsv2rgb(V3f(frac(hsv.x + gaussRand(rand) * var),
+                              1.0,
+                              rand.nextf(0.4,0.6)));
+        p.color = Color4f(c.x,c.y,c.z,1);
+        p.life = 10.0f + rand.nextf(0.0,20.0);
+        
+        p.vel = V3f(0,0,0);
+        
+        p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
+                 * (fabs(Imath::gaussRand(rand)) + 2)
+                 * 10);
+
+        
+        --count;
+        if (count < 1) {
+            explosions.resize(s);
+        }
+    }
+}
+
+void ParticleExplosionSource::explode(V3f pos,
+                                      Color4f color,
+                                      int count,
+                                      float var)
+{
+    explosions.push_back(Explosion(pos, color, count, var));
 }

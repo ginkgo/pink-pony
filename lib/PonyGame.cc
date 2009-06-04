@@ -133,7 +133,6 @@ PonyGame::~PonyGame()
 
 bool PonyGame::start(PonyPoints& points)
 {
-    // TODO: Write game's main loop.
     bool run_game = true;
 
     bool running = true;
@@ -146,6 +145,8 @@ bool PonyGame::start(PonyPoints& points)
     cout << m_config->player_count << " ponies." << endl;
 
     GLboolean space_pressed = glfwGetKey(GLFW_KEY_SPACE);
+
+    ParticleExplosionSource explosion_source(&particle_system);
     
     while (running || delay > 0.0) {
 
@@ -192,6 +193,11 @@ bool PonyGame::start(PonyPoints& points)
                         cout << "it ran in the water." << endl;
                     }
                     ponies[i]->set_out(true);
+                    explosion_source.explode
+                        (m_heightmap->get_pos(ponies[i]->get_pos()) + V3f(0,4,0),
+                         m_config->pony_color[i],
+                         m_config->pony_explosion_particles,
+                         1/8.0);
 
                     for (int j = 0; j < m_config->player_count; j++) {
                         if (!ponies[j]->is_out()) {
@@ -204,6 +210,11 @@ bool PonyGame::start(PonyPoints& points)
                 while(j != heart_positions.end()) {
                     if ((*j - ponies[i]->get_pos()).length() < 3.0) {
                         points.add_point(i, Color4f(1,0,0,1));
+                        explosion_source.explode
+                            (m_heightmap->get_pos(*j) + V3f(0,2,0),
+                             Color4f(1,0,0,1),
+                             m_config->heart_explosion_particles,
+                             1/32.0);
                         j = heart_positions.erase(j);
                     } else {
                         ++j;

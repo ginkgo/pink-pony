@@ -167,12 +167,9 @@ void Heightmap::draw(Config* config)
 
     terrain_shader.unbind();
 
-//     heightmap.unbind(GL_TEXTURE0);
     sand_texture.unbind(GL_TEXTURE1);
     grass_texture.unbind(GL_TEXTURE2);
     noise_texture.unbind(GL_TEXTURE0);
-
-//     glDisable(GL_CLIP_PLANE0);
     
     // Draw ocean
     

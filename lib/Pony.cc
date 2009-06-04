@@ -106,7 +106,8 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
 
         particle_source.set_pos(pos3 + V3f(0,2,0) + dir3 * 4);
         particle_source.set_dir(dir3);
-        particle_source.set_rate(pow(speed/5.0,3));
+        particle_source.set_rate(pow(speed/5.0,3)
+                                 * game->config()->pony_particle_rate / 100.0);
         particle_source.set_color(game->config()->pony_color[i]);
 
         particle_source.add_time(timeDiff);
