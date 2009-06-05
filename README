@@ -56,7 +56,8 @@ A copy of the GNU General Public License is avaliable in doc/GPL3 or
 Copyright (C) 2009 by tornado <j.sjolund@gmail.com>:
 models/Pony.mesh.xml
 models/pony.blend
-textures/pony.tga
+textures/pony.png
+textures/pony-blue.png (modified by qubodup)
 
 * Following files are available under terms of the Creative Commons
   Attribution 3.0 license (see docs/CCBY3 or
@@ -71,3 +72,5 @@ textures/sky.tga (modified by Iwan Gabovitch)
 By Iwan Gabovitch <qubodup@gmail.com>:
 textures/grass.tga
 textures/sand.tga
+sounds/heart.wav
+sounds/boom.wav
