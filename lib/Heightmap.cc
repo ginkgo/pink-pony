@@ -182,6 +182,8 @@ void Heightmap::draw(Config* config)
     glBlendEquation(GL_FUNC_ADD);
 
     glDisable(GL_LIGHTING);
+
+    glDepthMask(GL_FALSE);
     
     glBegin(GL_QUADS);
 
@@ -193,6 +195,8 @@ void Heightmap::draw(Config* config)
     glVertex3f(0.125 * area.min.x, water_level, 0.125 * area.min.y); // back left
     
     glEnd();
+
+    glDepthMask(GL_TRUE);
 
     water_shader.unbind();
     

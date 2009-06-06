@@ -102,7 +102,7 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
                                      / offset.length());
     
         V3f pos3 = game->terrain()->get_pos(pos,false);
-        V3f dir3 = game->terrain()->get_pos(pos+dir)-pos3;
+        V3f dir3 = game->terrain()->get_pos(pos+dir,false)-pos3;
 
         particle_source.set_pos(pos3 + V3f(0,2,0) + dir3 * 4);
         particle_source.set_dir(dir3);
