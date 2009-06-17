@@ -11,6 +11,9 @@ env.ParseConfig("pkg-config libglfw --cflags --libs")
 env.Program('mesh_compile', 
             ['mesh_compile.cc', 'lib/GL/GLee.c'] 
             + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))
+env.Program('skeleton_compile', 
+            ['skeleton_compile.cc', 'lib/GL/GLee.c'] 
+            + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))
 
 env.Program('Pony', 
             ['PinkPony.cc', 'lib/GL/GLee.c'] 

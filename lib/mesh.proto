@@ -14,3 +14,51 @@ message Mesh {
     
     required int32 primitive_type = 3;
 }
+
+message Quaternion {
+    required float r = 1;
+    required float i = 2;
+    required float j = 3;
+    required float k = 4;
+}
+
+message Vector {
+    required float x = 1;
+    required float y = 2;
+    required float z = 3;
+}
+
+
+message Transform {
+    required Vector translation = 1;
+    required Quaternion rotation = 2;
+}
+
+message Animation {
+    message Keyframe {
+        required float time = 1;
+        repeated Transform bone_transforms = 2;
+    }
+
+    required string name = 1;
+    required float duration = 2;
+    repeated Keyframe keyframes = 3;
+}
+
+message Skeleton {
+    message Relationship {
+        required int32 parent = 1;
+        required int32 child = 2;
+    }
+
+    message Bone {
+        required string name = 1;
+        required Transform transform = 2;
+    }
+
+    repeated Bone bones = 1;
+    repeated Relationship hierarchy = 2;
+    repeated Animation animations = 3;
+    
+}
+

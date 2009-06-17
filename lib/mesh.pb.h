@@ -31,6 +31,14 @@ void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
 
 class Mesh;
 class Mesh_Layer;
+class Quaternion;
+class Vector;
+class Transform;
+class Animation;
+class Animation_Keyframe;
+class Skeleton;
+class Skeleton_Relationship;
+class Skeleton_Bone;
 
 // ===================================================================
 
@@ -221,6 +229,683 @@ class Mesh : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static Mesh* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class Quaternion : public ::google::protobuf::Message {
+ public:
+  Quaternion();
+  virtual ~Quaternion();
+  
+  Quaternion(const Quaternion& from);
+  
+  inline Quaternion& operator=(const Quaternion& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Quaternion& default_instance();
+  void Swap(Quaternion* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Quaternion* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SetCachedSize(int size) const { _cached_size_ = size; }
+  public:
+  
+  const ::google::protobuf::Descriptor* GetDescriptor() const;
+  const ::google::protobuf::Reflection* GetReflection() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required float r = 1;
+  inline bool has_r() const;
+  inline void clear_r();
+  inline float r() const;
+  inline void set_r(float value);
+  
+  // required float i = 2;
+  inline bool has_i() const;
+  inline void clear_i();
+  inline float i() const;
+  inline void set_i(float value);
+  
+  // required float j = 3;
+  inline bool has_j() const;
+  inline void clear_j();
+  inline float j() const;
+  inline void set_j(float value);
+  
+  // required float k = 4;
+  inline bool has_k() const;
+  inline void clear_k();
+  inline float k() const;
+  inline void set_k(float value);
+  
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  float r_;
+  float i_;
+  float j_;
+  float k_;
+  friend void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
+      const ::google::protobuf::FileDescriptor* file);
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static Quaternion* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Vector : public ::google::protobuf::Message {
+ public:
+  Vector();
+  virtual ~Vector();
+  
+  Vector(const Vector& from);
+  
+  inline Vector& operator=(const Vector& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Vector& default_instance();
+  void Swap(Vector* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Vector* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SetCachedSize(int size) const { _cached_size_ = size; }
+  public:
+  
+  const ::google::protobuf::Descriptor* GetDescriptor() const;
+  const ::google::protobuf::Reflection* GetReflection() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required float x = 1;
+  inline bool has_x() const;
+  inline void clear_x();
+  inline float x() const;
+  inline void set_x(float value);
+  
+  // required float y = 2;
+  inline bool has_y() const;
+  inline void clear_y();
+  inline float y() const;
+  inline void set_y(float value);
+  
+  // required float z = 3;
+  inline bool has_z() const;
+  inline void clear_z();
+  inline float z() const;
+  inline void set_z(float value);
+  
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  float x_;
+  float y_;
+  float z_;
+  friend void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
+      const ::google::protobuf::FileDescriptor* file);
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static Vector* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Transform : public ::google::protobuf::Message {
+ public:
+  Transform();
+  virtual ~Transform();
+  
+  Transform(const Transform& from);
+  
+  inline Transform& operator=(const Transform& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Transform& default_instance();
+  void Swap(Transform* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Transform* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SetCachedSize(int size) const { _cached_size_ = size; }
+  public:
+  
+  const ::google::protobuf::Descriptor* GetDescriptor() const;
+  const ::google::protobuf::Reflection* GetReflection() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required .mesh.Vector translation = 1;
+  inline bool has_translation() const;
+  inline void clear_translation();
+  inline const ::mesh::Vector& translation() const;
+  inline ::mesh::Vector* mutable_translation();
+  
+  // required .mesh.Quaternion rotation = 2;
+  inline bool has_rotation() const;
+  inline void clear_rotation();
+  inline const ::mesh::Quaternion& rotation() const;
+  inline ::mesh::Quaternion* mutable_rotation();
+  
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  ::mesh::Vector* translation_;
+  ::mesh::Quaternion* rotation_;
+  friend void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
+      const ::google::protobuf::FileDescriptor* file);
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static Transform* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Animation_Keyframe : public ::google::protobuf::Message {
+ public:
+  Animation_Keyframe();
+  virtual ~Animation_Keyframe();
+  
+  Animation_Keyframe(const Animation_Keyframe& from);
+  
+  inline Animation_Keyframe& operator=(const Animation_Keyframe& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Animation_Keyframe& default_instance();
+  void Swap(Animation_Keyframe* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Animation_Keyframe* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SetCachedSize(int size) const { _cached_size_ = size; }
+  public:
+  
+  const ::google::protobuf::Descriptor* GetDescriptor() const;
+  const ::google::protobuf::Reflection* GetReflection() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required float time = 1;
+  inline bool has_time() const;
+  inline void clear_time();
+  inline float time() const;
+  inline void set_time(float value);
+  
+  // repeated .mesh.Transform bone_transforms = 2;
+  inline int bone_transforms_size() const;
+  inline void clear_bone_transforms();
+  inline const ::google::protobuf::RepeatedPtrField< ::mesh::Transform >& bone_transforms() const;
+  inline ::google::protobuf::RepeatedPtrField< ::mesh::Transform >* mutable_bone_transforms();
+  inline const ::mesh::Transform& bone_transforms(int index) const;
+  inline ::mesh::Transform* mutable_bone_transforms(int index);
+  inline ::mesh::Transform* add_bone_transforms();
+  
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  float time_;
+  ::google::protobuf::RepeatedPtrField< ::mesh::Transform > bone_transforms_;
+  friend void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
+      const ::google::protobuf::FileDescriptor* file);
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static Animation_Keyframe* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Animation : public ::google::protobuf::Message {
+ public:
+  Animation();
+  virtual ~Animation();
+  
+  Animation(const Animation& from);
+  
+  inline Animation& operator=(const Animation& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Animation& default_instance();
+  void Swap(Animation* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Animation* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SetCachedSize(int size) const { _cached_size_ = size; }
+  public:
+  
+  const ::google::protobuf::Descriptor* GetDescriptor() const;
+  const ::google::protobuf::Reflection* GetReflection() const;
+  
+  // nested types ----------------------------------------------------
+  
+  typedef Animation_Keyframe Keyframe;
+  
+  // accessors -------------------------------------------------------
+  
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline ::std::string* mutable_name();
+  
+  // required float duration = 2;
+  inline bool has_duration() const;
+  inline void clear_duration();
+  inline float duration() const;
+  inline void set_duration(float value);
+  
+  // repeated .mesh.Animation.Keyframe keyframes = 3;
+  inline int keyframes_size() const;
+  inline void clear_keyframes();
+  inline const ::google::protobuf::RepeatedPtrField< ::mesh::Animation_Keyframe >& keyframes() const;
+  inline ::google::protobuf::RepeatedPtrField< ::mesh::Animation_Keyframe >* mutable_keyframes();
+  inline const ::mesh::Animation_Keyframe& keyframes(int index) const;
+  inline ::mesh::Animation_Keyframe* mutable_keyframes(int index);
+  inline ::mesh::Animation_Keyframe* add_keyframes();
+  
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  ::std::string* name_;
+  static const ::std::string _default_name_;
+  float duration_;
+  ::google::protobuf::RepeatedPtrField< ::mesh::Animation_Keyframe > keyframes_;
+  friend void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
+      const ::google::protobuf::FileDescriptor* file);
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static Animation* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Skeleton_Relationship : public ::google::protobuf::Message {
+ public:
+  Skeleton_Relationship();
+  virtual ~Skeleton_Relationship();
+  
+  Skeleton_Relationship(const Skeleton_Relationship& from);
+  
+  inline Skeleton_Relationship& operator=(const Skeleton_Relationship& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Skeleton_Relationship& default_instance();
+  void Swap(Skeleton_Relationship* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Skeleton_Relationship* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SetCachedSize(int size) const { _cached_size_ = size; }
+  public:
+  
+  const ::google::protobuf::Descriptor* GetDescriptor() const;
+  const ::google::protobuf::Reflection* GetReflection() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required int32 parent = 1;
+  inline bool has_parent() const;
+  inline void clear_parent();
+  inline ::google::protobuf::int32 parent() const;
+  inline void set_parent(::google::protobuf::int32 value);
+  
+  // required int32 child = 2;
+  inline bool has_child() const;
+  inline void clear_child();
+  inline ::google::protobuf::int32 child() const;
+  inline void set_child(::google::protobuf::int32 value);
+  
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  ::google::protobuf::int32 parent_;
+  ::google::protobuf::int32 child_;
+  friend void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
+      const ::google::protobuf::FileDescriptor* file);
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static Skeleton_Relationship* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Skeleton_Bone : public ::google::protobuf::Message {
+ public:
+  Skeleton_Bone();
+  virtual ~Skeleton_Bone();
+  
+  Skeleton_Bone(const Skeleton_Bone& from);
+  
+  inline Skeleton_Bone& operator=(const Skeleton_Bone& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Skeleton_Bone& default_instance();
+  void Swap(Skeleton_Bone* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Skeleton_Bone* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SetCachedSize(int size) const { _cached_size_ = size; }
+  public:
+  
+  const ::google::protobuf::Descriptor* GetDescriptor() const;
+  const ::google::protobuf::Reflection* GetReflection() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline ::std::string* mutable_name();
+  
+  // required .mesh.Transform transform = 2;
+  inline bool has_transform() const;
+  inline void clear_transform();
+  inline const ::mesh::Transform& transform() const;
+  inline ::mesh::Transform* mutable_transform();
+  
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  ::std::string* name_;
+  static const ::std::string _default_name_;
+  ::mesh::Transform* transform_;
+  friend void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
+      const ::google::protobuf::FileDescriptor* file);
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static Skeleton_Bone* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Skeleton : public ::google::protobuf::Message {
+ public:
+  Skeleton();
+  virtual ~Skeleton();
+  
+  Skeleton(const Skeleton& from);
+  
+  inline Skeleton& operator=(const Skeleton& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Skeleton& default_instance();
+  void Swap(Skeleton* other);
+  
+  // implements Message ----------------------------------------------
+  
+  Skeleton* New() const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SetCachedSize(int size) const { _cached_size_ = size; }
+  public:
+  
+  const ::google::protobuf::Descriptor* GetDescriptor() const;
+  const ::google::protobuf::Reflection* GetReflection() const;
+  
+  // nested types ----------------------------------------------------
+  
+  typedef Skeleton_Relationship Relationship;
+  typedef Skeleton_Bone Bone;
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated .mesh.Skeleton.Bone bones = 1;
+  inline int bones_size() const;
+  inline void clear_bones();
+  inline const ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Bone >& bones() const;
+  inline ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Bone >* mutable_bones();
+  inline const ::mesh::Skeleton_Bone& bones(int index) const;
+  inline ::mesh::Skeleton_Bone* mutable_bones(int index);
+  inline ::mesh::Skeleton_Bone* add_bones();
+  
+  // repeated .mesh.Skeleton.Relationship hierarchy = 2;
+  inline int hierarchy_size() const;
+  inline void clear_hierarchy();
+  inline const ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Relationship >& hierarchy() const;
+  inline ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Relationship >* mutable_hierarchy();
+  inline const ::mesh::Skeleton_Relationship& hierarchy(int index) const;
+  inline ::mesh::Skeleton_Relationship* mutable_hierarchy(int index);
+  inline ::mesh::Skeleton_Relationship* add_hierarchy();
+  
+  // repeated .mesh.Animation animations = 3;
+  inline int animations_size() const;
+  inline void clear_animations();
+  inline const ::google::protobuf::RepeatedPtrField< ::mesh::Animation >& animations() const;
+  inline ::google::protobuf::RepeatedPtrField< ::mesh::Animation >* mutable_animations();
+  inline const ::mesh::Animation& animations(int index) const;
+  inline ::mesh::Animation* mutable_animations(int index);
+  inline ::mesh::Animation* add_animations();
+  
+ private:
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  mutable int _cached_size_;
+  
+  ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Bone > bones_;
+  ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Relationship > hierarchy_;
+  ::google::protobuf::RepeatedPtrField< ::mesh::Animation > animations_;
+  friend void protobuf_BuildDesc_mesh_2eproto_AssignGlobalDescriptors(
+      const ::google::protobuf::FileDescriptor* file);
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  
+  // WHY DOES & HAVE LOWER PRECEDENCE THAN != !?
+  inline bool _has_bit(int index) const {
+    return (_has_bits_[index / 32] & (1u << (index % 32))) != 0;
+  }
+  inline void _set_bit(int index) {
+    _has_bits_[index / 32] |= (1u << (index % 32));
+  }
+  inline void _clear_bit(int index) {
+    _has_bits_[index / 32] &= ~(1u << (index % 32));
+  }
+  
+  void InitAsDefaultInstance();
+  static Skeleton* default_instance_;
+};
 // ===================================================================
 
 
@@ -391,6 +1076,460 @@ inline ::google::protobuf::int32 Mesh::primitive_type() const {
 inline void Mesh::set_primitive_type(::google::protobuf::int32 value) {
   _set_bit(2);
   primitive_type_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Quaternion
+
+// required float r = 1;
+inline bool Quaternion::has_r() const {
+  return _has_bit(0);
+}
+inline void Quaternion::clear_r() {
+  r_ = 0;
+  _clear_bit(0);
+}
+inline float Quaternion::r() const {
+  return r_;
+}
+inline void Quaternion::set_r(float value) {
+  _set_bit(0);
+  r_ = value;
+}
+
+// required float i = 2;
+inline bool Quaternion::has_i() const {
+  return _has_bit(1);
+}
+inline void Quaternion::clear_i() {
+  i_ = 0;
+  _clear_bit(1);
+}
+inline float Quaternion::i() const {
+  return i_;
+}
+inline void Quaternion::set_i(float value) {
+  _set_bit(1);
+  i_ = value;
+}
+
+// required float j = 3;
+inline bool Quaternion::has_j() const {
+  return _has_bit(2);
+}
+inline void Quaternion::clear_j() {
+  j_ = 0;
+  _clear_bit(2);
+}
+inline float Quaternion::j() const {
+  return j_;
+}
+inline void Quaternion::set_j(float value) {
+  _set_bit(2);
+  j_ = value;
+}
+
+// required float k = 4;
+inline bool Quaternion::has_k() const {
+  return _has_bit(3);
+}
+inline void Quaternion::clear_k() {
+  k_ = 0;
+  _clear_bit(3);
+}
+inline float Quaternion::k() const {
+  return k_;
+}
+inline void Quaternion::set_k(float value) {
+  _set_bit(3);
+  k_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Vector
+
+// required float x = 1;
+inline bool Vector::has_x() const {
+  return _has_bit(0);
+}
+inline void Vector::clear_x() {
+  x_ = 0;
+  _clear_bit(0);
+}
+inline float Vector::x() const {
+  return x_;
+}
+inline void Vector::set_x(float value) {
+  _set_bit(0);
+  x_ = value;
+}
+
+// required float y = 2;
+inline bool Vector::has_y() const {
+  return _has_bit(1);
+}
+inline void Vector::clear_y() {
+  y_ = 0;
+  _clear_bit(1);
+}
+inline float Vector::y() const {
+  return y_;
+}
+inline void Vector::set_y(float value) {
+  _set_bit(1);
+  y_ = value;
+}
+
+// required float z = 3;
+inline bool Vector::has_z() const {
+  return _has_bit(2);
+}
+inline void Vector::clear_z() {
+  z_ = 0;
+  _clear_bit(2);
+}
+inline float Vector::z() const {
+  return z_;
+}
+inline void Vector::set_z(float value) {
+  _set_bit(2);
+  z_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Transform
+
+// required .mesh.Vector translation = 1;
+inline bool Transform::has_translation() const {
+  return _has_bit(0);
+}
+inline void Transform::clear_translation() {
+  if (translation_ != NULL) translation_->::mesh::Vector::Clear();
+  _clear_bit(0);
+}
+inline const ::mesh::Vector& Transform::translation() const {
+  return translation_ != NULL ? *translation_ : *default_instance_->translation_;
+}
+inline ::mesh::Vector* Transform::mutable_translation() {
+  _set_bit(0);
+  if (translation_ == NULL) translation_ = new ::mesh::Vector;
+  return translation_;
+}
+
+// required .mesh.Quaternion rotation = 2;
+inline bool Transform::has_rotation() const {
+  return _has_bit(1);
+}
+inline void Transform::clear_rotation() {
+  if (rotation_ != NULL) rotation_->::mesh::Quaternion::Clear();
+  _clear_bit(1);
+}
+inline const ::mesh::Quaternion& Transform::rotation() const {
+  return rotation_ != NULL ? *rotation_ : *default_instance_->rotation_;
+}
+inline ::mesh::Quaternion* Transform::mutable_rotation() {
+  _set_bit(1);
+  if (rotation_ == NULL) rotation_ = new ::mesh::Quaternion;
+  return rotation_;
+}
+
+// -------------------------------------------------------------------
+
+// Animation_Keyframe
+
+// required float time = 1;
+inline bool Animation_Keyframe::has_time() const {
+  return _has_bit(0);
+}
+inline void Animation_Keyframe::clear_time() {
+  time_ = 0;
+  _clear_bit(0);
+}
+inline float Animation_Keyframe::time() const {
+  return time_;
+}
+inline void Animation_Keyframe::set_time(float value) {
+  _set_bit(0);
+  time_ = value;
+}
+
+// repeated .mesh.Transform bone_transforms = 2;
+inline int Animation_Keyframe::bone_transforms_size() const {
+  return bone_transforms_.size();
+}
+inline void Animation_Keyframe::clear_bone_transforms() {
+  bone_transforms_.Clear();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::mesh::Transform >&
+Animation_Keyframe::bone_transforms() const {
+  return bone_transforms_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::mesh::Transform >*
+Animation_Keyframe::mutable_bone_transforms() {
+  return &bone_transforms_;
+}
+inline const ::mesh::Transform& Animation_Keyframe::bone_transforms(int index) const {
+  return bone_transforms_.Get(index);
+}
+inline ::mesh::Transform* Animation_Keyframe::mutable_bone_transforms(int index) {
+  return bone_transforms_.Mutable(index);
+}
+inline ::mesh::Transform* Animation_Keyframe::add_bone_transforms() {
+  return bone_transforms_.Add();
+}
+
+// -------------------------------------------------------------------
+
+// Animation
+
+// required string name = 1;
+inline bool Animation::has_name() const {
+  return _has_bit(0);
+}
+inline void Animation::clear_name() {
+  if (name_ != &_default_name_) {
+    name_->clear();
+  }
+  _clear_bit(0);
+}
+inline const ::std::string& Animation::name() const {
+  return *name_;
+}
+inline void Animation::set_name(const ::std::string& value) {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void Animation::set_name(const char* value) {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline ::std::string* Animation::mutable_name() {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+
+// required float duration = 2;
+inline bool Animation::has_duration() const {
+  return _has_bit(1);
+}
+inline void Animation::clear_duration() {
+  duration_ = 0;
+  _clear_bit(1);
+}
+inline float Animation::duration() const {
+  return duration_;
+}
+inline void Animation::set_duration(float value) {
+  _set_bit(1);
+  duration_ = value;
+}
+
+// repeated .mesh.Animation.Keyframe keyframes = 3;
+inline int Animation::keyframes_size() const {
+  return keyframes_.size();
+}
+inline void Animation::clear_keyframes() {
+  keyframes_.Clear();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::mesh::Animation_Keyframe >&
+Animation::keyframes() const {
+  return keyframes_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::mesh::Animation_Keyframe >*
+Animation::mutable_keyframes() {
+  return &keyframes_;
+}
+inline const ::mesh::Animation_Keyframe& Animation::keyframes(int index) const {
+  return keyframes_.Get(index);
+}
+inline ::mesh::Animation_Keyframe* Animation::mutable_keyframes(int index) {
+  return keyframes_.Mutable(index);
+}
+inline ::mesh::Animation_Keyframe* Animation::add_keyframes() {
+  return keyframes_.Add();
+}
+
+// -------------------------------------------------------------------
+
+// Skeleton_Relationship
+
+// required int32 parent = 1;
+inline bool Skeleton_Relationship::has_parent() const {
+  return _has_bit(0);
+}
+inline void Skeleton_Relationship::clear_parent() {
+  parent_ = 0;
+  _clear_bit(0);
+}
+inline ::google::protobuf::int32 Skeleton_Relationship::parent() const {
+  return parent_;
+}
+inline void Skeleton_Relationship::set_parent(::google::protobuf::int32 value) {
+  _set_bit(0);
+  parent_ = value;
+}
+
+// required int32 child = 2;
+inline bool Skeleton_Relationship::has_child() const {
+  return _has_bit(1);
+}
+inline void Skeleton_Relationship::clear_child() {
+  child_ = 0;
+  _clear_bit(1);
+}
+inline ::google::protobuf::int32 Skeleton_Relationship::child() const {
+  return child_;
+}
+inline void Skeleton_Relationship::set_child(::google::protobuf::int32 value) {
+  _set_bit(1);
+  child_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Skeleton_Bone
+
+// required string name = 1;
+inline bool Skeleton_Bone::has_name() const {
+  return _has_bit(0);
+}
+inline void Skeleton_Bone::clear_name() {
+  if (name_ != &_default_name_) {
+    name_->clear();
+  }
+  _clear_bit(0);
+}
+inline const ::std::string& Skeleton_Bone::name() const {
+  return *name_;
+}
+inline void Skeleton_Bone::set_name(const ::std::string& value) {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void Skeleton_Bone::set_name(const char* value) {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline ::std::string* Skeleton_Bone::mutable_name() {
+  _set_bit(0);
+  if (name_ == &_default_name_) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+
+// required .mesh.Transform transform = 2;
+inline bool Skeleton_Bone::has_transform() const {
+  return _has_bit(1);
+}
+inline void Skeleton_Bone::clear_transform() {
+  if (transform_ != NULL) transform_->::mesh::Transform::Clear();
+  _clear_bit(1);
+}
+inline const ::mesh::Transform& Skeleton_Bone::transform() const {
+  return transform_ != NULL ? *transform_ : *default_instance_->transform_;
+}
+inline ::mesh::Transform* Skeleton_Bone::mutable_transform() {
+  _set_bit(1);
+  if (transform_ == NULL) transform_ = new ::mesh::Transform;
+  return transform_;
+}
+
+// -------------------------------------------------------------------
+
+// Skeleton
+
+// repeated .mesh.Skeleton.Bone bones = 1;
+inline int Skeleton::bones_size() const {
+  return bones_.size();
+}
+inline void Skeleton::clear_bones() {
+  bones_.Clear();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Bone >&
+Skeleton::bones() const {
+  return bones_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Bone >*
+Skeleton::mutable_bones() {
+  return &bones_;
+}
+inline const ::mesh::Skeleton_Bone& Skeleton::bones(int index) const {
+  return bones_.Get(index);
+}
+inline ::mesh::Skeleton_Bone* Skeleton::mutable_bones(int index) {
+  return bones_.Mutable(index);
+}
+inline ::mesh::Skeleton_Bone* Skeleton::add_bones() {
+  return bones_.Add();
+}
+
+// repeated .mesh.Skeleton.Relationship hierarchy = 2;
+inline int Skeleton::hierarchy_size() const {
+  return hierarchy_.size();
+}
+inline void Skeleton::clear_hierarchy() {
+  hierarchy_.Clear();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Relationship >&
+Skeleton::hierarchy() const {
+  return hierarchy_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::mesh::Skeleton_Relationship >*
+Skeleton::mutable_hierarchy() {
+  return &hierarchy_;
+}
+inline const ::mesh::Skeleton_Relationship& Skeleton::hierarchy(int index) const {
+  return hierarchy_.Get(index);
+}
+inline ::mesh::Skeleton_Relationship* Skeleton::mutable_hierarchy(int index) {
+  return hierarchy_.Mutable(index);
+}
+inline ::mesh::Skeleton_Relationship* Skeleton::add_hierarchy() {
+  return hierarchy_.Add();
+}
+
+// repeated .mesh.Animation animations = 3;
+inline int Skeleton::animations_size() const {
+  return animations_.size();
+}
+inline void Skeleton::clear_animations() {
+  animations_.Clear();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::mesh::Animation >&
+Skeleton::animations() const {
+  return animations_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::mesh::Animation >*
+Skeleton::mutable_animations() {
+  return &animations_;
+}
+inline const ::mesh::Animation& Skeleton::animations(int index) const {
+  return animations_.Get(index);
+}
+inline ::mesh::Animation* Skeleton::mutable_animations(int index) {
+  return animations_.Mutable(index);
+}
+inline ::mesh::Animation* Skeleton::add_animations() {
+  return animations_.Add();
 }
 
 

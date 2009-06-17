@@ -57,7 +57,7 @@ void main (void)
     vec4 diff = diffuse(light, my_normal, -my_eye, 0);
     vec4 col = hemi + diff;
     
-    gl_FragColor = basecolor() 
+    gl_FragColor = gl_Color * basecolor() 
                    * (col + 
                       0.5 * velvet2(light, my_normal, -my_eye, 3.0));
 }

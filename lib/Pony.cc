@@ -148,8 +148,6 @@ void Pony::draw(PonyGame* game, int i)
         glColor(game->config()->pony_color[i]);
         glPushMatrix();
 
-        glTranslate(position);
-        glRotatef(180 + angle * 180.0/M_PI, 0, 1, 0);
 
         V3f slope =
             game->terrain()->get_pos(pos + V2f(sin(angle),
@@ -161,7 +159,11 @@ void Pony::draw(PonyGame* game, int i)
         slope_angle *= 31./32.;
         slope_angle += asin(slope.y/ slope.length()) / M_PI * 180 * 1./32.;
 
-        glRotatef(slope_angle,1,0,0);
+
+        glTranslate(position);
+        glRotatef(270 + angle * 180.0/M_PI, 0, 1, 0);
+        glRotatef(slope_angle,0,0,1);
+
     
         mesh_drawer.draw();
 

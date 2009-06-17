@@ -1,6 +1,6 @@
 // Interesting properties
 
-player_count = 2; // Number of players (1-4)
+player_count = 4; // Number of players (1-4)
 
 swap_interval = 0; // 1 for vsync on, 0 for vsync off
 
@@ -108,7 +108,7 @@ heart_mesh = "models/Heart.pmesh";
 pony_shader = "GLSL/pony";
 pony_velvet_coeff = 2;
 pony_texture = "textures/pony.png";
-pony_mesh = "models/Pony.pmesh";
+pony_mesh = "models/Pony-animated.pmesh";
 pony_color[0] = (1 0.75 0.792968 1);
 pony_color[1] = (0.25 0.875 0.8125 1);
 pony_color[2] = (1 0.839844 0 1);
