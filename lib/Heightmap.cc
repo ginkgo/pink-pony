@@ -152,7 +152,7 @@ void Heightmap::draw(Config* config)
     terrain_shader.set_uniform("velvet_coeff",
                                config->heightmap_velvet_coeff);
 
-    mesh_drawer.draw();
+    mesh_drawer.draw(&terrain_shader);
 
 
     glBegin(GL_QUADS);

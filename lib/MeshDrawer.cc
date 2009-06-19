@@ -1,5 +1,7 @@
 #include "MeshDrawer.hh"
 
+#include "Shader.hh"
+
 using namespace google::protobuf;
 
 void MeshDrawer::make_vbo()
@@ -86,18 +88,18 @@ void MeshDrawer::free_vbo()
     layers.clear();
 }
 
-void MeshDrawer::draw()
+void MeshDrawer::draw(Shader* shader)
 {
     if (!using_vbo)
         make_vbo();
 
     if (using_vbo)
-        draw_vertex_buffer_object();
+        draw_vertex_buffer_object(shader);
     else
-        draw_vertex_array();
+        draw_vertex_array(shader);
 }
 
-void MeshDrawer::draw_vertex_buffer_object()
+void MeshDrawer::draw_vertex_buffer_object(Shader* shader)
 {
     glBindBuffer(GL_ARRAY_BUFFER, layer_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
@@ -117,6 +119,16 @@ void MeshDrawer::draw_vertex_buffer_object()
         } else if (layers[i].name == "texcoord") {
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             glTexCoordPointer(layers[i].columns, GL_FLOAT, 0, layers[i].offset);
+        } else {
+            GLint location = 
+                shader->get_attribute_location(layers[i].name);
+
+            if (location >= 0) {
+                glEnableVertexAttribArray(location);
+                glVertexAttribPointer(location, layers[i].columns,
+                                      GL_FLOAT, GL_FALSE, 0,
+                                      layers[i].offset);
+            }
         }
     }
 
@@ -139,6 +151,11 @@ void MeshDrawer::draw_vertex_buffer_object()
             glDisableClientState(GL_COLOR_ARRAY);
         } else if (layers[i].name == "texcoord") {
             glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        } else {
+            GLint location = 
+                shader->get_attribute_location(layers[i].name);
+            if (location >= 0)
+                glDisableVertexAttribArray(location);
         }
     }
 
@@ -146,7 +163,7 @@ void MeshDrawer::draw_vertex_buffer_object()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void MeshDrawer::draw_vertex_array()
+void MeshDrawer::draw_vertex_array(Shader* shader)
 {
     int count = -1;
 
@@ -171,6 +188,17 @@ void MeshDrawer::draw_vertex_array()
         } else if (i->name() == "texcoord") {
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             glTexCoordPointer(i->columns(), GL_FLOAT, 0, i->data().data());
+        } else {
+            GLint location = 
+                shader->get_attribute_location(i->name());
+
+            if (location >= 0) {
+                glEnableVertexAttribArray(location);
+                glVertexAttribPointer
+                    (location, i->columns(),
+                     GL_FLOAT, GL_FALSE, 0,
+                     i->data().data());
+            }
         }
     }
 
@@ -194,6 +222,12 @@ void MeshDrawer::draw_vertex_array()
             glDisableClientState(GL_COLOR_ARRAY);
         } else if (i->name() == "texcoord") {
             glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        } else {
+            GLint location = 
+                shader->get_attribute_location(i->name());
+
+            if (location >= 0)
+                glDisableVertexAttribArray(location);
         }
     }
 }

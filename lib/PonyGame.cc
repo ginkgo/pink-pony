@@ -263,7 +263,7 @@ bool PonyGame::start(PonyPoints& points)
                 glRotatef(glfwGetTime() * 30, 0, 0, 1);
                 glScalef(1,2,1);
 
-                heart_drawer.draw();                
+                heart_drawer.draw(&heart_shader);                
                 
                 glPopMatrix();
 

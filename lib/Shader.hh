@@ -15,6 +15,8 @@ class Shader
 
     public:
 
+    Shader() {};
+
     Shader(std::string file_name);
 
     Shader(std::string vertex_shader_file,
@@ -119,6 +121,14 @@ class Shader
         GLint uniformLocation = glGetUniformLocation(program, uniform);
         glUniform4fv(uniformLocation, count, elements);
     };
+
+    void set_uniform(const char* uniform, const vector<M44f>& matrices)
+    {
+        GLint uniformLocation = glGetUniformLocation(program, uniform);
+        glUniformMatrix4fv(uniformLocation, matrices.size(), 
+                           GL_FALSE, (GLfloat*)&matrices[0]);
+
+    }
 
     operator GLuint() { return program;};
 

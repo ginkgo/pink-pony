@@ -11,6 +11,8 @@ class Pony;
 #include "MeshDrawer.hh"
 #include "ParticleSystem.hh"
 
+#include "Animation.hh"
+
 class Pony
 {    
     V2f pos;
@@ -23,6 +25,7 @@ class Pony
 
     Shader shader;
     Mesh mesh;
+    My::Animation animation;
     MeshDrawer mesh_drawer;
     Texture2D texture;
 

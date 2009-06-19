@@ -4,6 +4,8 @@
 #include "cinquo.hh"
 #include "Mesh.hh"
 
+class Shader;
+
 class MeshDrawer
 {
     private:
@@ -23,6 +25,8 @@ class MeshDrawer
         int columns;
         void* offset;
 
+        GLint attribute_location;
+
         LayerBuffer();
         LayerBuffer(string n, int c, void* o) 
             : name(n), columns(c), offset(o) {};
@@ -30,8 +34,8 @@ class MeshDrawer
 
     vector<LayerBuffer> layers;
 
-    void draw_vertex_array();
-    void draw_vertex_buffer_object();
+    void draw_vertex_array(Shader* shader);
+    void draw_vertex_buffer_object(Shader* shader);
 
     public:
 
@@ -50,7 +54,7 @@ class MeshDrawer
     void make_vbo();
     void free_vbo();
 
-    void draw();    
+    void draw(Shader* shader);    
 };
 
 #endif

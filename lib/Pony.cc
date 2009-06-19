@@ -16,6 +16,7 @@ Pony::Pony(V2f pos, float angle,
       right(right),
       shader(config->pony_shader),
       mesh(),
+      animation("models/Pony-animated.pskeleton"),
       mesh_drawer(&mesh),
       texture(config->pony_texture.c_str()),
 	  out(false), out_delay(false), particle_source(particle_system)
@@ -25,6 +26,8 @@ Pony::Pony(V2f pos, float angle,
     if (!loaded) {
         cerr << "Failed to load mesh file " << config->pony_mesh << endl;
     }
+
+    animation.set_animation("Gallop");
 }
 
 void Pony::move(PonyGame* game, double timeDiff, int i)
@@ -111,6 +114,9 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
         particle_source.set_color(game->config()->pony_color[i]);
 
         particle_source.add_time(timeDiff);
+
+        animation.step_animation(timeDiff * speed / 10);
+        animation.recalculate();
     }
 }
 
@@ -144,6 +150,8 @@ void Pony::draw(PonyGame* game, int i)
         shader.set_uniform("velvet_coeff",
                            game->config()->pony_velvet_coeff);
         shader.set_uniform("texture", 0);
+
+        animation.set_bone_matrices(shader, "bone_transforms");
     
         glColor(game->config()->pony_color[i]);
         glPushMatrix();
@@ -165,7 +173,7 @@ void Pony::draw(PonyGame* game, int i)
         glRotatef(slope_angle,0,0,1);
 
     
-        mesh_drawer.draw();
+        mesh_drawer.draw(&shader);
 
         glPopMatrix();
 
