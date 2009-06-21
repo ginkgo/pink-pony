@@ -26,7 +26,7 @@ My::Animation::Animation(string skeleton_file)
 
         r.child = skeleton.hierarchy(i).child();
         r.parent = skeleton.hierarchy(i).parent();
-
+        
         hierarchy.push_back(r);
     }
 
@@ -87,8 +87,19 @@ My::Animation::Animation(string skeleton_file)
         v1.y = t1.translation().y();
         v1.z = t1.translation().z();
         
-        bone_positions.push_back(M44f(M33f(), v1));
+        bone_positions.push_back(M44f(q1.toMatrix33(), v1));
+        inverse_bone_positions.push_back(M44f(q1.toMatrix33(), v1).inverse());
         transformations.push_back(M44f());
+    }
+
+    
+    for (unsigned int i = 0; i < hierarchy.size(); ++i) {
+        Relationship& r = hierarchy[i];
+        M44f& parent = inverse_bone_positions[r.parent];
+        M44f& child = inverse_bone_positions[r.child];
+        
+
+        child =  parent * child;
     }
 }
 
@@ -135,21 +146,21 @@ void My::Animation::recalculate()
                               (current_time-ta)/(tb-ta),
                               transformations);
 
+    for (unsigned i = 0; i < transformations.size(); ++i) {
+        transformations[i] =  transformations[i] * bone_positions[i];
+    }
 
     for (unsigned int i = 0; i < hierarchy.size(); ++i) {
         Relationship& r = hierarchy[i];
         M44f& parent = transformations[r.parent];
         M44f& child = transformations[r.child];
         
-
-        child = parent * child * parent.inverse() ;//* bone_positions[r.parent].inverse() * 
-        //child * bone_positions[r.parent];
+        child =  child * parent;
     }
 
+
     for (unsigned i = 0; i < transformations.size(); ++i) {
-       transformations[i] =  (bone_positions[i].inverse() * 
-                              transformations[i] *
-                              bone_positions[i]);
+        transformations[i] =  inverse_bone_positions[i] * transformations[i];
     }
 
 }

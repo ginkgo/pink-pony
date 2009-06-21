@@ -115,7 +115,7 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
 
         particle_source.add_time(timeDiff);
 
-        animation.step_animation(timeDiff * speed / 10);
+        animation.step_animation(timeDiff * speed / 50);
         animation.recalculate();
     }
 }
@@ -169,8 +169,9 @@ void Pony::draw(PonyGame* game, int i)
 
 
         glTranslate(position);
-        glRotatef(270 + angle * 180.0/M_PI, 0, 1, 0);
-        glRotatef(slope_angle,0,0,1);
+        glRotatef(180 + angle * 180.0/M_PI, 0, 1, 0);
+        glRotatef(slope_angle,1,0,0);
+        glRotatef(270,1,0,0);
 
     
         mesh_drawer.draw(&shader);

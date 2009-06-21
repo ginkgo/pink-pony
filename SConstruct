@@ -21,9 +21,6 @@ env.Program('Pony',
 env.Program('MapView', 
             ['MapView.cc', 'lib/GL/GLee.c'] 
             + Glob('lib/*cc'))
-env.Program('MeshViewer', 
-            ['MeshViewer.cc', 'lib/GL/GLee.c'] 
-            + Glob('lib/*cc'))
 env.Program('ConfigFile', 
             ['ConfigFile.cc', 'lib/GL/GLee.c'] 
             + Glob('lib/*cc'))

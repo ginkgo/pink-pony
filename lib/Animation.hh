@@ -42,6 +42,7 @@ class Animation
     vector<M44f> transformations;
 
     vector<M44f> bone_positions;
+    vector<M44f> inverse_bone_positions;
 
     public:
 
