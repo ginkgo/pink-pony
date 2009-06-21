@@ -5,22 +5,58 @@
 
 using std::set;
 
-ParticleSystem::ParticleSystem(GLuint max_particles,
-                               Config* config)
-    : last_stat_print(glfwGetTime()),sources(), calculating(false),
-      step_shader("GLSL/step_particles",
-                  "GLSL/step_particles",
-                  "GLSL/step_particles",
-                  GL_POINTS, GL_POINTS, 1),
-      draw_shader("GLSL/draw_particles",
-                  "GLSL/draw_particles",
-                  "GLSL/draw_particles",
-                  GL_POINTS, GL_TRIANGLE_STRIP, 4),
-      feedback(step_shader, GL_POINTS,
-               "out_pos out_color out_vel out_life",
-               max_particles, true),
-      particle_tex("textures/heart-particle.png"),
-      heightmap(config->heightmap_file.c_str())
+
+ParticleSystem::~ParticleSystem()
+{
+    for (set<ParticleSource*>::iterator i = sources.begin();
+         i != sources.end(); ++i) {
+        (*i)->remove_link();
+    }
+}
+
+ParticleSystem* ParticleSystem::make_particle_system(GLuint max_particles,
+                                                     Config* config)
+{
+    if (!config->use_particles) {
+        return new FallbackParticleSystem(max_particles, config);
+    } else if (!GLEE_EXT_geometry_shader4 || !GLEE_NV_transform_feedback) {
+        cout << "No hardware accelerated particles. :("
+             << " Using fallback." << endl;
+        return new FallbackParticleSystem(max_particles, config);
+    } else {
+        cout << "Hardware accelerated particles supported1 :D" << endl;
+        return new TransformFeedbackParticleSystem(max_particles, config);
+    }
+}
+
+void FallbackParticleSystem::step_simulation(float time_diff)
+{
+    Particle p;
+
+    for (set<ParticleSource*>::iterator i = sources.begin();
+         i != sources.end(); ++i) {
+        while ((*i)->has_particle()) {
+            (*i)->get_particle(p); // Empty pending particles.
+        }
+    }
+}
+
+TransformFeedbackParticleSystem::TransformFeedbackParticleSystem
+    (GLuint max_particles, Config* config)
+        : last_stat_print(glfwGetTime()), calculating(false),
+          step_shader("GLSL/step_particles",
+                      "GLSL/step_particles",
+                      "GLSL/step_particles",
+                      GL_POINTS, GL_POINTS, 1),
+          draw_shader("GLSL/draw_particles",
+                      "GLSL/draw_particles",
+                      "GLSL/draw_particles",
+                      GL_POINTS, GL_TRIANGLE_STRIP, 4),
+          feedback(step_shader, GL_POINTS,
+                   "out_pos out_color out_vel out_life",
+                   max_particles, true),
+          particle_tex("textures/heart-particle.png"),
+          heightmap(config->heightmap_file.c_str())
 {
     heightmap.normalize();
     heightmap.send_to_GPU();
@@ -39,15 +75,7 @@ ParticleSystem::ParticleSystem(GLuint max_particles,
     step_shader.unbind();
 }
 
-ParticleSystem::~ParticleSystem()
-{
-    for (set<ParticleSource*>::iterator i = sources.begin();
-         i != sources.end(); ++i) {
-        (*i)->remove_link();
-    }
-}
-
-void ParticleSystem::step_simulation(float time_diff)
+void TransformFeedbackParticleSystem::step_simulation(float time_diff)
 {
     step_shader.bind();
     step_shader.set_uniform("time_diff", time_diff);
@@ -95,7 +123,7 @@ void ParticleSystem::step_simulation(float time_diff)
     }
 }
 
-void ParticleSystem::draw(Camera& camera)
+void TransformFeedbackParticleSystem::draw(Camera& camera)
 {
     if (calculating) {
         feedback.finish();

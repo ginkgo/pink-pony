@@ -8,7 +8,7 @@ PonyGame::PonyGame(SplitScreen* screen,
                    Heightmap* heightmap,
                    Config* config,
                    Skydome* skydome)
-    : particle_system(2000000, config),
+    : particle_system(ParticleSystem::make_particle_system(2000000, config)),
       m_screen(screen),
       m_heightmap(heightmap),
       m_config(config),
@@ -52,7 +52,7 @@ PonyGame::PonyGame(SplitScreen* screen,
                                   m_config->pony_left[i],
                                   m_config->pony_right[i],
                                   m_config,
-                                  &particle_system));         
+                                  particle_system));         
         
         m_screen->camera(i)->init(1.0,
                                   m_config->camera_fov,
@@ -129,6 +129,8 @@ PonyGame::~PonyGame()
     }
 
     ponies.clear();
+
+    delete particle_system;
 }
 
 bool PonyGame::start(PonyPoints& points)
@@ -146,7 +148,7 @@ bool PonyGame::start(PonyPoints& points)
 
     GLboolean space_pressed = glfwGetKey(GLFW_KEY_SPACE);
 
-    ParticleExplosionSource explosion_source(&particle_system);
+    ParticleExplosionSource explosion_source(particle_system);
     
     while (running || delay > 0.0) {
 
@@ -160,7 +162,7 @@ bool PonyGame::start(PonyPoints& points)
 
         // Step simulation
 
-        particle_system.step_simulation(timeDiff);
+        particle_system->step_simulation(timeDiff);
 
         for (int i = 0; i < m_config->player_count; i++) {
             ponies[i]->move(this, timeDiff,i);
@@ -272,7 +274,7 @@ bool PonyGame::start(PonyPoints& points)
 
             m_heightmap->draw(m_config);
 
-            particle_system.draw(*(m_screen->camera(i)));
+            particle_system->draw(*(m_screen->camera(i)));
 
             line_list.draw_trails(this);
             

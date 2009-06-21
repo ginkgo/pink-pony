@@ -18,7 +18,7 @@ class PonyGame;
 
 class PonyGame
 {
-    ParticleSystem particle_system;
+    ParticleSystem* particle_system;
 
     SplitScreen* m_screen;
     Heightmap* m_heightmap;

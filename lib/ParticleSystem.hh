@@ -24,10 +24,44 @@ struct Particle
 class ParticleSystem
 {
     friend class ParticleSource;
-
-    double last_stat_print;
-
+    
+    protected:
     std::set<ParticleSource*> sources;
+
+
+    public:
+
+    static ParticleSystem* make_particle_system(GLuint max_particles,
+                                                Config* config);
+
+    virtual ~ParticleSystem();
+
+    virtual void step_simulation(float time_diff) = 0;
+    virtual void draw(Camera& camera) = 0;
+
+
+    private:
+
+
+    void add_source(ParticleSource* source);
+    void del_source(ParticleSource* source);
+
+};
+
+class FallbackParticleSystem : public ParticleSystem
+{
+    public:
+
+    FallbackParticleSystem(GLuint max_particles, Config* config ) {};
+    virtual void step_simulation(float time_diff);
+    virtual void draw(Camera& camera) {};
+
+
+};
+
+class TransformFeedbackParticleSystem : public ParticleSystem
+{
+    double last_stat_print;
 
     bool calculating;
 
@@ -41,24 +75,16 @@ class ParticleSystem
 
     public:
 
-    ParticleSystem(GLuint max_particles, Config* config);
-    ~ParticleSystem();
-
-    void step_simulation(float time_diff);
-    void draw(Camera& camera);
-
-
-    private:
-
-
-    void add_source(ParticleSource* source);
-    void del_source(ParticleSource* source);
-
+    TransformFeedbackParticleSystem(GLuint max_particles, Config* config);
+    virtual void step_simulation(float time_diff);
+    virtual void draw(Camera& camera);
 };
 
 class ParticleSource
 {
     friend class ParticleSystem;
+    friend class FallbackParticleSystem;
+    friend class TransformFeedbackParticleSystem;
     ParticleSystem* system;
 
     public:

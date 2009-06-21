@@ -41,12 +41,12 @@ void main (void)
     my_vertex = my_vertex + v * weights.w;
 
     gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * my_vertex;
-    normal = gl_NormalMatrix * my_normal.xyz;
+    normal = normalize(gl_NormalMatrix * my_normal.xyz);
 
     vec4 light_position = gl_LightSource[0].position;
     light = normalize(light_position.xyz);
 
-    eye = (gl_ModelViewMatrix * gl_Vertex).xyz;
+    eye = (gl_ModelViewMatrix * my_vertex).xyz;
     
     gl_TexCoord[0] = gl_MultiTexCoord0;
     gl_FrontColor = gl_Color;
