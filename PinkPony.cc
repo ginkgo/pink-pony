@@ -3,6 +3,9 @@
 #include <algorithm>
 #include "ImathRandom.h"
 
+#include <audiere.h>
+using namespace audiere;
+
 void permute_start_positions(Config& config);
 void randomize_start_positions(Config& config, Heightmap& heightmap);
 
@@ -49,6 +52,21 @@ int main(int argc, char** argv)
         Skydome skydome("textures/sky.png");
     
         PonyPoints points(config.player_count);
+
+		AudioDevicePtr device(OpenDevice());
+		if (!device) {
+			cerr << "Could not open audio device. :<" << endl;
+		}
+
+		OutputStreamPtr music(OpenSound(device, "music/To be happy.mp3", true));
+
+		if (!music) {
+			cerr << "Could not load music file. :<" << endl;
+		}
+
+		music->setRepeat(true);
+		music->setVolume(1.0);
+		music->play();
 
         while (run_game){
 
