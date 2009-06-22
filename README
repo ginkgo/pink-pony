@@ -9,6 +9,7 @@ You will need the following tools and libraries to build the game:
 * IlmBase
 * DevIL
 * google protobuf
+* audiere
 
 Just build the game with "scons" in the current directory. If you have
 a dualcore CPU, you can use "scons -j2" for parallel building.
