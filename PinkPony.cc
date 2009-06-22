@@ -62,11 +62,13 @@ int main(int argc, char** argv)
 
 		if (!music) {
 			cerr << "Could not load music file. :<" << endl;
-		}
+		} else {
 
-		music->setRepeat(true);
-		music->setVolume(1.0);
-		music->play();
+            music->setRepeat(true);
+            music->setVolume(1.0);
+            music->play();
+
+        }
 
         while (run_game){
 
