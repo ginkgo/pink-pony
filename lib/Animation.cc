@@ -64,7 +64,7 @@ My::Animation::Animation(string skeleton_file)
                 k = keyframe.bone_transforms(t).rotation().k();
 
                 Transformation transform(x,y,z,r,i,j,k);
-                kf.transformations.push_back(transform);                                
+                kf.transformations.push_back(transform);
             } 
 
             ks.push_back(kf);
@@ -72,6 +72,15 @@ My::Animation::Animation(string skeleton_file)
     }
     current_keyframe = 0;
     current_time = 0.0f;
+
+    cout << animations.size() << " Animations loaded:";
+
+    for (std::map<string, std::pair<float, vector<Animation::Keyframe> > >::iterator i = animations.begin();
+         i != animations.end(); ++i) {
+        cout << " " << i->first;
+    }
+
+    cout << "." << endl;
     
     for (unsigned i = 0; i < keyframes->at(0).transformations.size(); ++i) {
         const Transform& t1 = skeleton.bones(i).transform();
@@ -115,8 +124,8 @@ void My::Animation::set_animation(string animation_name)
     duration = animations[animation_name].first;
     keyframes = &(animations[animation_name].second);
     
-    current_keyframe = 0;
-    current_time = 0.0;
+    //current_keyframe = 0;
+    //current_time = 0.0;
 }
 
 void My::Animation::step_animation(float timediff) 

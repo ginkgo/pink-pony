@@ -115,7 +115,14 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
 
         particle_source.add_time(timeDiff);
 
-        animation.step_animation(timeDiff * speed / 50);
+        if (speed < 15) {
+            animation.set_animation("Trot");
+            animation.step_animation(timeDiff * speed / 25);
+        } else {
+            animation.set_animation("Gallop");
+            animation.step_animation(timeDiff * speed / 50);
+        }
+
         animation.recalculate();
     }
 }
