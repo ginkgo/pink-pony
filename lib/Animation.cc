@@ -137,8 +137,16 @@ void My::Animation::step_animation(float timediff)
         current_keyframe = 0;
     } 
 
+    while (current_time < 0) {
+        current_time += duration;
+    } 
+
     while (keyframes->at(current_keyframe+1).time <= current_time) {
         ++current_keyframe;
+    } 
+
+    while (keyframes->at(current_keyframe).time > current_time) {
+        --current_keyframe;
     } 
 
 }
