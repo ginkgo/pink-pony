@@ -181,10 +181,15 @@ bool PonyGame::start(PonyPoints& points)
                     if (m_config->player_count == 1) {
                         if (ponies_alive == 0) {
                             running = false;
+                            delay = 2.0;
                         }
                     } else {
                         if (ponies_alive < 2) {
                             running = false;
+                        }
+
+                        if (ponies_alive == 0) {
+                            delay = min(delay, 2.0);
                         }
                     }
 
