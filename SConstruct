@@ -2,7 +2,7 @@ import os
 
 env = Environment()
 env['CC'] = 'g++'
-env['CCFLAGS'] = '-Wall -Wextra -Wno-unused-parameter -O0 -ggdb -msse3 -I/usr/include/OpenEXR -I./lib -I./external/tinyXML'
+env['CCFLAGS'] = '-Wall -Wextra -Wno-unused-parameter -O0 -ggdb -I/usr/include/OpenEXR -I./lib -I./external/tinyXML'
 env['LIBS'] = ['GLU', 'GL', 'protobuf', 'IL', 'ILUT', 'audiere']
 env.ParseConfig("pkg-config IlmBase --cflags --libs")
 env.ParseConfig("pkg-config libglfw --cflags --libs")
