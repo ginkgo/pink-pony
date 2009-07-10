@@ -3,10 +3,6 @@ uniform sampler2D grass;
 uniform sampler2D noise;
 
 uniform float water_level;
-
-uniform vec3 start;
-uniform vec3 end;
-
 uniform vec3 hemi_pole;
 uniform vec4 hemi_sky;
 uniform vec4 hemi_ground;
@@ -17,25 +13,6 @@ varying vec3 eye;
 varying vec3 light;
 varying vec3 normal;
 varying vec3 world_coord;
-
-
-vec4 basecolor()
-{
-    float t = smoothstep(water_level + 5.0,
-                         water_level + 7.0, world_coord.y);
-
-    vec4 color = vec4(0,0,0,0);
-
-    if (t > 0.0) {
-        color = color + t * texture2D(grass, world_coord.xz * 0.05);
-    }
-
-    if (t < 1.0) {
-        color = color + (1-t) * texture2D(sand, world_coord.xz * 0.05);
-    }
-
-    return color;
-}
 
 vec4 diffuse (vec3 l, vec3 n, vec3 v, int light_no)
 {
@@ -81,10 +58,6 @@ void main (void)
                             + hemi * velvet(light, my_normal, -my_eye, 7.0) * 0.5
                             + hemi);
     }
-/*     else { */
-/*         gl_FragColor = vec4(1,0,0,1); */
-/*     } */
-
     if (world_coord.y < water_level + 7.0) {
         gl_FragColor = gl_FragColor
             + (1-t)
@@ -93,18 +66,12 @@ void main (void)
                + hemi * velvet(light, my_normal, -my_eye, 25.0) * -0.2 
                + hemi * 1.0);
     }
-/*     else { */
-/*         gl_FragColor += vec4(0,0,1,1); */
-/*     } */
 
     if (world_coord.y < water_level) {
         gl_FragColor =
-            mix(gl_FragColor, vec4(65.0/255.0,105.0/255.0,225.0/255.0,1),
+            mix(gl_FragColor, vec4(0.2,0.4,0.85,1.0),
                 pow((water_level - world_coord.y) / water_level, 0.5));
         
     }
 
-/*     gl_FragColor = basecolor() * (diffuse(light, my_normal, -my_eye, 0) */
-/*                                   + hemi * velvet(light, my_normal, -my_eye, 0) */
-/*                                   + hemi); */
 }

@@ -134,9 +134,6 @@ void Heightmap::draw(Config* config)
 
     terrain_shader.bind();
 
-    terrain_shader.set_uniform("start", extent.min);
-    terrain_shader.set_uniform("end",   extent.max);
-
     terrain_shader.set_uniform("sand", 1);
     terrain_shader.set_uniform("grass", 2);
     terrain_shader.set_uniform("noise", 0);
@@ -155,15 +152,6 @@ void Heightmap::draw(Config* config)
     mesh_drawer.draw(&terrain_shader);
 
 
-    glBegin(GL_QUADS);
-
-    glNormal3f(0.0,1.0,0.0);
-    glVertex3f(area.min.x, 0, area.max.y); // front left
-    glVertex3f(area.max.x, 0, area.max.y); // front right
-    glVertex3f(area.max.x, 0, area.min.y); // back  right
-    glVertex3f(area.min.x, 0, area.min.y); // back left
-    
-    glEnd();
 
     terrain_shader.unbind();
 
@@ -177,6 +165,17 @@ void Heightmap::draw(Config* config)
     glEnable(GL_BLEND);
 
     water_shader.bind();
+
+    glBegin(GL_QUADS);
+
+    glNormal3f(0.0,1.0,0.0);
+    glColor4f(0.2,0.4,0.85,1.0);
+    glVertex3f(area.min.x, 0, area.max.y); // front left
+    glVertex3f(area.max.x, 0, area.max.y); // front right
+    glVertex3f(area.max.x, 0, area.min.y); // back  right
+    glVertex3f(area.min.x, 0, area.min.y); // back left
+    
+    glEnd();
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);

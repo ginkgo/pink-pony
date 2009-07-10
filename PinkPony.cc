@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 
     glfwOpenWindow(config.width, config.height, // width, height
                    0, 0, 0, 0,                  // R, G, B, A
-                   16, 0,                        // depth, stencil
+                   24, 8,                        // depth, stencil
                    config.window_mode);         // GLFW_WINDOW | GLFW_FULLSCREEN
 
     glfwSetWindowTitle("Pink Pony <3");

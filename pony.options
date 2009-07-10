@@ -19,9 +19,9 @@ randomize_start_positions = true; // Generate random start positions.
                                   // border.
 
 use_particles = true;
-heart_explosion_particles = 10000;
-pony_explosion_particles = 50000;
-pony_particle_rate = 100.0;
+heart_explosion_particles = 1000;
+pony_explosion_particles = 5000;
+pony_particle_rate = 10.0;
 
 // Window properties
 

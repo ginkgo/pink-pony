@@ -19,6 +19,11 @@ template <class T> T frac (T x)
     return x - floor(x);
 }
 
+inline V3f reflect (V3f I, V3f N) 
+{
+    return I - 2 * (N^I) * N;
+}
+
 void getErrors();
 
 

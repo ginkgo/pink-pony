@@ -1,6 +1,3 @@
-uniform vec3 start;
-uniform vec3 end;
-
 varying vec3 eye;
 varying vec3 light;
 varying vec3 normal; 
@@ -20,6 +17,4 @@ void main (void)
     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 
     eye = (gl_ModelViewMatrix * gl_Vertex).xyz;
-    
-    gl_TexCoord[0] = gl_Vertex;
 }

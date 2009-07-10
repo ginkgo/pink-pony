@@ -232,7 +232,9 @@ bool PonyGame::start(PonyPoints& points)
 
         // Draw state        
         
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | 
+                GL_DEPTH_BUFFER_BIT | 
+                GL_STENCIL_BUFFER_BIT);
         glPolygonMode(GL_FRONT_AND_BACK, m_config->polygon_mode);
 
         
@@ -275,11 +277,13 @@ bool PonyGame::start(PonyPoints& points)
                 glPopMatrix();
 
                 heart_shader.unbind();
+
             }
 
             m_heightmap->draw(m_config);
 
             particle_system->draw(*(m_screen->camera(i)));
+
 
             line_list.draw_trails(this);
             

@@ -45,7 +45,7 @@ void main (void)
         
         vec3 normal = calc_normal(uv, pos, level_size);
         
-        in_vel = reflect(in_vel, normal) * 0.75;//vec3(0.999,0.75,0.999);
+        in_vel = reflect(normalize(in_vel), normal) * length(in_vel) * 0.75;//vec3(0.999,0.75,0.999);
     }
     
     gl_Position = gl_Vertex;

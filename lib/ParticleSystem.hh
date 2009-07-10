@@ -48,14 +48,47 @@ class ParticleSystem
 
 };
 
-class FallbackParticleSystem : public ParticleSystem
+class InactiveParticleSystem : public ParticleSystem
 {
     public:
 
-    FallbackParticleSystem(GLuint max_particles, Config* config ) {};
+    InactiveParticleSystem(GLuint max_particles, Config* config ) {};
     virtual void step_simulation(float time_diff);
     virtual void draw(Camera& camera) {};
 
+
+};
+
+class CPUParticleSystem : public ParticleSystem
+{
+    vector<Particle> particles;
+
+    // Mesh
+    vector<float> positions;
+    vector<float> colors;
+    vector<float> uv_coordinates;
+
+    double last_stat_print;
+    Shader draw_shader;
+    
+    Texture2D particle_tex;
+    Texture2D heightmap;
+
+    Box3f level_size;
+    float water_level;
+    float rel_water_level;
+
+    unsigned particle_count;
+
+    public:
+
+    CPUParticleSystem(GLuint max_particles, Config* config );
+    virtual void step_simulation(float time_diff);
+    virtual void draw(Camera& camera);
+
+    private:
+
+    bool step_particle(float time_diff, Particle& in, Particle& out);
 
 };
 
@@ -83,7 +116,8 @@ class TransformFeedbackParticleSystem : public ParticleSystem
 class ParticleSource
 {
     friend class ParticleSystem;
-    friend class FallbackParticleSystem;
+    friend class InactiveParticleSystem;
+    friend class CPUParticleSystem;
     friend class TransformFeedbackParticleSystem;
     ParticleSystem* system;
 

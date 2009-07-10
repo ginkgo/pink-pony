@@ -18,18 +18,19 @@ ParticleSystem* ParticleSystem::make_particle_system(GLuint max_particles,
                                                      Config* config)
 {
     if (!config->use_particles) {
-        return new FallbackParticleSystem(max_particles, config);
-    } else if (!GLEE_EXT_geometry_shader4 || !GLEE_NV_transform_feedback) {
+        return new InactiveParticleSystem(max_particles, config);
+    } else if (true || !GLEE_EXT_geometry_shader4 || !GLEE_NV_transform_feedback) {
         cout << "No hardware accelerated particles. :("
-             << " Using fallback." << endl;
-        return new FallbackParticleSystem(max_particles, config);
+             << " Using CPU fallback." << endl;
+        return new CPUParticleSystem(max_particles/10, config);
     } else {
-        cout << "Hardware accelerated particles supported1 :D" << endl;
+        cout << "Hardware accelerated particles supported! :D" << endl;
         return new TransformFeedbackParticleSystem(max_particles, config);
     }
 }
 
-void FallbackParticleSystem::step_simulation(float time_diff)
+
+void InactiveParticleSystem::step_simulation(float time_diff)
 {
     Particle p;
 
@@ -39,6 +40,209 @@ void FallbackParticleSystem::step_simulation(float time_diff)
             (*i)->get_particle(p); // Empty pending particles.
         }
     }
+}
+
+CPUParticleSystem::CPUParticleSystem
+    (GLuint max_particles, Config* config)
+        : last_stat_print(glfwGetTime()),
+          draw_shader("GLSL/draw_particles_cpu"),
+          particle_tex("textures/heart-particle.png"),
+          heightmap(config->heightmap_file.c_str()),
+          level_size(config->level_size),
+          water_level(config->water_level),
+          rel_water_level(0),
+          particle_count(0)
+{
+    heightmap.normalize();
+
+    rel_water_level = (water_level-level_size.min.y)/level_size.size().y;
+    particles.resize(1000);
+}
+
+
+void CPUParticleSystem::step_simulation(float time_diff)
+{
+    for (set<ParticleSource*>::iterator i = sources.begin();
+         i != sources.end(); ++i) {
+        while ((*i)->has_particle()) {
+            ++particle_count;
+            if (particle_count > particles.size()) {
+                particles.resize(particle_count*2);
+            }
+            (*i)->get_particle(particles[particle_count-1]);
+        }
+    }
+
+    Particle* p = &(particles[0]);
+
+    int write = 0;
+    for (unsigned read = 0; read < particle_count; ++read) {
+        if (step_particle(time_diff, p[read], p[write])) {
+            ++write;
+        }
+    }
+
+    particle_count = write;
+
+
+    if (glfwGetTime() - last_stat_print > 10.0) {
+        last_stat_print = glfwGetTime();
+
+        cout << particle_count << " particles." << endl;
+    }
+}
+
+bool CPUParticleSystem::step_particle(float time_diff,
+                                      Particle& in, 
+                                      Particle& out) 
+{
+    // Take care: in can reference the same position as out!
+    
+    if (in.life <= time_diff) return false;
+    
+    
+    out.vel = in.vel + time_diff * V3f(0,-9.81 * 2, 0);
+    out.pos = in.pos + out.vel * time_diff;
+    out.color = in.color / in.life * (in.life - time_diff);
+    out.life = in.life-time_diff;
+    
+    V3f rel_pos = box_unmap(level_size, out.pos);
+
+    V2f uv(rel_pos.x, 1-rel_pos.z); 
+    float rel_level = heightmap.get_value(uv);
+
+    if (rel_water_level > rel_level && rel_pos.y < rel_water_level) {
+        out.pos.y = water_level;
+        out.vel = (reflect(out.vel.normalized(), V3f(0,1,0)) * 
+                   out.vel.length() * 0.25);
+    } else if (rel_pos.y < rel_level) {
+        out.pos.y = (rel_level * level_size.size().y) + level_size.min.y;
+        
+        V3f dx = rel_pos + V3f(0.01,0,0);
+        V3f dy = rel_pos + V3f(0,0,0.01);
+        dx.y = heightmap.get_value(V2f(dx.x,1-dx.z));
+        dy.y = heightmap.get_value(V2f(dy.x,1-dy.z));
+        dx = box_map(level_size, dx) - out.pos;
+        dy = box_map(level_size, dy) - out.pos;
+
+        V3f normal = (dx % dy);
+        normal.normalize();
+
+        out.vel = (reflect(out.vel.normalized(), normal) * 
+                   out.vel.length() * 0.75);
+    }
+
+    return true;    
+}
+
+void CPUParticleSystem::draw(Camera& camera)
+{
+    V3f up, right;
+    camera.get_billboard_axes(up, right);
+
+
+    V3f ld = right * -.25 + up * -.25;
+    V3f rd = right * +.25 + up * -.25;
+    V3f ru = right * +.25 + up * +.25;
+    V3f lu = right * -.25 + up * +.25;
+
+    if (uv_coordinates.size() < particle_count*2*4) {
+        unsigned i = uv_coordinates.size();
+        uv_coordinates.resize(particle_count*2*4*2);
+        positions.resize(particle_count*4*3*2);
+        colors.resize(particle_count*4*4*2);
+
+        float* f = &(uv_coordinates[i]);
+
+        for(; i < uv_coordinates.size();i+=8) {
+            *f = 0.0; ++f;
+            *f = 0.0; ++f;
+
+            *f = 1.0; ++f;
+            *f = 0.0; ++f;
+
+            *f = 1.0; ++f;
+            *f = 1.0; ++f;
+
+            *f = 0.0; ++f;
+            *f = 1.0; ++f;
+        }
+    }
+
+
+    float *p = &(positions[0]);
+    float *c = &(colors[0]);
+
+    for (unsigned i = 0; i < particle_count; ++i) {
+        V3f& pos = particles[i].pos;
+        Color4f& col = particles[i].color;
+
+        *p = pos.x + ld.x; ++p;
+        *p = pos.y + ld.y; ++p;
+        *p = pos.z + ld.z; ++p;
+        *c = col.r; ++c;
+        *c = col.g; ++c;
+        *c = col.b; ++c;
+        *c = col.a; ++c;
+
+        *p = pos.x + rd.x; ++p;
+        *p = pos.y + rd.y; ++p;
+        *p = pos.z + rd.z; ++p;
+        *c = col.r; ++c;
+        *c = col.g; ++c;
+        *c = col.b; ++c;
+        *c = col.a; ++c;
+
+        *p = pos.x + ru.x; ++p;
+        *p = pos.y + ru.y; ++p;
+        *p = pos.z + ru.z; ++p;
+        *c = col.r; ++c;
+        *c = col.g; ++c;
+        *c = col.b; ++c;
+        *c = col.a; ++c;
+
+        *p = pos.x + lu.x; ++p;
+        *p = pos.y + lu.y; ++p;
+        *p = pos.z + lu.z; ++p;
+        *c = col.r; ++c;
+        *c = col.g; ++c;
+        *c = col.b; ++c;
+        *c = col.a; ++c;
+    }
+
+    draw_shader.bind();
+
+    particle_tex.bind(GL_TEXTURE0);
+    draw_shader.set_uniform("texture", 0);
+
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    glColorPointer(4, GL_FLOAT, 0, &(colors[0]));
+    glTexCoordPointer(2, GL_FLOAT, 0, &(uv_coordinates[0]));
+    glVertexPointer(3, GL_FLOAT, 0, &(positions[0]));
+
+    
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE,GL_ONE);
+    glBlendEquation(GL_FUNC_ADD);
+
+    glDepthMask(GL_FALSE);
+
+    glDrawArrays(GL_QUADS, 0, particle_count*4);
+
+    glDisable(GL_BLEND);
+
+    glDepthMask(GL_TRUE);
+    
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);    
+
+    draw_shader.unbind();
+
+    particle_tex.unbind(GL_TEXTURE0);
 }
 
 TransformFeedbackParticleSystem::TransformFeedbackParticleSystem

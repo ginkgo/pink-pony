@@ -46,7 +46,7 @@ void main (void)
     vec4 light_position = gl_LightSource[0].position;
     light = normalize(light_position.xyz);
 
-    eye = (gl_ModelViewMatrix * my_vertex).xyz;
+    eye = normalize((gl_ModelViewMatrix * my_vertex).xyz);
     
     gl_TexCoord[0] = gl_MultiTexCoord0;
     gl_FrontColor = gl_Color;
