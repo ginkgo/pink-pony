@@ -7,6 +7,9 @@ env['LIBS'] = ['GLU', 'GL', 'protobuf', 'IL', 'ILUT', 'audiere']
 env.ParseConfig("pkg-config IlmBase --cflags --libs")
 env.ParseConfig("pkg-config libglfw --cflags --libs")
 
+env.Command(['lib/mesh.pb.cc', 'lib/mesh.pb.h'], 'mesh.proto', 
+            'protoc --cpp_out=lib mesh.proto')
+
 
 env.Program('mesh_compile', 
             ['mesh_compile.cc', 'lib/GL/GLee.c'] 
