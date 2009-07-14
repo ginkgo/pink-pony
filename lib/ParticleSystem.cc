@@ -137,9 +137,11 @@ bool CPUParticleSystem::step_particle(float time_diff,
 
 void CPUParticleSystem::draw(Camera& camera)
 {
+	if (particle_count < 1)
+		return;
+
     V3f up, right;
     camera.get_billboard_axes(up, right);
-
 
     V3f ld = right * -.25 + up * -.25;
     V3f rd = right * +.25 + up * -.25;
@@ -169,6 +171,9 @@ void CPUParticleSystem::draw(Camera& camera)
         }
     }
 
+
+	assert(positions.size() > 0);
+	assert(colors.size() > 0);
 
     float *p = &(positions[0]);
     float *c = &(colors[0]);
