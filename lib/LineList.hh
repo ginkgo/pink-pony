@@ -14,10 +14,9 @@ class LineList
     std::vector<Line> lines;
     //std::multiset<Line, sort_lines_by_b> lines_b;
 
-    bool intersects(Line& line, V2f* intersection);
-    //bool intersects(Line& line, V2f* intersection);
-    
     public:
+
+    bool intersects(Line& line, V2f* intersection);   
 
     bool add_point(int i, V2f point, Heightmap& heightmap);
 

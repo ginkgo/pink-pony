@@ -58,6 +58,11 @@ class PonyGame
         return m_config;
     }
 
+    LineList* linelist()
+    {
+        return &line_list;
+    }
+
     bool start(PonyPoints& points);
 };
 
