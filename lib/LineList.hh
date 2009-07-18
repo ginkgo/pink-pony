@@ -16,7 +16,8 @@ class LineList
 
     public:
 
-    bool intersects(Line& line, V2f* intersection);   
+    bool intersects(Line& line, V2f* intersection);
+    bool intersects(Line& line, Line* intersection);
 
     bool add_point(int i, V2f point, Heightmap& heightmap);
 

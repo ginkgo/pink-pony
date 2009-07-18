@@ -10,7 +10,7 @@ bool LineList::add_point(int i, V2f point, Heightmap& heightmap) {
     vector<V3f>* v3 = &trails[i];
 
     V2f old_point;
-    
+
     if (v->empty()) {
         v->push_back(point);
         v->push_back(point);
@@ -19,12 +19,12 @@ bool LineList::add_point(int i, V2f point, Heightmap& heightmap) {
     } else {
         if (((*v)[v->size()-2] - point).length() > 2.0) {
             Line new_line((*v)[v->size()-2], point);
-            
+
             v->back() = point;
             v->push_back(point);
 
             V2f i1(0,0);
-        
+
             if (intersects(new_line, &i1)) {
                 lines.push_back(new_line);
                 return_value = true;
@@ -67,6 +67,21 @@ bool LineList::intersects(Line& line, V2f* intersection) {
 
 }
 
+bool LineList::intersects(Line& line, Line* intersection) {
+
+    for (vector<Line>::iterator i = lines.begin();
+         i != lines.end();
+         i++) {
+        if (line.intersects(*i)) {
+            *intersection = *i;
+            return true;
+        }
+    }
+
+    return false;
+
+}
+
 void LineList::draw_lines(Config* config)
 {
     for (int i = 0; i < 4; i++) {
@@ -76,13 +91,13 @@ void LineList::draw_lines(Config* config)
         int pony_no = i;
 
         glColor(config->pony_color[pony_no]);
-        
+
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(2, GL_FLOAT, 0, &(line_strips[i][0]));
 
         glDrawArrays(GL_LINE_STRIP, 0, line_strips[i].size());
 
-        glDisableClientState(GL_VERTEX_ARRAY); 
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 }
 
@@ -91,7 +106,7 @@ void LineList::draw_trails(PonyGame* game)
     glDisable(GL_LIGHTING);
     glDisable(GL_CULL_FACE);
     glDepthMask(GL_TRUE);
-    
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
@@ -102,13 +117,13 @@ void LineList::draw_trails(PonyGame* game)
         Color4f c = game->config()->pony_color[i];
 
         glColor4f(c.r, c.g, c.b, 0.75);
-        
+
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, 0, &(trails[i][0]));
 
         glDrawArrays(GL_QUAD_STRIP, 0, trails[i].size());
 
-        glDisableClientState(GL_VERTEX_ARRAY); 
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 
     glDisable(GL_BLEND);
