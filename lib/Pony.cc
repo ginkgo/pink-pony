@@ -88,23 +88,53 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
     Decision decision = {0.0f, 0.0f};
     float& accel = decision.acceleration;
     float& steer = decision.steer;
-	V2f intersection;
-	V2f dir(sin(angle), cos(angle));
-	V2f nextpos = pos + dir * speed * 5;
+	Line intersection(pos,pos);
+	V2f pony_dir(sin(angle), cos(angle));
+	V2f nextpos = pos + pony_dir * speed * 5;
 	Line nextline(pos,nextpos);
+	Line perpendicular_nextline(nextpos,-pos);
+	V2f per_dir = V2f(cos(angle), -sin(angle));
+	V2f inter_dir = intersection.b-intersection.a;
 	/*
 		position actuelle : pos
 		pos2 = pos + dir * speed * time_diff
 	*/
 
-	if (game->linelist()->intersects(nextline, &intersection) || game->terrain()->below_water(nextpos, game->config()->water_tolerance)) {
-		//printf("help");
+	if (game->linelist()->intersects(nextline, &intersection)) {
 		accel -= game->config()->pony_acceleration;
-		steer -= game->config()->pony_turn_speed;
+		if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
+		if((per_dir^inter_dir) < 0) {
+			turning = LEFT;
+		} else {
+			turning = RIGHT;
+		}
+	} else if (game->terrain()->below_water(nextpos, game->config()->water_tolerance)) {
+		accel -= game->config()->pony_acceleration;
+		if(turning==0) {
+			bool r = game->terrain()->below_water(nextpos+per_dir, game->config()->water_tolerance);
+			bool l = game->terrain()->below_water(nextpos-per_dir, game->config()->water_tolerance);
+			if (r&&!l) turning = RIGHT;
+			else if (l&&!r) turning = LEFT;
+			else turning = lastturning;
+		}
 	} else {
 		accel = game->config()->pony_acceleration;
+		turning = STILL;
 		//steer += 0.1;
 	}
+	switch(turning) {
+		case RIGHT:
+			printf("right\n");
+		break;
+		case LEFT:
+			printf("left\n");
+		break;
+		default:
+			printf("straight\n");
+		break;
+	}
+	steer = turning*game->config()->pony_turn_speed;
+	if(turning!=0) lastturning = turning;
 
     return decision;
 }

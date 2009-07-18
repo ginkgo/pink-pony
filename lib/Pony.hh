@@ -14,7 +14,7 @@ class Pony;
 #include "Animation.hh"
 
 class Pony
-{    
+{
     protected:
 
     V2f pos;
@@ -43,11 +43,11 @@ class Pony
     };
 
     virtual Decision decide(PonyGame* game, int i) = 0;
-    
+
     public:
 
     //Camera camera;
-    
+
     Pony(V2f pos, float angle, float speed,
          int up, int down, int left, int right,
          Config* config, ParticleSystem* particle_system);
@@ -58,7 +58,7 @@ class Pony
     {
         return pos;
     }
-    
+
     void move(PonyGame* game, double timeDiff, int i);
     void set_camera(PonyGame* game, Camera* camera, int i);
     void draw(PonyGame* game, int i);
@@ -67,7 +67,7 @@ class Pony
         particle_source.set_rate(0);
         this->out = out;
     }
-    
+
     bool is_out(void) {
         return out;
     }
@@ -80,14 +80,14 @@ class PlayerPony : public Pony
     virtual Decision decide(PonyGame* game, int i);
 
     public:
-    
+
     PlayerPony(V2f pos, float angle, float speed,
                int up, int down, int left, int right,
-               Config* config, ParticleSystem* particle_system) 
-        : Pony(pos, angle, speed, 
-               up, down, left, right, 
+               Config* config, ParticleSystem* particle_system)
+        : Pony(pos, angle, speed,
+               up, down, left, right,
                config, particle_system) {};
-    
+
 };
 
 class AIPony : public Pony
@@ -95,16 +95,19 @@ class AIPony : public Pony
     protected:
 
     virtual Decision decide(PonyGame* game, int i);
+	int turning;
+	int lastturning;
+	const static int LEFT=1,STILL=0,RIGHT=-1;
 
     public:
-    
+
     AIPony(V2f pos, float angle, float speed,
            int up, int down, int left, int right,
-           Config* config, ParticleSystem* particle_system) 
-        : Pony(pos, angle, speed, 
-               up, down, left, right, 
-               config, particle_system) {};
-    
+           Config* config, ParticleSystem* particle_system)
+        : Pony(pos, angle, speed,
+               up, down, left, right,
+               config, particle_system) { turning = 0; };
+
 };
 
 #endif
