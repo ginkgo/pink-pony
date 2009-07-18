@@ -44,15 +44,15 @@ PonyGame::PonyGame(SplitScreen* screen,
     glMaterialf(GL_FRONT, GL_SHININESS, config->heightmap_shininess);
     
     for (int i = 0; i < m_config->player_count; i++) {
-        ponies.push_back(new Pony(m_config->pony_start[i],
-                                  m_config->pony_start_angle[i],
-                                  m_config->pony_start_speed,
-                                  m_config->pony_up[i],
-                                  m_config->pony_down[i],
-                                  m_config->pony_left[i],
-                                  m_config->pony_right[i],
-                                  m_config,
-                                  particle_system));         
+        ponies.push_back(new PlayerPony(m_config->pony_start[i],
+                                        m_config->pony_start_angle[i],
+                                        m_config->pony_start_speed,
+                                        m_config->pony_up[i],
+                                        m_config->pony_down[i],
+                                        m_config->pony_left[i],
+                                        m_config->pony_right[i],
+                                        m_config,
+                                        particle_system));         
         
         m_screen->camera(i)->init(1.0,
                                   m_config->camera_fov,

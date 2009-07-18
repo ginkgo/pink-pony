@@ -15,6 +15,8 @@ class Pony;
 
 class Pony
 {    
+    protected:
+
     V2f pos;
     float angle;
     float speed;
@@ -33,6 +35,14 @@ class Pony
     bool out_delay;
 
     PonyParticleSource particle_source;
+
+    struct Decision
+    {
+        float acceleration;
+        float steer;
+    };
+
+    virtual Decision decide(PonyGame* game, int i) = 0;
     
     public:
 
@@ -40,7 +50,9 @@ class Pony
     
     Pony(V2f pos, float angle, float speed,
          int up, int down, int left, int right,
-         Config* config, ParticleSystem* particle_system);         
+         Config* config, ParticleSystem* particle_system);
+
+    virtual ~Pony() {};
 
     V2f get_pos()
     {
@@ -59,6 +71,40 @@ class Pony
     bool is_out(void) {
         return out;
     }
+};
+
+class PlayerPony : public Pony
+{
+    protected:
+
+    virtual Decision decide(PonyGame* game, int i);
+
+    public:
+    
+    PlayerPony(V2f pos, float angle, float speed,
+               int up, int down, int left, int right,
+               Config* config, ParticleSystem* particle_system) 
+        : Pony(pos, angle, speed, 
+               up, down, left, right, 
+               config, particle_system) {};
+    
+};
+
+class AIPony : public Pony
+{
+    protected:
+
+    virtual Decision decide(PonyGame* game, int i);
+
+    public:
+    
+    AIPony(V2f pos, float angle, float speed,
+           int up, int down, int left, int right,
+           Config* config, ParticleSystem* particle_system) 
+        : Pony(pos, angle, speed, 
+               up, down, left, right, 
+               config, particle_system) {};
+    
 };
 
 #endif

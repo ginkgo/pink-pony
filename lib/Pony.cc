@@ -30,69 +30,93 @@ Pony::Pony(V2f pos, float angle,
     animation.set_animation("Gallop");
 }
 
+Pony::Decision PlayerPony::decide(PonyGame* game, int i)
+{
+    Decision decision = {0.0f, 0.0f};
+    float& accel = decision.acceleration;
+    float& steer = decision.steer;
+
+    if (glfwGetKey(up) == GLFW_PRESS)
+        accel += 1.0;
+    if (glfwGetKey(down) == GLFW_PRESS)
+        accel -= 1.0;
+    
+    if (glfwGetKey(left) == GLFW_PRESS)
+        steer += 1.0;
+    if (glfwGetKey(right) == GLFW_PRESS)
+        steer -= 1.0;
+    
+    if (glfwGetJoystickParam(i,GLFW_PRESENT) == GL_TRUE) {
+        
+        float axes[10];
+        
+        int n = glfwGetJoystickPos(i,axes,10);
+        
+        if (n >= 2) {
+            
+            if (fabs(axes[0]) < 0.2) axes[0] = 0.0;
+            //accel += axes[1];
+            steer -= axes[0]*2;
+        }
+        
+        unsigned char buttons[20];
+        
+        int button_count = glfwGetJoystickButtons(i, buttons, 20);
+
+        if (button_count >= 2) {
+            if (buttons[0] == GLFW_PRESS)
+                accel += 1.0;
+            if (buttons[1] == GLFW_PRESS)
+                accel -= 1.0;
+        }
+        
+        if (accel > 1.0) accel = 1.0;
+        if (accel < -1.0) accel = -1.0;
+        if (steer > 1.0) steer = 1.0;
+        if (steer < -1.0) steer = -1.0;
+        
+    }
+
+    accel *= game->config()->pony_acceleration;
+    steer *= game->config()->pony_turn_speed;
+    
+    return decision;
+};
+
+Pony::Decision AIPony::decide(PonyGame* game, int i)
+{
+    Decision decision = {0.0f, 0.0f};
+
+    // TODO: Implement AI.
+
+    return decision;
+}
+
 void Pony::move(PonyGame* game, double timeDiff, int i)
 {
     if (!out) {
-        float accel = 0.0;
-        float steer = 0.0;
+        Decision decision = this->decide(game, i);
 
-        if (glfwGetKey(up) == GLFW_PRESS)
-            accel += 1.0;
-        if (glfwGetKey(down) == GLFW_PRESS)
-            accel -= 1.0;
+        float accel = decision.acceleration;
+        float steer = decision.steer;
 
-        if (glfwGetKey(left) == GLFW_PRESS)
-            steer += 1.0;
-        if (glfwGetKey(right) == GLFW_PRESS)
-            steer -= 1.0;
-
-        if (glfwGetJoystickParam(i,GLFW_PRESENT) == GL_TRUE) {
-            
-            float axes[10];
-
-            int n = glfwGetJoystickPos(i,axes,10);
-
-            if (n >= 2) {
-                
-                if (fabs(axes[0]) < 0.2) axes[0] = 0.0;
-                //accel += axes[1];
-                steer -= axes[0]*2;
-            }
-
-            unsigned char buttons[20];
-
-            int button_count = glfwGetJoystickButtons(i, buttons, 20);
-
-            if (button_count >= 2) {
-                if (buttons[0] == GLFW_PRESS)
-                    accel += 1.0;
-                if (buttons[1] == GLFW_PRESS)
-                    accel -= 1.0;
-            }
-
-            if (accel > 1.0) accel = 1.0;
-            if (accel < -1.0) accel = -1.0;
-            if (steer > 1.0) steer = 1.0;
-            if (steer < -1.0) steer = -1.0;
-
-        }
-
-        float slope =
-            game->terrain()->get_pos(pos + V2f(sin(angle),
-                                               cos(angle)),false).y
-            - game->terrain()->get_pos(pos,false).y;
-        accel -= game->config()->pony_slope_acceleration * slope;
+        if (accel > game->config()->pony_acceleration) 
+            accel = game->config()->pony_acceleration;
+        if (accel < -game->config()->pony_acceleration) 
+            accel = -game->config()->pony_acceleration;
+        if (steer > game->config()->pony_turn_speed) 
+            steer = game->config()->pony_turn_speed;
+        if (steer < -game->config()->pony_turn_speed) 
+            steer = -game->config()->pony_turn_speed;
 
         float min = game->config()->pony_min_speed;
         float max = game->config()->pony_max_speed;
 
-        speed += accel * game->config()->pony_acceleration * timeDiff;
+        speed += accel * timeDiff;
         if (speed < min) speed = min;
         if (speed > max) speed = max;
     
-        angle += steer * timeDiff * game->config()->pony_turn_speed;
-        //     dir = dir * M33f().rotate(steer * timeDiff
-        //                               * game->config()->pony_turn_speed);
+        angle += steer * timeDiff;
 
         V2f dir(sin(angle), cos(angle));
     
