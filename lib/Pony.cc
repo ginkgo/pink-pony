@@ -40,27 +40,27 @@ Pony::Decision PlayerPony::decide(PonyGame* game, int i)
         accel += 1.0;
     if (glfwGetKey(down) == GLFW_PRESS)
         accel -= 1.0;
-    
+
     if (glfwGetKey(left) == GLFW_PRESS)
         steer += 1.0;
     if (glfwGetKey(right) == GLFW_PRESS)
         steer -= 1.0;
-    
+
     if (glfwGetJoystickParam(i,GLFW_PRESENT) == GL_TRUE) {
-        
+
         float axes[10];
-        
+
         int n = glfwGetJoystickPos(i,axes,10);
-        
+
         if (n >= 2) {
-            
+
             if (fabs(axes[0]) < 0.2) axes[0] = 0.0;
             //accel += axes[1];
             steer -= axes[0]*2;
         }
-        
+
         unsigned char buttons[20];
-        
+
         int button_count = glfwGetJoystickButtons(i, buttons, 20);
 
         if (button_count >= 2) {
@@ -69,25 +69,42 @@ Pony::Decision PlayerPony::decide(PonyGame* game, int i)
             if (buttons[1] == GLFW_PRESS)
                 accel -= 1.0;
         }
-        
+
         if (accel > 1.0) accel = 1.0;
         if (accel < -1.0) accel = -1.0;
         if (steer > 1.0) steer = 1.0;
         if (steer < -1.0) steer = -1.0;
-        
+
     }
 
     accel *= game->config()->pony_acceleration;
     steer *= game->config()->pony_turn_speed;
-    
+
     return decision;
 };
 
 Pony::Decision AIPony::decide(PonyGame* game, int i)
 {
     Decision decision = {0.0f, 0.0f};
+    float& accel = decision.acceleration;
+    float& steer = decision.steer;
+	V2f intersection;
+	V2f dir(sin(angle), cos(angle));
+	V2f nextpos = pos + dir * speed * 5;
+	Line nextline(pos,nextpos);
+	/*
+		position actuelle : pos
+		pos2 = pos + dir * speed * time_diff
+	*/
 
-    // TODO: Implement AI.
+	if (game->linelist()->intersects(nextline, &intersection) || game->terrain()->below_water(nextpos, game->config()->water_tolerance)) {
+		//printf("help");
+		accel -= game->config()->pony_acceleration;
+		steer -= game->config()->pony_turn_speed;
+	} else {
+		accel = game->config()->pony_acceleration;
+		//steer += 0.1;
+	}
 
     return decision;
 }
@@ -100,13 +117,13 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
         float accel = decision.acceleration;
         float steer = decision.steer;
 
-        if (accel > game->config()->pony_acceleration) 
+        if (accel > game->config()->pony_acceleration)
             accel = game->config()->pony_acceleration;
-        if (accel < -game->config()->pony_acceleration) 
+        if (accel < -game->config()->pony_acceleration)
             accel = -game->config()->pony_acceleration;
-        if (steer > game->config()->pony_turn_speed) 
+        if (steer > game->config()->pony_turn_speed)
             steer = game->config()->pony_turn_speed;
-        if (steer < -game->config()->pony_turn_speed) 
+        if (steer < -game->config()->pony_turn_speed)
             steer = -game->config()->pony_turn_speed;
 
         float min = game->config()->pony_min_speed;
@@ -115,19 +132,19 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
         speed += accel * timeDiff;
         if (speed < min) speed = min;
         if (speed > max) speed = max;
-    
+
         angle += steer * timeDiff;
 
         V2f dir(sin(angle), cos(angle));
-    
+
         pos += dir * speed * timeDiff;
-        
+
         // Calculate new camera position
-    
+
         V2f offset = pos - camera_pos;
         camera_pos = pos - offset * (game->config()->camera_distance
                                      / offset.length());
-    
+
         V3f pos3 = game->terrain()->get_pos(pos,false);
         V3f dir3 = game->terrain()->get_pos(pos+dir,false)-pos3;
 
@@ -159,19 +176,19 @@ void Pony::set_camera(PonyGame* game, Camera* camera, int i)
 
     V3f p = pony_height + game->terrain()->get_pos(pos,false);
     V3f c = camera_height + game->terrain()->get_pos(camera_pos,true);
-    
-    camera->look_at(c,p);                   
+
+    camera->look_at(c,p);
 }
 
 void Pony::draw(PonyGame* game, int i)
 {
     if (!out_delay) {
-        
+
         V3f position = game->terrain()->get_pos(pos,false);
 
         texture.bind(GL_TEXTURE0);
         shader.bind();
-    
+
         shader.set_uniform("hemi_pole",
                            game->config()->hemilight_pole);
         shader.set_uniform("hemi_sky",
@@ -183,7 +200,7 @@ void Pony::draw(PonyGame* game, int i)
         shader.set_uniform("texture", 0);
 
         animation.set_bone_matrices(shader, "bone_transforms");
-    
+
         glColor(game->config()->pony_color[i]);
         glPushMatrix();
 
@@ -204,7 +221,7 @@ void Pony::draw(PonyGame* game, int i)
         glRotatef(slope_angle,1,0,0);
         glRotatef(270,1,0,0);
 
-    
+
         mesh_drawer.draw(&shader);
 
         glPopMatrix();
@@ -214,5 +231,5 @@ void Pony::draw(PonyGame* game, int i)
 
         if (out) out_delay = true;
     }
-    
+
 }
