@@ -106,7 +106,7 @@ class AIPony : public Pony
            Config* config, ParticleSystem* particle_system)
         : Pony(pos, angle, speed,
                up, down, left, right,
-               config, particle_system) { turning = 0; };
+               config, particle_system) { turning = STILL; lastturning = LEFT; };
 
 };
 

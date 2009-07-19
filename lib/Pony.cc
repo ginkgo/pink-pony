@@ -91,24 +91,26 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 	Line intersection(pos,pos);
 	V2f pony_dir(sin(angle), cos(angle));
 	V2f nextpos = pos + pony_dir * speed * 5;
+	V2f waterpos;
 	Line nextline(pos,nextpos);
-	Line perpendicular_nextline(nextpos,-pos);
 	V2f per_dir = V2f(cos(angle), -sin(angle));
-	V2f inter_dir = intersection.b-intersection.a;
 
 	if (game->linelist()->intersects(nextline, &intersection)) {
+		V2f inter_dir = intersection.b-intersection.a;
 		accel -= game->config()->pony_acceleration;
 		if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
-		if((per_dir^inter_dir) < 0) {
+		if((per_dir^inter_dir) > 0) {
 			turning = LEFT;
-		} else {
+		} else if((per_dir^inter_dir) > 0)  {
 			turning = RIGHT;
+		} else {
+			turning = lastturning;
 		}
-	} else if (game->terrain()->below_water(nextpos, game->config()->water_tolerance)) {
+	} else if (game->terrain()->intersects_with_water(nextline, game->config()->water_tolerance, &waterpos)) {
 		accel -= game->config()->pony_acceleration;
-		if(turning==0) {
-			bool r = game->terrain()->below_water(nextpos+per_dir, game->config()->water_tolerance);
-			bool l = game->terrain()->below_water(nextpos-per_dir, game->config()->water_tolerance);
+		if(turning==STILL) {
+			bool r = game->terrain()->below_water(waterpos+per_dir, game->config()->water_tolerance);
+			bool l = game->terrain()->below_water(waterpos-per_dir, game->config()->water_tolerance);
 			if (r&&!l) turning = RIGHT;
 			else if (l&&!r) turning = LEFT;
 			else turning = lastturning;
@@ -116,9 +118,27 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 	} else {
 		accel = game->config()->pony_acceleration;
 		turning = STILL;
+		list<V2f>* hearts = game->hearts();
+		for(list<V2f>::iterator heart = hearts->begin(); heart != hearts->end(); heart++) {
+			V2f heart_dir = *heart - pos;
+			Line heart_line(pos, *heart);
+			if((heart_dir.length()<300)&&!game->linelist()->intersects(heart_line, &intersection)) {
+				heart_dir.normalize();
+				if((pony_dir^heart_dir) > cos(M_PI_4)) {
+					printf("I have a heart in sight : angle = %.2f < %.2f\n",(pony_dir^heart_dir),cos(M_PI_4));
+					if((per_dir^heart_dir) < 0) {
+						turning = LEFT;
+						printf("turning left");
+					} else {
+						turning = RIGHT;
+						printf("turning right");
+					}
+				}
+			}
+		}
 	}
 	steer = turning*game->config()->pony_turn_speed;
-	if(turning!=0) lastturning = turning;
+	if(turning!=STILL) lastturning = turning;
 
     return decision;
 }
