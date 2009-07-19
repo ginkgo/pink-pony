@@ -68,7 +68,7 @@ class PonyGame
         return &heart_positions;
     }
     
-    vector<Pony*>* ponies()
+    vector<Pony*>* get_ponies()
     {
         return &ponies;
     }
