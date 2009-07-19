@@ -90,12 +90,24 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
     float& steer = decision.steer;
 	Line intersection(pos,pos);
 	V2f pony_dir(sin(angle), cos(angle));
-	V2f nextpos = pos + pony_dir * speed * 5;
+	V2f nextpos = pos + pony_dir * speed * 2;
 	V2f waterpos;
 	Line nextline(pos,nextpos);
 	V2f per_dir = V2f(cos(angle), -sin(angle));
+	V2f intersection_point;
+	bool water_collision = game->terrain()->intersects_with_water(nextline, game->config()->water_tolerance, &waterpos);
+	bool wall_collision = game->linelist()->intersects(nextline, &intersection_point);
 
-	if (game->linelist()->intersects(nextline, &intersection)) {
+	if ((water_collision)&&((!wall_collision)||(wall_collision && (intersection_point - pos).length() > (waterpos - pos).length()))) {
+		accel -= game->config()->pony_acceleration;
+		if(turning==STILL) {
+			bool r = game->terrain()->below_water(waterpos+per_dir, game->config()->water_tolerance);
+			bool l = game->terrain()->below_water(waterpos-per_dir, game->config()->water_tolerance);
+			if (r&&!l) turning = RIGHT;
+			else if (l&&!r) turning = LEFT;
+			else turning = lastturning;
+		}
+	} else if (game->linelist()->intersects(nextline, &intersection)) {
 		V2f inter_dir = intersection.b-intersection.a;
 		accel -= game->config()->pony_acceleration;
 		if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
@@ -105,15 +117,6 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 			turning = RIGHT;
 		} else {
 			turning = lastturning;
-		}
-	} else if (game->terrain()->intersects_with_water(nextline, game->config()->water_tolerance, &waterpos)) {
-		accel -= game->config()->pony_acceleration;
-		if(turning==STILL) {
-			bool r = game->terrain()->below_water(waterpos+per_dir, game->config()->water_tolerance);
-			bool l = game->terrain()->below_water(waterpos-per_dir, game->config()->water_tolerance);
-			if (r&&!l) turning = RIGHT;
-			else if (l&&!r) turning = LEFT;
-			else turning = lastturning;
 		}
 	} else {
 		accel = game->config()->pony_acceleration;
@@ -126,10 +129,10 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 				heart_dir.normalize();
 				if((pony_dir^heart_dir) > cos(M_PI_4)) {
 					printf("I have a heart in sight : angle = %.2f < %.2f\n",(pony_dir^heart_dir),cos(M_PI_4));
-					if((per_dir^heart_dir) < 0) {
+					if((per_dir^heart_dir) > 0) {
 						turning = LEFT;
 						printf("turning left");
-					} else {
+					} else if((per_dir^heart_dir) < 0){
 						turning = RIGHT;
 						printf("turning right");
 					}
