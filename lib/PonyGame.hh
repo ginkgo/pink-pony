@@ -67,10 +67,11 @@ class PonyGame
     {
         return &heart_positions;
     }
-    vector<Pony*> ponies()
-	{
-		return ponies;
-	}
+    
+    vector<Pony*>* ponies()
+    {
+        return &ponies;
+    }
 
     bool start(PonyPoints& points);
 };
