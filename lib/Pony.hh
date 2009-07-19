@@ -15,6 +15,7 @@ class Pony;
 
 class Pony
 {
+	friend class AIPony;
     protected:
 
     V2f pos;
@@ -58,6 +59,12 @@ class Pony
     {
         return pos;
     }
+    float get_angle() {
+		return angle;
+	}
+    float get_speed() {
+		return speed;
+	}
 
     void move(PonyGame* game, double timeDiff, int i);
     void set_camera(PonyGame* game, Camera* camera, int i);
