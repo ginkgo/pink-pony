@@ -101,7 +101,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 		if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
 		if((per_dir^inter_dir) > 0) {
 			turning = LEFT;
-		} else if((per_dir^inter_dir) > 0)  {
+		} else if((per_dir^inter_dir) < 0)  {
 			turning = RIGHT;
 		} else {
 			turning = lastturning;
