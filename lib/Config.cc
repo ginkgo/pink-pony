@@ -32,7 +32,9 @@ Config::Config()
       camera_distance(15.0),
       camera_height(6.0),
       pony_height(3.0),
-      player_count(1),
+      ai_count(1),
+      player_count(2),
+      heart_count(3),
       pony_start_speed(15.0),
       pony_min_speed(5.0),
       pony_max_speed(50.0),
@@ -56,7 +58,8 @@ Config::Config()
       pony_texture("textures/pony.png"),
       pony_mesh("models/Pony.pmesh"),
       pony_particle_rate(100.0),
-      pony_explosion_particles(50000)
+      pony_explosion_particles(50000),
+      background_music("music/To be happy.mp3")
 {
     pony_up[0] = GLFW_KEY_UP;
     pony_down[0] = GLFW_KEY_DOWN;
@@ -194,7 +197,9 @@ void Config::set_value(string name, string value)
     else if (name == "camera_distance") camera_distance = fval;
     else if (name == "camera_height") camera_height = fval;
     else if (name == "pony_height") pony_height = fval;
+    else if (name == "ai_count") ai_count = ival;
     else if (name == "player_count") player_count = ival;
+    else if (name == "heart_count") heart_count = ival;
     else if (name == "pony_start[0]") pony_start[0] = vec2val;
     else if (name == "pony_start[1]") pony_start[1] = vec2val;
     else if (name == "pony_start[2]") pony_start[2] = vec2val;
@@ -251,6 +256,7 @@ void Config::set_value(string name, string value)
     else if (name == "heart_explosion_particles") heart_explosion_particles = ival;
     else if (name == "pony_particle_rate") pony_particle_rate = fval;
     else if (name == "use_particles") use_particles = bval;
+    else if (name == "background_music") background_music = sval;
 }
 
 bool Config::read_file(string filename)
@@ -350,7 +356,9 @@ bool Config::write_file(string filename)
     os << "pony_height = " << pony_height << ";" << endl;
 
     os << endl << "// Game properties" << endl << endl;   
+    os << "ai_count = " << ai_count << ";" << endl;
     os << "player_count = " << player_count << ";" << endl;
+    os << "heart_count = " << heart_count << ";" << endl;
     os << "pony_start_speed = " << pony_start_speed << ";" << endl;
     os << "pony_min_speed = " << pony_min_speed << ";" << endl;
     os << "pony_max_speed = " << pony_max_speed << ";" << endl;
@@ -386,5 +394,9 @@ bool Config::write_file(string filename)
     for (int i = 0; i < 4; i++) {
         os << "pony_color[" << i << "] = " << pony_color[i] << ";" << endl;
     }
+
+    os << endl << "// Sounds" << endl << endl;
+    os << "background_music = \"" << background_music << "\";" << endl;   
+    
     return true;
 }

@@ -44,7 +44,19 @@ PonyGame::PonyGame(SplitScreen* screen,
     glMaterialf(GL_FRONT, GL_SHININESS, config->heightmap_shininess);
     
     for (int i = 0; i < m_config->player_count; i++) {
-        ponies.push_back(new PlayerPony(m_config->pony_start[i],
+
+        if ( i < (config->player_count - config->ai_count)) {
+            ponies.push_back(new PlayerPony(m_config->pony_start[i],
+                                            m_config->pony_start_angle[i],
+                                            m_config->pony_start_speed,
+                                            m_config->pony_up[i],
+                                            m_config->pony_down[i],
+                                            m_config->pony_left[i],
+                                            m_config->pony_right[i],
+                                            m_config,
+                                            particle_system));  
+        } else {
+            ponies.push_back(new AIPony(m_config->pony_start[i],
                                         m_config->pony_start_angle[i],
                                         m_config->pony_start_speed,
                                         m_config->pony_up[i],
@@ -52,7 +64,9 @@ PonyGame::PonyGame(SplitScreen* screen,
                                         m_config->pony_left[i],
                                         m_config->pony_right[i],
                                         m_config,
-                                        particle_system));         
+                                        particle_system)); 
+
+        }       
         
         m_screen->camera(i)->init(1.0,
                                   m_config->camera_fov,
@@ -78,7 +92,7 @@ PonyGame::PonyGame(SplitScreen* screen,
 
     Rand32 rand((long)(glfwGetTime() * 1000));
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < config->heart_count; i++) {
         V2f size = V2f(config->level_size.size().x, 
                        config->level_size.size().z);
 

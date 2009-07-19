@@ -1,6 +1,9 @@
 // Interesting properties
 
-player_count = 2; // Number of players (1-4)
+player_count = 4; // Total number of ponies
+ai_count = 4; // Number of ponies that are controlled by an AI
+
+heart_count = 3; // Number of hearts
 
 swap_interval = 0; // 1 for vsync on, 0 for vsync off
 
@@ -32,7 +35,7 @@ polygon_mode = fill; // fill: fill polygons, line: wireframe
 
 // Level properties
 
-heightmap_file = "levels/ring.png";
+heightmap_file = "levels/heart.png";
 level_size = (1500 90 1500);
 water_level = 30;
 heightmap_specular = (1 1 1 1);
@@ -113,3 +116,7 @@ pony_color[0] = (1 0.75 0.792968 1);
 pony_color[1] = (0.25 0.875 0.8125 1);
 pony_color[2] = (1 0.839844 0 1);
 pony_color[3] = (0.484375 0.984375 0 1);
+
+// Sounds
+
+background_music = "music/To be happy.mp3"

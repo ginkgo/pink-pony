@@ -66,8 +66,8 @@ void SplitScreen::resize(int width, int height)
         p1 = V2i(size.y/12, size.y/12);
         p2 = V2i(size.y/4, size.y/4);
         box.makeEmpty();
-        box.extendBy(V2i(0,0) - p1 * V2i(+1,+1));
-        box.extendBy(V2i(0,0) - p2 * V2i(+1,+1));
+        box.extendBy(V2i(0,0) + p1 * V2i(+1,+1));
+        box.extendBy(V2i(0,0) + p2 * V2i(+1,+1));
         point_huds.push_back(box);
         break;
     case 2:

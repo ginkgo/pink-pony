@@ -58,7 +58,9 @@ int main(int argc, char** argv)
 			cerr << "Could not open audio device. :<" << endl;
 		}
 
-		OutputStreamPtr music(OpenSound(device, "music/To be happy.mp3", true));
+		OutputStreamPtr music(OpenSound(device, 
+                                        config.background_music.c_str(), 
+                                        true));
 
 		if (!music) {
 			cerr << "Could not load music file. :<" << endl;

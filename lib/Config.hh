@@ -53,7 +53,9 @@ class Config
     
     // Game properties:
 
+    int ai_count;
     int player_count;
+    int heart_count;
     V2f pony_start[4];
     float pony_start_angle[4];
     float pony_start_speed;
@@ -90,6 +92,9 @@ class Config
     string pony_mesh;
     float pony_particle_rate;
     int pony_explosion_particles;
+
+    // Sounds
+    string background_music;
     
 
     Config();
