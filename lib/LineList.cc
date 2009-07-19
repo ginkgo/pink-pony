@@ -69,16 +69,31 @@ bool LineList::intersects(Line& line, V2f* intersection) {
 
 bool LineList::intersects(Line& line, Line* intersection) {
 
+    bool found = false;
+    float distance = 10000000.0;
+
     for (vector<Line>::iterator i = lines.begin();
          i != lines.end();
          i++) {
         if (line.intersects(*i)) {
-            *intersection = *i;
-            return true;
+            if (!found) {
+                *intersection = *i;
+                found = true;
+
+                distance = (line.intersection(*i)-line.a).length();
+            } else {
+                float new_distance = 
+                    (line.intersection(*i)-line.a).length();
+                
+                if (new_distance < distance) {
+                    distance = new_distance;
+                    *intersection = *i;
+                }
+            }
         }
     }
 
-    return false;
+    return found;
 
 }
 

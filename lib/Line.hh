@@ -14,10 +14,10 @@ class Line
           b(end)
     {
         // Always make sure that a is the left point.
-        if (a.x > b.x) {
-            a = end;
-            b = start;            
-        }
+//         if (a.x > b.x) {
+//             a = end;
+//             b = start;            
+//         }
     }
 
 //     // Comparator definition for trees..
