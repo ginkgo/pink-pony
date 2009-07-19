@@ -119,6 +119,22 @@ V3f Heightmap::get_pos(V2f position, bool with_water)
     return result;  
 }
 
+bool Heightmap::intersects_with_water(Line line, float tolerance, 
+                                      V2f* intersection) {
+    
+    V2f p = line.a;
+    V2f d = line.b - line.a;
+
+    for (int i = 0; i < 100; ++i) {
+        if (below_water(p + d * (i/100.0), tolerance)) {
+            *intersection = p + d * (i/100.0);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void Heightmap::draw(Config* config)
 {
 

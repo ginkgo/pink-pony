@@ -11,6 +11,8 @@ class Heightmap;
 #include "Mesh.hh"
 #include "MeshDrawer.hh"
 
+#include "Line.hh"
+
 class Heightmap
 {
     Mesh mesh;
@@ -52,6 +54,9 @@ class Heightmap
         
         return (p.y + tolerance <= water_level);
     }
+
+    bool intersects_with_water(Line line, float tolerance,
+                               V2f* intersection);
 };
 
 #endif
