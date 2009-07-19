@@ -24,7 +24,7 @@ class PonyGame
     Heightmap* m_heightmap;
     Config* m_config;
     Skydome* skydome;
-    
+
     LineList line_list;
     vector<Pony*> ponies;
 
@@ -67,6 +67,10 @@ class PonyGame
     {
         return &heart_positions;
     }
+    vector<Pony*> ponies()
+	{
+		return ponies;
+	}
 
     bool start(PonyPoints& points);
 };
