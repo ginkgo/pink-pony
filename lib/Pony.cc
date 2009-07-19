@@ -122,21 +122,27 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 		accel = game->config()->pony_acceleration;
 		turning = STILL;
 		list<V2f>* hearts = game->hearts();
+		int minlength = 301;
+		V2f minheart_dir;
 		for(list<V2f>::iterator heart = hearts->begin(); heart != hearts->end(); heart++) {
 			V2f heart_dir = *heart - pos;
 			Line heart_line(pos, *heart);
 			if((heart_dir.length()<300)&&!game->linelist()->intersects(heart_line, &intersection)) {
+				int length = heart_dir.length();
 				heart_dir.normalize();
 				if((pony_dir^heart_dir) > cos(M_PI_4)) {
-					printf("I have a heart in sight : angle = %.2f < %.2f\n",(pony_dir^heart_dir),cos(M_PI_4));
-					if((per_dir^heart_dir) > 0) {
-						turning = LEFT;
-						printf("turning left");
-					} else if((per_dir^heart_dir) < 0){
-						turning = RIGHT;
-						printf("turning right");
+					if (length < minlength) {
+						minheart_dir = heart_dir;
+						minlength = length;
 					}
 				}
+			}
+		}
+		if(minlength<301) {
+			if((per_dir^minheart_dir) > 0) {
+				turning = LEFT;
+			} else if((per_dir^minheart_dir) < 0){
+				turning = RIGHT;
 			}
 		}
 	}
