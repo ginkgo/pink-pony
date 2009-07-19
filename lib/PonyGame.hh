@@ -63,6 +63,11 @@ class PonyGame
         return &line_list;
     }
 
+    list<V2f>* hearts()
+    {
+        return &heart_positions;
+    }
+
     bool start(PonyPoints& points);
 };
 
