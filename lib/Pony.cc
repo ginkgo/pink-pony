@@ -95,10 +95,6 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 	Line perpendicular_nextline(nextpos,-pos);
 	V2f per_dir = V2f(cos(angle), -sin(angle));
 	V2f inter_dir = intersection.b-intersection.a;
-	/*
-		position actuelle : pos
-		pos2 = pos + dir * speed * time_diff
-	*/
 
 	if (game->linelist()->intersects(nextline, &intersection)) {
 		accel -= game->config()->pony_acceleration;
@@ -120,18 +116,6 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 	} else {
 		accel = game->config()->pony_acceleration;
 		turning = STILL;
-		//steer += 0.1;
-	}
-	switch(turning) {
-		case RIGHT:
-			printf("right\n");
-		break;
-		case LEFT:
-			printf("left\n");
-		break;
-		default:
-			printf("straight\n");
-		break;
 	}
 	steer = turning*game->config()->pony_turn_speed;
 	if(turning!=0) lastturning = turning;
