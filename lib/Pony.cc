@@ -85,6 +85,8 @@ Pony::Decision PlayerPony::decide(PonyGame* game, int i)
 
 Pony::Decision AIPony::decide(PonyGame* game, int i)
 {
+    float angle = this->angle + rand.nextf(-0.1, 0.1);
+
     Decision decision = {0.0f, 0.0f};
     float& accel = decision.acceleration;
     float& steer = decision.steer;

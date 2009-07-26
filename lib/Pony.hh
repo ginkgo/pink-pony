@@ -13,6 +13,8 @@ class Pony;
 
 #include "Animation.hh"
 
+#include <ImathRandom.h>
+
 class Pony
 {
 	friend class AIPony;
@@ -105,6 +107,8 @@ class AIPony : public Pony
 	int turning;
 	int lastturning;
 	const static int LEFT=1,STILL=0,RIGHT=-1;
+
+    Imath::Rand32 rand;
 
     public:
 

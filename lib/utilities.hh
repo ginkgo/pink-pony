@@ -2,6 +2,8 @@
 #define UTILITIES_HH
 #include "cinquo.hh"
 
+#include <sstream>
+
 void calc_fps();
 
 template <class T> T box_map (Box<T> box, T pos) 
@@ -39,5 +41,13 @@ void type_convert( GLenum in_type, GLsizei in_size,
 std::istream& operator>>(std::istream& is, V2f& v);
 std::istream& operator>>(std::istream& is, V3f& v);
 std::istream& operator>>(std::istream& is, Color4f& v);
+
+template<class T> T parse(string s)
+{
+    T t;
+    std::stringstream ss(s);
+    s >> t;
+    return t;
+}
 
 #endif

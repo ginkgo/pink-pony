@@ -21,6 +21,9 @@ env.Program('skeleton_compile',
 env.Program('Pony', 
             ['PinkPony.cc', 'lib/GL/GLee.c'] 
             + Glob('lib/*cc'))
+env.Program('MenuTest', 
+            ['MenuTest.cc', 'lib/GL/GLee.c'] 
+            + Glob('lib/*cc'))
 env.Program('MapView', 
             ['MapView.cc', 'lib/GL/GLee.c'] 
             + Glob('lib/*cc'))
