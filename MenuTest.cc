@@ -36,13 +36,12 @@ int main(int argc, char** argv)
     // between braces, so that stack variables that need a GL context
     // are destructed, while the context still exists.
     {
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
 
+        Skydome skydome("textures/sky.png");
         Menu::MenuStatus menu_status;
         
         {
-            Menu menu(config);
+            Menu menu(&config, &skydome);
 
             menu_status = menu.run();
         }

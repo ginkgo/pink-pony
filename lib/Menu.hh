@@ -3,14 +3,19 @@
 
 #include "cinquo.hh"
 #include "Config.hh"
+#include "Skydome.hh"
 #include "Camera.hh"
 #include "Heightmap.hh"
+#include "Texture2D.hh"
+
+#include "Widget.hh"
 
 #include <map>
 
 class Menu
 {
-    Config& config;
+    Config* config;
+    Skydome* skydome;
 
     auto_ptr<Heightmap> heightmap;
 
@@ -40,9 +45,14 @@ class Menu
     void reload_level(string level);
     void draw(void);
     
+    Button logo_button;
+
+    V2f screen_size;
+
     public:
 
-    Menu(Config& config);
+    Menu(Config* config, 
+         Skydome* skydome);
 
     enum MenuStatus { START, QUIT };
 

@@ -32,6 +32,7 @@ Texture2D::Texture2D(const char* path,
     min_filter(min_filter),
     mag_filter(mag_filter)
 {
+
     if (!initialized_IL) {
         initialized_IL = true;
         ilInit();
