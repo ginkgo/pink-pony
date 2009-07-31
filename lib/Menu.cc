@@ -28,8 +28,11 @@ void Menu::mouse_callback(int button, int action)
 
     glfwGetMousePos(&x, &y);
 
-    if (action == GLFW_PRESS)
-        logo_button.area_clicked(V2f(x,screen_size.y - y));
+    if (action == GLFW_PRESS) {
+        V2f pos(x,screen_size.y - y);
+        logo_button.area_clicked(pos);
+        start_text.area_clicked(pos);
+    }
 }
 
 void Menu::resize_callback(int width, int height)
@@ -43,8 +46,12 @@ void Menu::resize_callback(int width, int height)
 
     screen_size = V2f(width, height);
 
+    start_text.set_available_area(Box2f(V2f(screen_size.x * 1.0/4.0,
+                                            screen_size.y * 1.0/12.0),
+                                        V2f(screen_size.x * 3.0/4.0,
+                                            screen_size.y * 3.0/12.0)));
     logo_button.set_available_area(Box2f(V2f(0,screen_size.y * 2.0/3.0),
-                                         screen_size));
+                                          screen_size));
 }
 
 Menu::Menu (Config* config, 
@@ -52,7 +59,8 @@ Menu::Menu (Config* config,
     : config(config),
       skydome(skydome),
       heightmap(NULL),
-      logo_button("textures/logo.png")
+      logo_button("textures/logo.png"),
+      start_text("#########")
 {
 
     // Some static test data
@@ -76,10 +84,6 @@ Menu::Menu (Config* config,
     level_names.push_back("Ring");
 
     selected_level = 0;
-
-    for (unsigned i = 0; i < level_names.size(); ++i) {
-        cout << level_names[i] << endl;
-    }
 
     int w,h;
     glfwGetWindowSize(&w,&h);
@@ -129,6 +133,9 @@ void Menu::reload_level(string level)
                                   config->noise_texture));
 
     camera_distance = s.length() / 2;
+
+
+    start_text.set_text(level);
 }    
 
 Menu::MenuStatus Menu::run(void)
@@ -199,6 +206,7 @@ void Menu::draw(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    start_text.draw();
     logo_button.draw();
     
 }

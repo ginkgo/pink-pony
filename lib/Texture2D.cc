@@ -85,6 +85,8 @@ Texture2D::Texture2D(const char* path,
 Texture2D::~Texture2D()
 {
     glDeleteTextures(1, &texture_name);
+    
+
     delete pixels;
 };
 

@@ -2,6 +2,8 @@
 #define WIDGET_HH
 
 #include <ImathBox.h>
+#include <FTGL/ftgl.h>
+
 #include "Texture2D.hh"
 
 class Widget
@@ -38,6 +40,25 @@ class Button : public Widget
 
     //    virtual void set_available_area(Box2f area);
     //virtual Box2f get_extent(void);
+
+    virtual void area_clicked(V2f pos);
+    virtual void draw(void);
+};
+
+class TextArea : public Widget
+{
+    FTFont* font;
+
+    string text;
+    
+    public:
+
+    TextArea(string initial_text);
+    ~TextArea();
+
+    void set_text(string text);
+
+    virtual void  set_available_area(Box2f area);
 
     virtual void area_clicked(V2f pos);
     virtual void draw(void);

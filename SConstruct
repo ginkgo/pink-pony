@@ -2,10 +2,11 @@ import os
 
 env = Environment()
 env['CC'] = 'g++'
-env['CCFLAGS'] = '-Wall -Wextra -Wno-unused-parameter -O0 -ggdb -I/usr/include/OpenEXR -I./lib -I./external/tinyXML'
+env['CCFLAGS'] = '-Wall -Wextra -Wno-unused-parameter -O2 -ggdb -I/usr/include/OpenEXR -I./lib -I./external/tinyXML'
 env['LIBS'] = ['GLU', 'GL', 'protobuf', 'IL', 'ILUT', 'audiere']
 env.ParseConfig("pkg-config IlmBase --cflags --libs")
 env.ParseConfig("pkg-config libglfw --cflags --libs")
+env.ParseConfig("pkg-config ftgl --cflags --libs")
 
 env.Command(['lib/mesh.pb.cc', 'lib/mesh.pb.h'], 'mesh.proto', 
             'protoc --cpp_out=lib mesh.proto')

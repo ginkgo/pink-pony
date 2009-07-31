@@ -147,7 +147,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 		turning = STILL;
 		list<V2f>* hearts = game->hearts();
 		int minlength = 301;
-		V2f minheart_dir;
+		V2f minheart_dir(1.0,0.0);
 		for(list<V2f>::iterator heart = hearts->begin(); heart != hearts->end(); heart++) {
 			V2f heart_dir = *heart - pos;
 			Line heart_line(pos, *heart);

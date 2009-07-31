@@ -36,7 +36,6 @@ int main(int argc, char** argv)
     // between braces, so that stack variables that need a GL context
     // are destructed, while the context still exists.
     {
-
         Skydome skydome("textures/sky.png");
         Menu::MenuStatus menu_status;
         

@@ -46,6 +46,7 @@ class Menu
     void draw(void);
     
     Button logo_button;
+    TextArea start_text;
 
     V2f screen_size;
 
