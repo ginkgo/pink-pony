@@ -18,7 +18,6 @@ class Widget
 
     public:
 
-
     virtual void  set_available_area(Box2f area);
     
     Box2f get_extent(void) 
@@ -59,6 +58,25 @@ class TextArea : public Widget
     void set_text(string text);
 
     virtual void  set_available_area(Box2f area);
+
+    virtual void area_clicked(V2f pos);
+    virtual void draw(void);
+};
+
+class SimpleLayout : public Widget
+{
+    Box2f own_size;
+    map<Widget*, Box2f> widgets;
+
+    public:
+
+    SimpleLayout() 
+        : Widget(1.0) {}
+
+    void add_widget(Widget* widget, Box2f rel_pos);
+    void remove_widget(Widget* widget);
+
+    virtual void set_available_area(Box2f area);
 
     virtual void area_clicked(V2f pos);
     virtual void draw(void);

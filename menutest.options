@@ -7,6 +7,13 @@ window_mode = window;
 fsaa_samples = 4;
 polygon_mode = fill;
 
+// Particles
+
+pony_explosion_particles = 50000;
+heart_explosion_particles = 10000;
+pony_particle_rate = 100;
+use_particles = true;
+
 // Level properties
 
 heightmap_file = "levels/heart.png";
@@ -76,8 +83,8 @@ pony_down[3] = 75;
 pony_left[3] = 74;
 pony_right[3] = 76;
 pony_slope_acceleration = 0;
-permute_start_positions = 0;
-randomize_start_positions = 0;
+permute_start_positions = false;
+randomize_start_positions = true;
 min_start_distance = 200;
 
 // General appearance

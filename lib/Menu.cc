@@ -30,8 +30,8 @@ void Menu::mouse_callback(int button, int action)
 
     if (action == GLFW_PRESS) {
         V2f pos(x,screen_size.y - y);
-        logo_button.area_clicked(pos);
-        start_text.area_clicked(pos);
+        
+        mainscreen_layout.area_clicked(pos);
     }
 }
 
@@ -46,12 +46,7 @@ void Menu::resize_callback(int width, int height)
 
     screen_size = V2f(width, height);
 
-    start_text.set_available_area(Box2f(V2f(screen_size.x * 1.0/4.0,
-                                            screen_size.y * 1.0/12.0),
-                                        V2f(screen_size.x * 3.0/4.0,
-                                            screen_size.y * 3.0/12.0)));
-    logo_button.set_available_area(Box2f(V2f(0,screen_size.y * 2.0/3.0),
-                                          screen_size));
+    mainscreen_layout.set_available_area(Box2f(V2f(0,0), screen_size));
 }
 
 Menu::Menu (Config* config, 
@@ -90,19 +85,16 @@ Menu::Menu (Config* config,
     resize_callback(w,h);
     reload_level("Lagoon");
 
-    //    setup_layout();
+    setup_layout();
 }
 
-// void Menu::setup_layout(void)
-// {
-//     layout.set_position(V2f(0,0), screen_size);
-
-//     layout.split(0.2);
-//     layout.split(0.4);
-//     layout.split(0.6);
-
-//     layout.set(3, new Button("textures/logo.png"));
-// }
+void Menu::setup_layout(void)
+{
+    mainscreen_layout.add_widget(&start_text, Box2f(V2f(1/4.0, 1/12.0),
+                                          V2f(3/4.0, 3/12.0)));
+    mainscreen_layout.add_widget(&logo_button, Box2f(V2f(0.0, 2.0/3.0),
+                                          V2f(1.0,     1.0)));
+}
 
 void Menu::next_level(void)
 {
@@ -163,6 +155,9 @@ Menu::MenuStatus Menu::run(void)
             !glfwGetWindowParam( GLFW_OPENED )) {
             status = QUIT;
             running = false;
+        } else if (glfwGetKey(GLFW_KEY_ENTER)) {
+            status = START;
+            running = false;
         }
     }
 
@@ -176,6 +171,7 @@ Menu::MenuStatus Menu::run(void)
 
 void Menu::draw(void)
 {
+    glEnable(GL_LIGHTING);
 
     float rotation_speed = 15.0 * M_PI/180.0; // degree/second
 
@@ -198,6 +194,8 @@ void Menu::draw(void)
 
     heightmap->draw(config);
 
+    glDisable(GL_LIGHTING);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0,screen_size.x,
@@ -206,7 +204,5 @@ void Menu::draw(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    start_text.draw();
-    logo_button.draw();
-    
+    mainscreen_layout.draw();    
 }

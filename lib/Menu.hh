@@ -47,8 +47,11 @@ class Menu
     
     Button logo_button;
     TextArea start_text;
+    SimpleLayout mainscreen_layout;
 
     V2f screen_size;
+
+    void setup_layout(void);
 
     public:
 

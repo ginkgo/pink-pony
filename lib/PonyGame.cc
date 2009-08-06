@@ -163,7 +163,7 @@ bool PonyGame::start(PonyPoints& points)
     GLboolean space_pressed = glfwGetKey(GLFW_KEY_SPACE);
 
     ParticleExplosionSource explosion_source(particle_system);
-    
+
     while (running || delay > 0.0) {
 
         double now = glfwGetTime();

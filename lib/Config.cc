@@ -138,8 +138,11 @@ void Config::set_value(string name, string value)
     if (value.find("true") != string::npos &&
         value.find("true") < value.find(';')) {
         bval = true;
-    } else {
+    } else if (value.find("true") != string::npos &&
+               value.find("true") < value.find(';')) {
         bval = false;
+    } else {
+        bval = ival; // Try to parse as integer (0/1)
     }
 
     if (value.find("window") != string::npos &&
@@ -317,6 +320,12 @@ bool Config::write_file(string filename)
     else
         os << "fill;" << endl;
 
+    os << endl << "// Particles" << endl << endl;
+
+    os << "pony_explosion_particles = " << pony_explosion_particles << ";" << endl;
+    os << "heart_explosion_particles = " << heart_explosion_particles << ";" << endl;
+    os << "pony_particle_rate = " << pony_particle_rate << ";" << endl;
+    os << "use_particles = " << (use_particles?"true":"false") << ";" << endl;
 
     os << endl << "// Level properties" << endl << endl;
     os << "heightmap_file = \"" << heightmap_file << "\";" << endl;
@@ -374,8 +383,10 @@ bool Config::write_file(string filename)
     }
     os << "pony_slope_acceleration = " << pony_slope_acceleration << ";" << endl;
 
-    os << "permute_start_positions = " << permute_start_positions << ";" << endl;
-    os << "randomize_start_positions = " << randomize_start_positions << ";" << endl;
+    os << "permute_start_positions = " 
+       << (permute_start_positions?"true":"false") << ";" << endl;
+    os << "randomize_start_positions = " 
+       << (randomize_start_positions?"true":"false") << ";" << endl;
     os << "min_start_distance = " << min_start_distance << ";" << endl;
     
 

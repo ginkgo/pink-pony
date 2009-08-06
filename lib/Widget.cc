@@ -76,7 +76,7 @@ void Button::draw(void)
 
     texture.unbind(GL_TEXTURE0);
 
-    glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHTING);
 
     glEnable(GL_DEPTH_TEST);   
 }
@@ -163,4 +163,62 @@ void TextArea::draw(void)
 
     glPopMatrix();
     
+}
+
+void SimpleLayout::add_widget(Widget* widget, Box2f rel_pos)
+{
+    widgets[widget] = rel_pos;
+
+    set_available_area(own_size);
+}
+
+void SimpleLayout::remove_widget(Widget* widget)
+{
+    widgets.erase(widget);
+}
+
+void SimpleLayout::set_available_area(Box2f area)
+{
+    own_size = area;
+
+    for (map<Widget*, Box2f>::iterator i = widgets.begin();
+         i != widgets.end(); ++i) {
+        V2f t_min = i->second.min,
+            t_max = i->second.max;
+        
+        Box2f new_widget_area = Box2f((t_min * area.max) + ((V2f(1,1)-t_min) * area.min),
+                                      (t_max * area.max) + ((V2f(1,1)-t_max) * area.min));
+        i->first->set_available_area(new_widget_area);
+    }
+}
+
+void SimpleLayout::area_clicked(V2f pos) 
+{
+    for (map<Widget*, Box2f>::iterator i = widgets.begin();
+         i != widgets.end(); ++i) {
+        i->first->area_clicked(pos);
+    }    
+}
+
+void SimpleLayout::draw(void)
+{
+    for (map<Widget*, Box2f>::iterator i = widgets.begin();
+         i != widgets.end(); ++i) {
+        // glPushMatrix();
+        // glTranslatef(own_size.min.x, own_size.min.y, 0);
+        // glScalef(own_size.size().x, own_size.size().y,1);
+        // V2f p1 = i->second.min,
+        //     p2 = i->second.max;
+        // glColor3f(1,1,0);
+        // glLineWidth(2.0);
+        // glBegin(GL_LINE_LOOP);
+        // glVertex2f(p1.x, p1.y);
+        // glVertex2f(p2.x, p1.y);
+        // glVertex2f(p2.x, p2.y);
+        // glVertex2f(p1.x, p2.y);
+        // glEnd();
+        // glPopMatrix();
+
+        i->first->draw();
+    }    
 }
