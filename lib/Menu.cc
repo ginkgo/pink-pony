@@ -19,7 +19,7 @@ void GLFWCALL menu_key_callback(int key, int state)
     if (key == GLFW_KEY_SPACE && 
         state == GLFW_PRESS && 
         Menu::callback_menu != NULL)
-        Menu::callback_menu->next_level();
+        Menu::callback_menu->next_level(1);
 }
 
 void Menu::mouse_callback(int button, int action)
@@ -55,7 +55,10 @@ Menu::Menu (Config* config,
       skydome(skydome),
       heightmap(NULL),
       logo_button("textures/logo.png"),
-      start_text("#########")
+      prev_level_button("<"),
+      next_level_button(">"),
+      level_name_text("#######"),
+      start_button("Start")
 {
 
     // Some static test data
@@ -90,15 +93,31 @@ Menu::Menu (Config* config,
 
 void Menu::setup_layout(void)
 {
-    mainscreen_layout.add_widget(&start_text, Box2f(V2f(1/4.0, 1/12.0),
-                                          V2f(3/4.0, 3/12.0)));
+    mainscreen_layout.add_widget(&level_name_text, Box2f(V2f(4/12.0, 1/12.0),
+                                                         V2f(8/12.0, 3/12.0)));
+    mainscreen_layout.add_widget(&prev_level_button, Box2f(V2f(3/12.0, 1/12.0),
+                                                           V2f(4/12.0, 3/12.0)));
+    mainscreen_layout.add_widget(&next_level_button, Box2f(V2f(8/12.0, 1/12.0),
+                                                           V2f(9/12.0, 3/12.0)));
     mainscreen_layout.add_widget(&logo_button, Box2f(V2f(0.0, 2.0/3.0),
                                           V2f(1.0,     1.0)));
+    mainscreen_layout.add_widget(&start_button, Box2f(V2f(9.0/24.0, 6.0/12.0),
+                                                      V2f(15.0/24.0, 8.0/12.0)));
+
+    next_level_button.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1)); 
+    prev_level_button.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), -1)); 
+    level_name_text.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1)); 
+    start_button.on_click()
+        .connect(sigc::mem_fun(this,&Menu::start)); 
 }
 
-void Menu::next_level(void)
+void Menu::next_level(int d)
 {
-    ++selected_level;
+    // We add one interval so that the modulo also works when d is negative.
+    selected_level = selected_level + level_names.size() + d;
     selected_level = selected_level % level_names.size();
 
     cout << "Selected level " << selected_level 
@@ -127,19 +146,19 @@ void Menu::reload_level(string level)
     camera_distance = s.length() / 2;
 
 
-    start_text.set_text(level);
+    level_name_text.set_text(level);
 }    
 
 Menu::MenuStatus Menu::run(void)
 {
-    MenuStatus status = START;
+    status = START;
+    running = true;
 
     callback_menu = this;
     glfwSetMouseButtonCallback(menu_mouse_callback);
     glfwSetWindowSizeCallback(menu_resize_callback);
     glfwSetKeyCallback(menu_key_callback);
 
-    bool running = true;
 
     while (running) {
 

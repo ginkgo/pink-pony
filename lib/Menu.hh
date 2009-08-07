@@ -14,6 +14,12 @@
 
 class Menu
 {
+    public:
+
+    enum MenuStatus { START, QUIT };
+
+    private:
+
     Config* config;
     Skydome* skydome;
 
@@ -46,26 +52,39 @@ class Menu
     void draw(void);
     
     Button logo_button;
-    TextArea start_text;
+    TextArea start_button;
+    TextArea level_name_text;
+    TextArea next_level_button, prev_level_button;
     SimpleLayout mainscreen_layout;
 
     V2f screen_size;
 
     void setup_layout(void);
 
+    MenuStatus status;
+    bool running ;
+
+    void quit() {
+        status = QUIT;
+        running = false;
+    }
+
+    void start() {
+        status = START;
+        running = false;
+    }
+
     public:
 
     Menu(Config* config, 
          Skydome* skydome);
-
-    enum MenuStatus { START, QUIT };
 
     MenuStatus run(void);
 
     void mouse_callback(int button, int action);
     void resize_callback(int width, int height);
 
-    void next_level(void);
+    void next_level(int d);
 
     static Menu* callback_menu;
 };

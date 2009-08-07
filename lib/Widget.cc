@@ -40,7 +40,8 @@ Button::Button(string texture_file)
 void Button::area_clicked(V2f pos) 
 {
     if (extent.intersects(pos)) {
-        cout << "Button clicked at " << pos << "." << endl;
+        signal_clicked.emit();
+        //cout << "Button clicked at " << pos << "." << endl;
     }
 }
 
@@ -127,7 +128,8 @@ void TextArea::set_text(string text)
 void TextArea::area_clicked(V2f pos)
 {
     if (extent.intersects(pos)) {
-        cout << "Button clicked at " << pos << "." << endl;
+        signal_clicked.emit();
+        //cout << "Button clicked at " << pos << "." << endl;
     }    
 }
 
@@ -217,6 +219,7 @@ void SimpleLayout::draw(void)
         // glVertex2f(p2.x, p2.y);
         // glVertex2f(p1.x, p2.y);
         // glEnd();
+        // glLineWidth(1.0);
         // glPopMatrix();
 
         i->first->draw();

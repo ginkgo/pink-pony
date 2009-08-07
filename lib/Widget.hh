@@ -6,6 +6,8 @@
 
 #include "Texture2D.hh"
 
+#include <sigc++/sigc++.h>
+
 class Widget
 {    
     protected:
@@ -15,6 +17,8 @@ class Widget
 
     Widget(float aspect) 
         : aspect(aspect) {};
+
+    sigc::signal<void> signal_clicked;
 
     public:
 
@@ -27,6 +31,11 @@ class Widget
 
     virtual void area_clicked(V2f pos) = 0;
     virtual void draw(void) = 0;
+
+    sigc::signal<void>& on_click()
+    {
+        return signal_clicked;
+    }
 };
 
 class Button : public Widget
