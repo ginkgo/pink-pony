@@ -59,12 +59,12 @@ Menu::Menu (Config* config,
       next_level_button("textures/right.png"),
       level_name_text("Lagoon"),
       start_button("Start"),
-      quit_button("Quit"),
-      options_button("Settings"),
+      quit_button("textures/quit.png"),
+      options_button("textures/settings.png"),
       computer_no("0"),
       human_no("0"),
-      human_text("humans"),
-      computer_text("computers"),
+      human_text("textures/human.png"),
+      computer_text("textures/computer.png"),
       computers(config->ai_count),
       humans(config->player_count - config->ai_count)
 {
@@ -168,9 +168,9 @@ void Menu::setup_layout(void)
     mainscreen_layout.add_widget(&start_button, Box2f(V2f(8.0/24.0, 6.0/12.0),
                                                       V2f(16.0/24.0, 17.0/24.0)));
     mainscreen_layout.add_widget(&quit_button, Box2f(V2f(1.0/48.0, 1.0/32.0),
-                                                     V2f(10.0/48.0, 5.0/32.0)));
-    mainscreen_layout.add_widget(&options_button, Box2f(V2f(37.0/48.0, 1.0/32.0),
-                                                        V2f(46.0/48.0, 5.0/32.0)));
+                                                     V2f(5.0/48.0, 5.0/32.0)));
+    mainscreen_layout.add_widget(&options_button, Box2f(V2f(42.0/48.0, 1.0/32.0),
+                                                        V2f(47.0/48.0, 5.0/32.0)));
     mainscreen_layout.add_widget(&human_slider, Box2f(V2f(13.0/32.0, 8.0/24.0),
                                                       V2f(16.0/32.0,11.0/24.0)));
     mainscreen_layout.add_widget(&computer_slider, Box2f(V2f(16.0/32.0, 8.0/24.0),
@@ -179,10 +179,10 @@ void Menu::setup_layout(void)
                                                   V2f(13.0/32.0,11.0/24.0)));
     mainscreen_layout.add_widget(&computer_no, Box2f(V2f(19.0/32.0, 8.0/24.0),
                                                      V2f(21.0/32.0,11.0/24.0)));
-    mainscreen_layout.add_widget(&human_text, Box2f(V2f(1.0/32.0, 8.0/24.0),
-                                                    V2f(9.0/32.0,11.0/24.0)));
-    mainscreen_layout.add_widget(&computer_text, Box2f(V2f(22.0/32.0, 8.0/24.0),
-                                                       V2f(31.0/32.0,11.0/24.0)));
+    mainscreen_layout.add_widget(&human_text, Box2f(V2f(4.0/32.0, 7.0/24.0),
+                                                    V2f(9.0/32.0,12.0/24.0)));
+    mainscreen_layout.add_widget(&computer_text, Box2f(V2f(22.0/32.0, 7.0/24.0),
+                                                       V2f(27.0/32.0,12.0/24.0)));
 
     next_level_button.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1)); 
