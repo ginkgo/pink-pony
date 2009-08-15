@@ -53,8 +53,13 @@ class Menu
     
     Button logo_button;
     TextArea start_button;
+    TextArea quit_button;
+    TextArea options_button;
     TextArea level_name_text;
-    TextArea next_level_button, prev_level_button;
+    Button next_level_button, prev_level_button;
+    Slider computer_slider, human_slider;
+    TextArea computer_no, human_no;
+    TextArea computer_text, human_text;
     SimpleLayout mainscreen_layout;
 
     V2f screen_size;
@@ -73,6 +78,10 @@ class Menu
         status = START;
         running = false;
     }
+
+    int computers, humans;
+    void change_computers(int dir);
+    void change_humans(int dir);
 
     public:
 

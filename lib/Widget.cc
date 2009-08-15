@@ -100,8 +100,8 @@ TextArea::TextArea(string initial_text)
     Box2f bbox(V2f(ftbbox.Lower().X(), ftbbox.Lower().Y()),
                V2f(ftbbox.Upper().X(), ftbbox.Upper().Y()));
 
-    bbox.min.y = 0;
-    bbox.max.y = face_size;
+    // bbox.min.y = 0;
+    // bbox.max.y = face_size;
 
     aspect = bbox.size().x / bbox.size().y;
 }
@@ -135,27 +135,22 @@ void TextArea::area_clicked(V2f pos)
 
 void TextArea::draw(void)
 {
-    int face_size = 512;
+    int face_size = 72;
 
     FTBBox ftbbox = font->BBox(text.c_str());
     Box2f bbox(V2f(ftbbox.Lower().X(), ftbbox.Lower().Y()),
                V2f(ftbbox.Upper().X(), ftbbox.Upper().Y()));
-    bbox.min.y = 0;
-    bbox.max.y = face_size;
+    // bbox.min.y = 0;
+    // bbox.max.y = face_size;
 
     V2f es = extent.size();
 
-//     bbox.min *= es.y/face_size;
-//     bbox.max *= es.y/face_size;
     
     glPushMatrix();
 
     glTranslatef(extent.center().x - bbox.center().x,
-                 extent.min.y,//0,//extent.center().y - bbox.center().y,
+                 extent.center().y - bbox.center().y,
                  0);
-    // glScalef(es.y/face_size,
-//              es.y/face_size,
-//              es.y/face_size);    
     
     
     glDisable(GL_LIGHTING);
@@ -224,4 +219,44 @@ void SimpleLayout::draw(void)
 
         i->first->draw();
     }    
+}
+
+Slider::Slider()
+    : Widget(1.0),
+      up_button("textures/up.png"),
+      down_button("textures/down.png")
+{
+    up_button.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this, &Slider::change), 1));
+    down_button.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this, &Slider::change),-1));
+}
+
+void Slider::change(int dir)
+{
+    signal_clicked.emit(dir);
+}
+
+void Slider::set_available_area(Box2f area)
+{
+    extent = area;
+
+    up_button.set_available_area(Box2f(V2f(area.min.x,area.center().y),
+                                       area.max));
+    down_button.set_available_area(Box2f(area.min,
+                                         V2f(area.max.x,area.center().y)));
+}
+
+void Slider::area_clicked(V2f pos)
+{
+    if (extent.intersects(pos)) {
+        up_button.area_clicked(pos);
+        down_button.area_clicked(pos);
+    }
+}
+
+void Slider::draw(void)
+{
+    up_button.draw();
+    down_button.draw();
 }

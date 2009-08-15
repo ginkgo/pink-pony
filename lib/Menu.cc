@@ -55,10 +55,18 @@ Menu::Menu (Config* config,
       skydome(skydome),
       heightmap(NULL),
       logo_button("textures/logo.png"),
-      prev_level_button("<"),
-      next_level_button(">"),
-      level_name_text("#######"),
-      start_button("Start")
+      prev_level_button("textures/left.png"),
+      next_level_button("textures/right.png"),
+      level_name_text("Lagoon"),
+      start_button("Start"),
+      quit_button("Quit"),
+      options_button("Settings"),
+      computer_no("0"),
+      human_no("0"),
+      human_text("humans"),
+      computer_text("computers"),
+      computers(config->ai_count),
+      humans(config->player_count - config->ai_count)
 {
 
     // Some static test data
@@ -89,6 +97,62 @@ Menu::Menu (Config* config,
     reload_level("Lagoon");
 
     setup_layout();
+    computer_no.set_text(to_string(computers));
+    human_no.set_text(to_string(humans));
+}
+
+void Menu::change_humans(int dir)
+{
+    humans += dir;
+
+    if (humans < 0) {
+        humans = 0;
+    }
+
+    if (humans > 4) {
+        humans = 4;
+    }
+
+    if (humans + computers > 4) {
+        computers = 4-humans;
+    }
+
+    if (humans + computers < 1) {
+        humans = 1;
+    }
+
+    config->ai_count = computers;
+    config->player_count = humans+computers;
+
+    computer_no.set_text(to_string(computers));
+    human_no.set_text(to_string(humans));    
+}
+
+void Menu::change_computers(int dir)
+{
+    computers += dir;
+
+    if (computers < 0) {
+        computers = 0;
+    }
+
+    if (computers > 4) {
+        computers = 4;
+    }
+
+    if (humans + computers > 4) {
+        humans = 4-computers;
+    }
+
+    if (humans + computers < 1) {
+        computers = 1;
+    }
+
+    config->ai_count = computers;
+    config->player_count = humans+computers;
+
+    computer_no.set_text(to_string(computers));
+    human_no.set_text(to_string(humans));    
 }
 
 void Menu::setup_layout(void)
@@ -100,9 +164,25 @@ void Menu::setup_layout(void)
     mainscreen_layout.add_widget(&next_level_button, Box2f(V2f(8/12.0, 1/12.0),
                                                            V2f(9/12.0, 3/12.0)));
     mainscreen_layout.add_widget(&logo_button, Box2f(V2f(0.0, 2.0/3.0),
-                                          V2f(1.0,     1.0)));
-    mainscreen_layout.add_widget(&start_button, Box2f(V2f(9.0/24.0, 6.0/12.0),
-                                                      V2f(15.0/24.0, 8.0/12.0)));
+                                                     V2f(1.0,     1.0)));
+    mainscreen_layout.add_widget(&start_button, Box2f(V2f(8.0/24.0, 6.0/12.0),
+                                                      V2f(16.0/24.0, 17.0/24.0)));
+    mainscreen_layout.add_widget(&quit_button, Box2f(V2f(1.0/48.0, 1.0/32.0),
+                                                     V2f(10.0/48.0, 5.0/32.0)));
+    mainscreen_layout.add_widget(&options_button, Box2f(V2f(37.0/48.0, 1.0/32.0),
+                                                        V2f(46.0/48.0, 5.0/32.0)));
+    mainscreen_layout.add_widget(&human_slider, Box2f(V2f(13.0/32.0, 8.0/24.0),
+                                                      V2f(16.0/32.0,11.0/24.0)));
+    mainscreen_layout.add_widget(&computer_slider, Box2f(V2f(16.0/32.0, 8.0/24.0),
+                                                         V2f(19.0/32.0,11.0/24.0)));
+    mainscreen_layout.add_widget(&human_no, Box2f(V2f(10.0/32.0, 8.0/24.0),
+                                                  V2f(13.0/32.0,11.0/24.0)));
+    mainscreen_layout.add_widget(&computer_no, Box2f(V2f(19.0/32.0, 8.0/24.0),
+                                                     V2f(21.0/32.0,11.0/24.0)));
+    mainscreen_layout.add_widget(&human_text, Box2f(V2f(1.0/32.0, 8.0/24.0),
+                                                    V2f(9.0/32.0,11.0/24.0)));
+    mainscreen_layout.add_widget(&computer_text, Box2f(V2f(22.0/32.0, 8.0/24.0),
+                                                       V2f(31.0/32.0,11.0/24.0)));
 
     next_level_button.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1)); 
@@ -111,7 +191,13 @@ void Menu::setup_layout(void)
     level_name_text.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1)); 
     start_button.on_click()
-        .connect(sigc::mem_fun(this,&Menu::start)); 
+        .connect(sigc::mem_fun(this,&Menu::start));  
+    quit_button.on_click()
+        .connect(sigc::mem_fun(this,&Menu::quit)); 
+    computer_slider.on_click()
+        .connect(sigc::mem_fun(this,&Menu::change_computers)); 
+    human_slider.on_click()
+        .connect(sigc::mem_fun(this,&Menu::change_humans)); 
 }
 
 void Menu::next_level(int d)

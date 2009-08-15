@@ -18,8 +18,6 @@ class Widget
     Widget(float aspect) 
         : aspect(aspect) {};
 
-    sigc::signal<void> signal_clicked;
-
     public:
 
     virtual void  set_available_area(Box2f area);
@@ -31,16 +29,13 @@ class Widget
 
     virtual void area_clicked(V2f pos) = 0;
     virtual void draw(void) = 0;
-
-    sigc::signal<void>& on_click()
-    {
-        return signal_clicked;
-    }
 };
 
 class Button : public Widget
 {
     Texture2D texture;
+
+    sigc::signal<void> signal_clicked;
 
     public:
 
@@ -51,6 +46,11 @@ class Button : public Widget
 
     virtual void area_clicked(V2f pos);
     virtual void draw(void);
+
+    sigc::signal<void>& on_click()
+    {
+        return signal_clicked;
+    }
 };
 
 class TextArea : public Widget
@@ -58,6 +58,8 @@ class TextArea : public Widget
     FTFont* font;
 
     string text;
+
+    sigc::signal<void> signal_clicked;
     
     public:
 
@@ -70,6 +72,11 @@ class TextArea : public Widget
 
     virtual void area_clicked(V2f pos);
     virtual void draw(void);
+
+    sigc::signal<void>& on_click()
+    {
+        return signal_clicked;
+    }
 };
 
 class SimpleLayout : public Widget
@@ -89,6 +96,29 @@ class SimpleLayout : public Widget
 
     virtual void area_clicked(V2f pos);
     virtual void draw(void);
+};
+
+class Slider : public Widget
+{
+    Button up_button, down_button;
+
+    sigc::signal<void,int> signal_clicked;
+
+    void change(int dir);
+
+    public:
+
+    Slider();
+
+    virtual void set_available_area(Box2f area);
+
+    virtual void area_clicked(V2f pos);
+    virtual void draw(void);
+
+    sigc::signal<void,int>& on_click()
+    {
+        return signal_clicked;
+    }
 };
 
 #endif

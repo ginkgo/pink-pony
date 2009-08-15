@@ -46,8 +46,15 @@ template<class T> T parse(string s)
 {
     T t;
     std::stringstream ss(s);
-    s >> t;
+    ss >> t;
     return t;
+}
+
+template<class T> string to_string(T t)
+{
+    std::stringstream ss;
+    ss << t;
+    return ss.str();
 }
 
 #endif

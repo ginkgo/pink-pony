@@ -8,8 +8,10 @@ You will need the following tools and libraries to build the game:
 * GLFW
 * IlmBase
 * DevIL
-* google protobuf
+* protobuf (You also need protobuf-compiler on ubuntu)
 * audiere
+* FTGL
+* libsigc++
 
 Just build the game with "scons" in the current directory. If you have
 a dualcore CPU, you can use "scons -j2" for parallel building.
@@ -47,7 +49,7 @@ You can supply an alternative config file as option in the "./Pony" call.
 Different parts of Pink Pony are available under different terms.
 
 Unless otherwise noted in this file (see below), everything is Copyright
-(C) 2009 by ginkgo and availeble under the terms of the GNU General Public
+(C) 2009 by ginkgo and available under the terms of the GNU General Public
 License of the Free Software Foundation, either version 3 of the License,
 or (at your option) any later version.
 

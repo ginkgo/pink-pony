@@ -14,7 +14,7 @@ void randomize_start_positions(Config& config, Heightmap& heightmap);
 
 int main(int argc, char** argv)
 {
-    string config_file = "menutest.options";
+    string config_file = "pony.options";
     
     Config config;
 
