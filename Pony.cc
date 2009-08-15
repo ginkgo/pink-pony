@@ -15,6 +15,7 @@ void randomize_start_positions(Config& config, Heightmap& heightmap);
 int main(int argc, char** argv)
 {
     string config_file = "pony.options";
+    bool running = true;
     
     Config config;
 
@@ -60,7 +61,7 @@ int main(int argc, char** argv)
     // We put everything between glfwOpenWindow & glfwTerminate
     // between braces, so that stack variables that need a GL context
     // are destructed, while the context still exists.
-    {
+    while (running) {
         Skydome skydome("textures/sky.png");
         Menu::MenuStatus menu_status;
         
@@ -106,8 +107,12 @@ int main(int argc, char** argv)
             }
         } else if (menu_status == Menu::QUIT) {
             cout << "Quit game." << endl;
+            running = false;
         }
         
+        if (!glfwGetWindowParam(GLFW_OPENED)) {
+            running = false;
+        }
 
     }
     glfwTerminate();
