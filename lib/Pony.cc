@@ -162,10 +162,12 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 				}
 			}
 			if(minlength<301) {
-				if((per_dir^minheart_dir) > 0) {
+				if((per_dir^minheart_dir) > 0.1) {
 					turning = LEFT;
-				} else if((per_dir^minheart_dir) < 0){
+				} else if((per_dir^minheart_dir) < -0.1){
 					turning = RIGHT;
+				} else {
+					turning = STILL;
 				}
 			}
 		}
