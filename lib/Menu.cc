@@ -1,4 +1,5 @@
 #include "Menu.hh"
+#include <tinyxml.h>
 
 Menu* Menu::callback_menu = NULL;
 
@@ -70,35 +71,77 @@ Menu::Menu (Config* config,
 {
 
     // Some static test data
-    level_names.clear();
-    levels["Lagoon"] = Level("Lagoon",
-                            "levels/heart.png",
-                            V3f(1500, 90, 1500),
-                            45);
-    level_names.push_back("Lagoon");
-
-    levels["Heart"] = Level("Heart",
-                            "levels/heart.png",
-                            V3f(1500, 90, 1500),
-                            30);
-    level_names.push_back("Heart");
-
-    levels["Ring"] = Level("Ring",
-                           "levels/ring.png",
-                           V3f(1500, 90, 1500),
-                           30);
-    level_names.push_back("Ring");
-
-    selected_level = 0;
+    load_levels(config->levels_file);
 
     int w,h;
     glfwGetWindowSize(&w,&h);
     resize_callback(w,h);
-    reload_level("Lagoon");
+
+    next_level(0);
 
     setup_layout();
     computer_no.set_text(to_string(computers));
     human_no.set_text(to_string(humans));
+}
+
+void Menu::load_levels(string levels_file)
+{
+    TiXmlDocument doc(levels_file.c_str());
+
+    level_names.clear();
+    levels.clear();
+
+    if (!doc.LoadFile()) {
+        cerr << "Could not load levels file " << levels_file << ".\n";
+        assert(0);
+    }
+    
+    TiXmlNode* levels_node = doc.FirstChild();
+
+    if (levels_node->Type() != TiXmlNode::ELEMENT ||
+        string(levels_node->Value()) != "levels") {
+        cerr << "Could not find 'levels' element in " << levels_file << endl;
+        assert(0);
+    }
+
+    for (TiXmlNode* level_node = levels_node->ToElement()->FirstChild(); level_node != NULL;
+         level_node = level_node->NextSibling()) {
+        
+        if (level_node->Type() != TiXmlNode::ELEMENT ||
+            string(level_node->Value()) != "level") {
+            cerr << "Could not find 'level' element in " << levels_file << endl;
+            assert(0);
+        }
+
+        TiXmlElement* level_element = level_node->ToElement();
+
+        const char* name;
+        const char* file;
+        const char* size_string;
+        V3f size;
+        float water_level;
+
+        if ((name = level_element->Attribute("name")) == NULL)
+            assert(0);
+        if ((file = level_element->Attribute("file")) == NULL)
+            assert(0);
+        if ((size_string = level_element->Attribute("size")) == NULL)
+            assert(0);
+        if (level_element->QueryFloatAttribute("water_level", &water_level) != TIXML_SUCCESS)
+            assert(0);
+
+        try {
+            size = parse<V3f>(string(size_string));
+        } catch (...) {
+            assert(0);
+        }
+
+        level_names.push_back(string(name));
+        levels[string(name)] = Level(string(name),
+                                     string(file),
+                                     size,
+                                     water_level);
+    }
 }
 
 void Menu::change_humans(int dir)
@@ -203,13 +246,13 @@ void Menu::setup_layout(void)
 void Menu::next_level(int d)
 {
     // We add one interval so that the modulo also works when d is negative.
-    selected_level = selected_level + level_names.size() + d;
-    selected_level = selected_level % level_names.size();
+    config->selected_level = config->selected_level + level_names.size() + d;
+    config->selected_level = config->selected_level % level_names.size();
 
-    cout << "Selected level " << selected_level 
-         << ": " << level_names[selected_level] << endl;
+    cout << "Selected level " << config->selected_level 
+         << ": " << level_names[config->selected_level] << endl;
 
-    reload_level(level_names[selected_level]);
+    reload_level(level_names[config->selected_level]);
 }
 
 void Menu::reload_level(string level)

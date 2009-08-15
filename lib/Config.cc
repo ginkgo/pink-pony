@@ -8,6 +8,8 @@ Config::Config()
       fsaa_samples(4),
       swap_interval(1),
       polygon_mode(GL_FILL),
+      levels_file("levels.xml"),
+      selected_level(0),
       heightmap_file("levels/heightmap-heart.exr"),
       level_size(V3f(-500, 0,-500),
                  V3f( 500,60, 500)),
@@ -260,6 +262,8 @@ void Config::set_value(string name, string value)
     else if (name == "pony_particle_rate") pony_particle_rate = fval;
     else if (name == "use_particles") use_particles = bval;
     else if (name == "background_music") background_music = sval;
+    else if (name == "levels_file") levels_file = sval;
+    else if (name == "selected_level") selected_level = ival;
 }
 
 bool Config::read_file(string filename)
@@ -328,6 +332,8 @@ bool Config::write_file(string filename)
     os << "use_particles = " << (use_particles?"true":"false") << ";" << endl;
 
     os << endl << "// Level properties" << endl << endl;
+    os << "levels_file = \"" << levels_file << "\";" << endl;
+    os << "selected_level = " << selected_level << ";" << endl;
     os << "heightmap_file = \"" << heightmap_file << "\";" << endl;
     os << "level_size = " << level_size.size() << ";" << endl;
     os << "water_level = " << water_level << ";" << endl;

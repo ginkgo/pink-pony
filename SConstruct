@@ -22,10 +22,10 @@ env.Program('skeleton_compile',
 
 env.Program('Pony', 
             ['Pony.cc', 'lib/GL/GLee.c'] 
-            + Glob('lib/*cc'))
+            + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))
 env.Program('MapView', 
             ['MapView.cc', 'lib/GL/GLee.c'] 
-            + Glob('lib/*cc'))
+            + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))
 env.Program('ConfigFile', 
             ['ConfigFile.cc', 'lib/GL/GLee.c'] 
-            + Glob('lib/*cc'))
+            + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))

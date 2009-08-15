@@ -17,6 +17,9 @@ class Config
     
     // Level properties:
     
+    string levels_file;
+    int selected_level;
+
     string heightmap_file;
     Box3f level_size;
     float water_level;

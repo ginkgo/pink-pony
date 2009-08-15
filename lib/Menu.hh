@@ -46,8 +46,8 @@ class Menu
 
     map<string, Level> levels;
     vector<string> level_names;
-    int selected_level;
     
+    void load_levels(string levels_file);
     void reload_level(string level);
     void draw(void);
     
