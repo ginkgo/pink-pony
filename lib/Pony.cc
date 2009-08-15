@@ -102,7 +102,8 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 
 	vector<Pony*>* ponies = game->get_ponies();
 	bool cut_road = false;
-	for (unsigned int i = 0; i < ponies->size(); ++i) {
+	int cut_turning = STILL;
+	for (unsigned int i = 0; i < ponies->size(); i++) {
 		V2f pony_pony_dir(sin(ponies->at(i)->angle), cos(ponies->at(i)->angle));
 		V2f pony_nextpos = ponies->at(i)->pos + pony_pony_dir * ponies->at(i)->speed * 1;
 		Line pony_nextline(ponies->at(i)->pos,pony_nextpos);
@@ -111,11 +112,11 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 			accel -= game->config()->pony_acceleration;
 			if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
 			if((per_dir^inter_dir) > 0) {
-				turning = LEFT;
+				cut_turning = LEFT;
 			} else if((per_dir^inter_dir) < 0)  {
-				turning = RIGHT;
+				cut_turning = RIGHT;
 			} else {
-				turning = lastturning;
+				cut_turning = lastturning;
 			}
 			cut_road = true;
 		}
@@ -130,7 +131,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 			if (r&&!l) turning = RIGHT;
 			else if (l&&!r) turning = LEFT;
 			else turning = lastturning;
-		}
+		} else turning = lastturning;
 	} else if (game->linelist()->intersects(nextline, &intersection)) {
 		V2f inter_dir = intersection.b-intersection.a;
 		accel -= game->config()->pony_acceleration;
@@ -142,6 +143,8 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 		} else {
 			turning = lastturning;
 		}
+	} else if(cut_road) {
+		turning = cut_turning;
 	} else {
 		accel = game->config()->pony_acceleration;
 		turning = STILL;
