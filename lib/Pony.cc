@@ -100,29 +100,6 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 	bool water_collision = game->terrain()->intersects_with_water(nextline, game->config()->water_tolerance, &waterpos);
 	bool wall_collision = game->linelist()->intersects(nextline, &intersection_point);
 
-	vector<Pony*>* ponies = game->get_ponies();
-	bool cut_road = false;
-	int cut_turning = STILL;
-	for (unsigned int i = 0; i < ponies->size(); i++) {
-		V2f pony_pony_dir(sin(ponies->at(i)->angle), cos(ponies->at(i)->angle));
-		V2f pony_nextpos = ponies->at(i)->pos + pony_pony_dir * ponies->at(i)->speed * 1;
-		Line pony_nextline(ponies->at(i)->pos,pony_nextpos);
-		if(pony_nextline.intersects(nextline)) {
-			V2f inter_dir = pony_nextline.b-pony_nextline.a;
-			accel -= game->config()->pony_acceleration;
-			if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
-			if((per_dir^inter_dir) > 0) {
-				cut_turning = LEFT;
-			} else if((per_dir^inter_dir) < 0)  {
-				cut_turning = RIGHT;
-			} else {
-				cut_turning = lastturning;
-			}
-			cut_road = true;
-		}
-	}
-	// for now this is useless, but later I'll put that in a better place
-
 	if ((water_collision)&&((!wall_collision)||(wall_collision && (intersection_point - pos).length() > (waterpos - pos).length()))) {
 		accel -= game->config()->pony_acceleration;
 		if(turning==STILL) {
@@ -143,33 +120,53 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 		} else {
 			turning = lastturning;
 		}
-	} else if(cut_road) {
-		turning = cut_turning;
 	} else {
-		accel = game->config()->pony_acceleration;
-		turning = STILL;
-		list<V2f>* hearts = game->hearts();
-		int minlength = 301;
-		V2f minheart_dir(1.0,0.0);
-		for(list<V2f>::iterator heart = hearts->begin(); heart != hearts->end(); heart++) {
-			V2f heart_dir = *heart - pos;
-			Line heart_line(pos, *heart);
-			if((heart_dir.length()<300)&&!game->linelist()->intersects(heart_line, &intersection)) {
-				int length = heart_dir.length();
-				heart_dir.normalize();
-				if((pony_dir^heart_dir) > cos(M_PI_4)) {
-					if (length < minlength) {
-						minheart_dir = heart_dir;
-						minlength = length;
+		vector<Pony*>* ponies = game->get_ponies();
+		bool cut_road = false;
+		for (unsigned int i = 0; i < ponies->size(); i++) {
+			V2f pony_pony_dir(sin(ponies->at(i)->angle), cos(ponies->at(i)->angle));
+			V2f pony_nextpos = ponies->at(i)->pos + pony_pony_dir * ponies->at(i)->speed * 1;
+			Line pony_nextline(ponies->at(i)->pos,pony_nextpos);
+			if(pony_nextline.intersects(nextline)) {
+				V2f inter_dir = pony_nextline.b-pony_nextline.a;
+				accel -= game->config()->pony_acceleration;
+				if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
+				if((per_dir^inter_dir) > 0) {
+					turning = LEFT;
+				} else if((per_dir^inter_dir) < 0)  {
+					turning = RIGHT;
+				} else {
+					turning = lastturning;
+				}
+				cut_road = true;
+			}
+		}
+		if (!cut_road) {
+			accel = game->config()->pony_acceleration;
+			turning = STILL;
+			list<V2f>* hearts = game->hearts();
+			int minlength = 301;
+			V2f minheart_dir(1.0,0.0);
+			for(list<V2f>::iterator heart = hearts->begin(); heart != hearts->end(); heart++) {
+				V2f heart_dir = *heart - pos;
+				Line heart_line(pos, *heart);
+				if((heart_dir.length()<300)&&!game->linelist()->intersects(heart_line, &intersection)) {
+					int length = heart_dir.length();
+					heart_dir.normalize();
+					if((pony_dir^heart_dir) > cos(M_PI_4)) {
+						if (length < minlength) {
+							minheart_dir = heart_dir;
+							minlength = length;
+						}
 					}
 				}
 			}
-		}
-		if(minlength<301) {
-			if((per_dir^minheart_dir) > 0) {
-				turning = LEFT;
-			} else if((per_dir^minheart_dir) < 0){
-				turning = RIGHT;
+			if(minlength<301) {
+				if((per_dir^minheart_dir) > 0) {
+					turning = LEFT;
+				} else if((per_dir^minheart_dir) < 0){
+					turning = RIGHT;
+				}
 			}
 		}
 	}
