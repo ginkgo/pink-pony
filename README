@@ -59,8 +59,8 @@ A copy of the GNU General Public License is avaliable in doc/GPL3 or
 * Following files are also available under terms of the GPL v3 or later:
   
 Copyright (C) 2009 by tornado <j.sjolund@gmail.com>:
-models/Pony.mesh.xml
-models/pony.blend
+models/Pony.mesh.xml (animated by Skorpio)
+models/pony.blend (animated by Skorpio)
 textures/pony.png
 textures/pony-blue.png (modified by qubodup)
 
