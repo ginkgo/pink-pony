@@ -121,8 +121,11 @@ int main(int argc, char** argv)
                     else if (config.permute_start_positions)
                         permute_start_positions(config);
 
-                    SplitScreen screen(config.width, config.height,
-                                       config.player_count);
+                    
+                    int human_count = config.player_count - config.ai_count;
+                    if (human_count == 0) human_count = config.player_count;
+
+                    SplitScreen screen(config.width, config.height, human_count);
                     screen.set_glfw_callback();
 
                     PonyGame game(&screen,

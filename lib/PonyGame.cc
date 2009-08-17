@@ -17,6 +17,8 @@ PonyGame::PonyGame(SplitScreen* screen,
       heart_drawer(&heart),
       heart_shader("GLSL/heart")
 {
+    int human_count = m_config->player_count - m_config->ai_count;
+    if (human_count == 0) human_count = m_config->player_count;
     // Init OpenGL states
 
     glEnable(GL_DEPTH_TEST);
@@ -68,10 +70,12 @@ PonyGame::PonyGame(SplitScreen* screen,
 
         }       
         
-        m_screen->camera(i)->init(1.0,
-                                  m_config->camera_fov,
-                                  m_config->camera_near,
-                                  m_config->camera_far);
+        if (i < human_count) {
+            m_screen->camera(i)->init(1.0,
+                                      m_config->camera_fov,
+                                      m_config->camera_near,
+                                      m_config->camera_far);
+        }
                                      
         m_screen->resize(m_screen->get_size().x,
                          m_screen->get_size().y);
@@ -149,6 +153,9 @@ PonyGame::~PonyGame()
 
 bool PonyGame::start(PonyPoints& points)
 {
+    int human_count = m_config->player_count - m_config->ai_count;
+    if (human_count == 0) human_count = m_config->player_count;
+
     bool run_game = true;
 
     bool running = true;
@@ -180,7 +187,9 @@ bool PonyGame::start(PonyPoints& points)
 
         for (int i = 0; i < m_config->player_count; i++) {
             ponies[i]->move(this, timeDiff,i);
-            ponies[i]->set_camera(this, m_screen->camera(i),i);
+
+            if (i < human_count)
+                ponies[i]->set_camera(this, m_screen->camera(i),i);
 
             if (!ponies[i]->is_out()) {
                 bool has_intersected =
@@ -252,7 +261,7 @@ bool PonyGame::start(PonyPoints& points)
         glPolygonMode(GL_FRONT_AND_BACK, m_config->polygon_mode);
 
         
-        for (int i = 0; i < m_config->player_count; i++) {
+        for (int i = 0; i < human_count; i++) {
 
             m_screen->set_subscreen(i);
             m_screen->camera(i)->set_matrices();
@@ -305,7 +314,7 @@ bool PonyGame::start(PonyPoints& points)
 
         // Draw point HUD
 
-        for (int i = 0; i < m_config->player_count; i++) {
+        for (int i = 0; i < human_count; i++) {
             m_screen->set_point_hud(i);
             glDisable(GL_DEPTH_TEST);
             glDisable(GL_CULL_FACE);

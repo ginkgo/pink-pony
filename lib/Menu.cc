@@ -295,7 +295,9 @@ void Menu::reload_level(string level)
 
 Menu::MenuStatus Menu::run(void)
 {
-    glfwEnable(GLFW_MOUSE_CURSOR);
+    if (config->window_mode == GLFW_FULLSCREEN)
+        glfwEnable(GLFW_MOUSE_CURSOR);
+
     status = START;
     running = true;
 
@@ -330,7 +332,8 @@ Menu::MenuStatus Menu::run(void)
     glfwSetKeyCallback(NULL);
     callback_menu = NULL;
 
-    glfwDisable(GLFW_MOUSE_CURSOR);
+    if (config->window_mode == GLFW_FULLSCREEN)
+        glfwDisable(GLFW_MOUSE_CURSOR);
 
     return status;
 }
