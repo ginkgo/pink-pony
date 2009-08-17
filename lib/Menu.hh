@@ -22,6 +22,7 @@ class Menu
 
     Config* config;
     Skydome* skydome;
+    audiere::OutputStreamPtr music;
 
     auto_ptr<Heightmap> heightmap;
 
@@ -86,9 +87,11 @@ class Menu
     public:
 
     void toggle_fullscreen(void);
+    void toggle_music(void);
 
     Menu(Config* config, 
-         Skydome* skydome);
+         Skydome* skydome,
+         audiere::OutputStreamPtr music);
 
     MenuStatus run(void);
 

@@ -7,12 +7,14 @@
 PonyGame::PonyGame(SplitScreen* screen,
                    Heightmap* heightmap,
                    Config* config,
-                   Skydome* skydome)
+                   Skydome* skydome,
+                   audiere::OutputStreamPtr music)
     : particle_system(ParticleSystem::make_particle_system(2000000, config)),
       m_screen(screen),
       m_heightmap(heightmap),
       m_config(config),
       skydome(skydome),
+      music(music),
       heart(),
       heart_drawer(&heart),
       heart_shader("GLSL/heart")
@@ -156,6 +158,8 @@ bool PonyGame::start(PonyPoints& points)
     int human_count = m_config->player_count - m_config->ai_count;
     if (human_count == 0) human_count = m_config->player_count;
 
+    int humans_alive = human_count;
+
     bool run_game = true;
 
     bool running = true;
@@ -168,6 +172,7 @@ bool PonyGame::start(PonyPoints& points)
     cout << m_config->player_count << " ponies." << endl;
 
     GLboolean space_pressed = glfwGetKey(GLFW_KEY_SPACE);
+    GLboolean f1_pressed = glfwGetKey(GLFW_KEY_F1);
 
     ParticleExplosionSource explosion_source(particle_system);
 
@@ -176,6 +181,9 @@ bool PonyGame::start(PonyPoints& points)
         double now = glfwGetTime();
         double timeDiff = now - then;
         then = now;
+        
+        if (humans_alive < 1)
+            timeDiff *= 8;
 
         if (!running) {
             delay -= timeDiff;
@@ -228,6 +236,9 @@ bool PonyGame::start(PonyPoints& points)
                          m_config->pony_color[i],
                          m_config->pony_explosion_particles,
                          1/8.0);
+
+                    if (i < human_count)
+                        --humans_alive;
 
                     for (int j = 0; j < m_config->player_count; j++) {
                         if (!ponies[j]->is_out()) {
@@ -396,7 +407,16 @@ bool PonyGame::start(PonyPoints& points)
             ilutGLScreenie(); // Take screenshot;
         }
 
+        if (glfwGetKey(GLFW_KEY_F1) && !f1_pressed) {
+            if (music->getVolume() != 0.0) {
+                music->setVolume(0.0);
+            } else {
+                music->setVolume(1.0);
+            }            
+        }
+
         space_pressed = glfwGetKey(GLFW_KEY_SPACE);
+        f1_pressed = glfwGetKey(GLFW_KEY_F1);
     }
 
     return run_game;

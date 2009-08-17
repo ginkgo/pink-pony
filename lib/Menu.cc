@@ -22,6 +22,8 @@ void GLFWCALL menu_key_callback(int key, int state)
 
     if (key == GLFW_KEY_SPACE)
         Menu::callback_menu->next_level(1);
+    if (key == GLFW_KEY_F1)
+        Menu::callback_menu->toggle_music();
     if (key == GLFW_KEY_F2)
         Menu::callback_menu->toggle_fullscreen();
 }
@@ -31,6 +33,15 @@ void Menu::toggle_fullscreen(void)
     config->window_mode = (config->window_mode == GLFW_WINDOW)?GLFW_FULLSCREEN:GLFW_WINDOW;
     status = RESET;
     running = false;    
+}
+
+void Menu::toggle_music(void)
+{
+    if (music->getVolume() != 0.0) {
+        music->setVolume(0.0);
+    } else {
+        music->setVolume(1.0);
+    }
 }
 
 void Menu::mouse_callback(int button, int action)
@@ -61,9 +72,11 @@ void Menu::resize_callback(int width, int height)
 }
 
 Menu::Menu (Config* config, 
-            Skydome* skydome)
+            Skydome* skydome,
+            audiere::OutputStreamPtr music)
     : config(config),
       skydome(skydome),
+      music(music),
       heightmap(NULL),
       logo_button("textures/logo.png"),
       start_button("Start"),

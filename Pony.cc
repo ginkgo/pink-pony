@@ -88,7 +88,7 @@ int main(int argc, char** argv)
             Menu::MenuStatus menu_status;
         
             {
-                Menu menu(&config, &skydome);
+                Menu menu(&config, &skydome, music);
 
                 menu_status = menu.run();
             }
@@ -131,7 +131,8 @@ int main(int argc, char** argv)
                     PonyGame game(&screen,
                                   &heightmap,
                                   &config,
-                                  &skydome);
+                                  &skydome,
+                                  music);
 
                     run_game = game.start(points);
                 }
