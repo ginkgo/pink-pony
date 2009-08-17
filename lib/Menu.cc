@@ -17,10 +17,20 @@ void GLFWCALL menu_resize_callback(int width, int height)
 
 void GLFWCALL menu_key_callback(int key, int state)
 {
-    if (key == GLFW_KEY_SPACE && 
-        state == GLFW_PRESS && 
-        Menu::callback_menu != NULL)
+    if (state != GLFW_PRESS || Menu::callback_menu == NULL ) 
+        return;
+
+    if (key == GLFW_KEY_SPACE)
         Menu::callback_menu->next_level(1);
+    if (key == GLFW_KEY_F2)
+        Menu::callback_menu->toggle_fullscreen();
+}
+
+void Menu::toggle_fullscreen(void)
+{
+    config->window_mode = (config->window_mode == GLFW_WINDOW)?GLFW_FULLSCREEN:GLFW_WINDOW;
+    status = RESET;
+    running = false;    
 }
 
 void Menu::mouse_callback(int button, int action)
@@ -56,16 +66,16 @@ Menu::Menu (Config* config,
       skydome(skydome),
       heightmap(NULL),
       logo_button("textures/logo.png"),
-      prev_level_button("textures/left.png"),
-      next_level_button("textures/right.png"),
-      level_name_text("Lagoon"),
       start_button("Start"),
       quit_button("textures/quit.png"),
       options_button("textures/settings.png"),
+      level_name_text("Lagoon"),
+      next_level_button("textures/right.png"),
+      prev_level_button("textures/left.png"),
       computer_no("0"),
       human_no("0"),
-      human_text("textures/human.png"),
       computer_text("textures/computer.png"),
+      human_text("textures/human.png"),
       computers(config->ai_count),
       humans(config->player_count - config->ai_count)
 {
@@ -200,20 +210,13 @@ void Menu::change_computers(int dir)
 
 void Menu::setup_layout(void)
 {
-    mainscreen_layout.add_widget(&level_name_text, Box2f(V2f(4/12.0, 1/12.0),
-                                                         V2f(8/12.0, 3/12.0)));
-    mainscreen_layout.add_widget(&prev_level_button, Box2f(V2f(3/12.0, 1/12.0),
-                                                           V2f(4/12.0, 3/12.0)));
-    mainscreen_layout.add_widget(&next_level_button, Box2f(V2f(8/12.0, 1/12.0),
-                                                           V2f(9/12.0, 3/12.0)));
+
     mainscreen_layout.add_widget(&logo_button, Box2f(V2f(0.0, 2.0/3.0),
                                                      V2f(1.0,     1.0)));
+
     mainscreen_layout.add_widget(&start_button, Box2f(V2f(8.0/24.0, 6.0/12.0),
                                                       V2f(16.0/24.0, 17.0/24.0)));
-    mainscreen_layout.add_widget(&quit_button, Box2f(V2f(1.0/48.0, 1.0/32.0),
-                                                     V2f(5.0/48.0, 5.0/32.0)));
-    mainscreen_layout.add_widget(&options_button, Box2f(V2f(42.0/48.0, 1.0/32.0),
-                                                        V2f(47.0/48.0, 5.0/32.0)));
+
     mainscreen_layout.add_widget(&human_slider, Box2f(V2f(13.0/32.0, 8.0/24.0),
                                                       V2f(16.0/32.0,11.0/24.0)));
     mainscreen_layout.add_widget(&computer_slider, Box2f(V2f(16.0/32.0, 8.0/24.0),
@@ -221,11 +224,23 @@ void Menu::setup_layout(void)
     mainscreen_layout.add_widget(&human_no, Box2f(V2f(10.0/32.0, 8.0/24.0),
                                                   V2f(13.0/32.0,11.0/24.0)));
     mainscreen_layout.add_widget(&computer_no, Box2f(V2f(19.0/32.0, 8.0/24.0),
-                                                     V2f(21.0/32.0,11.0/24.0)));
-    mainscreen_layout.add_widget(&human_text, Box2f(V2f(4.0/32.0, 7.0/24.0),
-                                                    V2f(9.0/32.0,12.0/24.0)));
+                                                     V2f(22.0/32.0,11.0/24.0)));
+    mainscreen_layout.add_widget(&human_text, Box2f(V2f(5.0/32.0, 7.0/24.0),
+                                                    V2f(10.0/32.0,12.0/24.0)));
     mainscreen_layout.add_widget(&computer_text, Box2f(V2f(22.0/32.0, 7.0/24.0),
                                                        V2f(27.0/32.0,12.0/24.0)));
+
+    mainscreen_layout.add_widget(&level_name_text, Box2f(V2f(4/12.0, 1/32.0),
+                                                         V2f(8/12.0, 5/32.0)));
+    mainscreen_layout.add_widget(&prev_level_button, Box2f(V2f(3/12.0, 1/32.0),
+                                                           V2f(4/12.0, 5/32.0)));
+    mainscreen_layout.add_widget(&next_level_button, Box2f(V2f(8/12.0, 1/32.0),
+                                                           V2f(9/12.0, 5/32.0)));
+
+    mainscreen_layout.add_widget(&quit_button, Box2f(V2f(1.0/48.0, 1.0/32.0),
+                                                     V2f(5.0/48.0, 5.0/32.0)));
+    mainscreen_layout.add_widget(&options_button, Box2f(V2f(43.0/48.0, 1.0/32.0),
+                                                        V2f(47.0/48.0, 5.0/32.0)));
 
     next_level_button.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1)); 
@@ -280,6 +295,7 @@ void Menu::reload_level(string level)
 
 Menu::MenuStatus Menu::run(void)
 {
+    glfwEnable(GLFW_MOUSE_CURSOR);
     status = START;
     running = true;
 
@@ -313,6 +329,8 @@ Menu::MenuStatus Menu::run(void)
     glfwSetWindowSizeCallback(NULL);
     glfwSetKeyCallback(NULL);
     callback_menu = NULL;
+
+    glfwDisable(GLFW_MOUSE_CURSOR);
 
     return status;
 }

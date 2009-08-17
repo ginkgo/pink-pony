@@ -16,7 +16,7 @@ class Menu
 {
     public:
 
-    enum MenuStatus { START, QUIT };
+    enum MenuStatus { START, QUIT, RESET };
 
     private:
 
@@ -84,6 +84,8 @@ class Menu
     void change_humans(int dir);
 
     public:
+
+    void toggle_fullscreen(void);
 
     Menu(Config* config, 
          Skydome* skydome);

@@ -57,63 +57,98 @@ int main(int argc, char** argv)
 
     glfwSetWindowTitle("Pink Pony <3");
     glfwSwapInterval(config.swap_interval);
+
+    bool reset_video = false;
     
-    // We put everything between glfwOpenWindow & glfwTerminate
-    // between braces, so that stack variables that need a GL context
-    // are destructed, while the context still exists.
     while (running) {
-        Skydome skydome("textures/sky.png");
-        Menu::MenuStatus menu_status;
-        
+
+        if (reset_video) {
+
+            glfwTerminate();
+
+            glfwInit();
+            glfwOpenWindowHint(GLFW_FSAA_SAMPLES, config.fsaa_samples);
+            
+            glfwOpenWindow(config.width, config.height, // width, height
+                           0, 0, 0, 0,                  // R, G, B, A
+                           24, 8,                       // depth, stencil
+                           config.window_mode);         // GLFW_WINDOW | GLFW_FULLSCREEN
+
+            glfwSetWindowTitle("Pink Pony <3");
+            glfwSwapInterval(config.swap_interval);
+
+            reset_video = false;
+        }
+
+        // We put everything between glfwOpenWindow & glfwTerminate
+        // between braces, so that stack variables that need a GL context
+        // are destructed, while the context still exists.
         {
-            Menu menu(&config, &skydome);
-
-            menu_status = menu.run();
-        }
-
-        if (!config.write_file(config_file)) {
-            cerr << "Could not write config file." << endl;
-        }
-
-        if (menu_status == Menu::START) {        
-            Heightmap heightmap(config.heightmap_file,
-                                config.level_size,
-                                config.water_level,
-                                config.sand_texture,
-                                config.grass_texture,
-                                config.noise_texture);
-    
-            PonyPoints points(config.player_count);
-
-            bool run_game = true;
-
-            while (run_game){
-
-                if (config.randomize_start_positions)
-                    randomize_start_positions(config, heightmap);
-                else if (config.permute_start_positions)
-                    permute_start_positions(config);
-
-                SplitScreen screen(config.width, config.height,
-                                   config.player_count);
-                screen.set_glfw_callback();
-
-                PonyGame game(&screen,
-                              &heightmap,
-                              &config,
-                              &skydome);
-
-                run_game = game.start(points);
-            }
-        } else if (menu_status == Menu::QUIT) {
-            cout << "Quit game." << endl;
-            running = false;
-        }
+            Skydome skydome("textures/sky.png");
+            Menu::MenuStatus menu_status;
         
-        if (!glfwGetWindowParam(GLFW_OPENED)) {
-            running = false;
+            {
+                Menu menu(&config, &skydome);
+
+                menu_status = menu.run();
+            }
+
+            if (!config.write_file(config_file)) {
+                cerr << "Could not write config file." << endl;
+            }
+
+            if (menu_status == Menu::RESET) {
+                reset_video = true;
+                continue;
+            }
+
+            if (menu_status == Menu::START) {        
+                Heightmap heightmap(config.heightmap_file,
+                                    config.level_size,
+                                    config.water_level,
+                                    config.sand_texture,
+                                    config.grass_texture,
+                                    config.noise_texture);
+    
+                PonyPoints points(config.player_count);
+
+                bool run_game = true;
+
+                while (run_game){
+
+                    if (config.randomize_start_positions)
+                        randomize_start_positions(config, heightmap);
+                    else if (config.permute_start_positions)
+                        permute_start_positions(config);
+
+                    SplitScreen screen(config.width, config.height,
+                                       config.player_count);
+                    screen.set_glfw_callback();
+
+                    PonyGame game(&screen,
+                                  &heightmap,
+                                  &config,
+                                  &skydome);
+
+                    run_game = game.start(points);
+                }
+            } else if (menu_status == Menu::QUIT) {
+                cout << "Quit game." << endl;
+                running = false;
+            }
+        
+            if (!glfwGetWindowParam(GLFW_OPENED)) {
+                running = false;
+            }
         }
 
+    }
+
+    if (!GLEE_VERSION_2_0) {
+        cout << endl
+             << "Your computer does not support OpenGL 2.0" << endl
+             << "OpenGL 2.0 is needed for Pink Pony to work." << endl
+             << "Try to update your graphics card's driver. This could help." << endl;
     }
     glfwTerminate();
 

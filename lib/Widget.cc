@@ -135,7 +135,7 @@ void TextArea::area_clicked(V2f pos)
 
 void TextArea::draw(void)
 {
-    int face_size = 72;
+    //int face_size = 72;
 
     FTBBox ftbbox = font->BBox(text.c_str());
     Box2f bbox(V2f(ftbbox.Lower().X(), ftbbox.Lower().Y()),
