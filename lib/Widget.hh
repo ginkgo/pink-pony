@@ -60,10 +60,13 @@ class TextArea : public Widget
     string text;
 
     sigc::signal<void> signal_clicked;
+
+    Box2f bgarea;
+    Color4f bgcolor;
     
     public:
 
-    TextArea(string initial_text);
+    TextArea(string initial_text, Color4f bgcolor = Color4f(1,1,1,0));
     ~TextArea();
 
     void set_text(string text);

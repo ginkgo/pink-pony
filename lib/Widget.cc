@@ -82,9 +82,9 @@ void Button::draw(void)
     glEnable(GL_DEPTH_TEST);   
 }
 
-TextArea::TextArea(string initial_text)
+TextArea::TextArea(string initial_text, Color4f bgcolor)
     : Widget(1.0), 
-      text(initial_text)
+      text(initial_text), bgcolor(bgcolor)
 {
     int face_size = 72;
 
@@ -109,6 +109,8 @@ TextArea::TextArea(string initial_text)
 void TextArea::set_available_area(Box2f area)
 {
     Widget::set_available_area(area);
+
+    bgarea = area;
 
     font->FaceSize((int)extent.size().y);
 }
@@ -144,7 +146,26 @@ void TextArea::draw(void)
     // bbox.max.y = face_size;
 
     V2f es = extent.size();
+    
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    glDisable(GL_DEPTH_TEST);
 
+    glColor(bgcolor);
+
+    glBegin(GL_QUADS);
+    
+    glTexCoord2f(0, 0);
+    glVertex2f(bgarea.min.x, bgarea.min.y);
+    glTexCoord2f(1, 0);
+    glVertex2f(bgarea.max.x, bgarea.min.y);
+    glTexCoord2f(1, 1);
+    glVertex2f(bgarea.max.x, bgarea.max.y);
+    glTexCoord2f(0, 1);
+    glVertex2f(bgarea.min.x, bgarea.max.y);
+
+    glEnd();
     
     glPushMatrix();
 
@@ -159,6 +180,8 @@ void TextArea::draw(void)
     font->Render(text.c_str());
 
     glPopMatrix();
+
+    glDisable(GL_BLEND);
     
 }
 
