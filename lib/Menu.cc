@@ -53,7 +53,14 @@ void Menu::mouse_callback(int button, int action)
     if (action == GLFW_PRESS) {
         V2f pos(x,screen_size.y - y);
         
-        mainscreen_layout.area_clicked(pos);
+        switch (active_screen) {
+        case MAIN_SCREEN:
+            mainscreen_layout.area_clicked(pos);
+            break;
+        case SETTINGS_SCREEN:
+            settings_layout.area_clicked(pos);
+            break;
+        }
     }
 }
 
@@ -69,12 +76,14 @@ void Menu::resize_callback(int width, int height)
     screen_size = V2f(width, height);
 
     mainscreen_layout.set_available_area(Box2f(V2f(0,0), screen_size));
+    settings_layout.set_available_area(Box2f(V2f(0,0), screen_size));
 }
 
 Menu::Menu (Config* config, 
             Skydome* skydome,
             audiere::OutputStreamPtr music)
-    : config(config),
+    : active_screen(MAIN_SCREEN),
+      config(config),
       skydome(skydome),
       music(music),
       heightmap(NULL),
@@ -90,7 +99,27 @@ Menu::Menu (Config* config,
       computer_text("textures/computer.png"),
       human_text("textures/human.png"),
       computers(config->ai_count),
-      humans(config->player_count - config->ai_count)
+      humans(config->player_count - config->ai_count),
+      settings_text("Settings"),
+      settings_done("textures/back.png"),
+      particles_text("##############"),
+      prev_particles("textures/left.png"),
+      next_particles("textures/right.png"),
+      fullscreen_text("##############"),
+      prev_fullscreen("textures/left.png"),
+      next_fullscreen("textures/right.png"),
+      minimap_text("##############"),
+      prev_minimap("textures/left.png"),
+      next_minimap("textures/right.png"),
+      antialiasing_text("##############"),
+      prev_antialiasing("textures/left.png"),
+      next_antialiasing("textures/right.png"),
+      hearts_text("##############"),
+      prev_hearts("textures/left.png"),
+      next_hearts("textures/right.png"),
+      resolution_text("##############"),
+      prev_resolution("textures/left.png"),
+      next_resolution("textures/right.png")
 {
 
     // Some static test data
@@ -269,6 +298,67 @@ void Menu::setup_layout(void)
         .connect(sigc::mem_fun(this,&Menu::change_computers)); 
     human_slider.on_click()
         .connect(sigc::mem_fun(this,&Menu::change_humans)); 
+    options_button.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::go_to_screen), SETTINGS_SCREEN));
+
+
+    settings_layout.add_widget(&settings_done, Box2f(V2f(1.0/48.0, 1.0/32.0),
+                                                     V2f(5.0/48.0, 5.0/32.0)));
+
+    settings_layout.add_widget(&settings_text, Box2f(V2f( 4/16.0, 9/12.0),
+                                                     V2f(12/16.0,11/12.0)));
+
+    settings_layout.add_widget(&particles_text, Box2f(V2f( 3/32.0, 7/12.0),
+                                                      V2f(13/32.0, 8/12.0)));
+    settings_layout.add_widget(&prev_particles, Box2f(V2f( 1/32.0, 7/12.0),
+                                                      V2f( 3/32.0, 8/12.0)));
+    settings_layout.add_widget(&next_particles, Box2f(V2f(13/32.0, 7/12.0),
+                                                      V2f(15/32.0, 8/12.0)));
+
+    settings_layout.add_widget(&minimap_text, Box2f(V2f( 3/32.0, 5/12.0),
+                                                    V2f(13/32.0, 6/12.0)));
+    settings_layout.add_widget(&prev_minimap, Box2f(V2f( 1/32.0, 5/12.0),
+                                                    V2f( 3/32.0, 6/12.0)));
+    settings_layout.add_widget(&next_minimap, Box2f(V2f(13/32.0, 5/12.0),
+                                                    V2f(15/32.0, 6/12.0)));
+
+    settings_layout.add_widget(&hearts_text, Box2f(V2f( 3/32.0, 3/12.0),
+                                                   V2f(13/32.0, 4/12.0)));
+    settings_layout.add_widget(&prev_hearts, Box2f(V2f( 1/32.0, 3/12.0),
+                                                   V2f( 3/32.0, 4/12.0)));
+    settings_layout.add_widget(&next_hearts, Box2f(V2f(13/32.0, 3/12.0),
+                                                   V2f(15/32.0, 4/12.0)));
+
+    settings_layout.add_widget(&fullscreen_text, Box2f(V2f(19/32.0, 7/12.0),
+                                                       V2f(29/32.0, 8/12.0)));
+    settings_layout.add_widget(&prev_fullscreen, Box2f(V2f(17/32.0, 7/12.0),
+                                                       V2f(19/32.0, 8/12.0)));
+    settings_layout.add_widget(&next_fullscreen, Box2f(V2f(29/32.0, 7/12.0),
+                                                       V2f(31/32.0, 8/12.0)));
+
+    settings_layout.add_widget(&antialiasing_text, Box2f(V2f(19/32.0, 5/12.0),
+                                                         V2f(29/32.0, 6/12.0)));
+    settings_layout.add_widget(&prev_antialiasing, Box2f(V2f(17/32.0, 5/12.0),
+                                                         V2f(19/32.0, 6/12.0)));
+    settings_layout.add_widget(&next_antialiasing, Box2f(V2f(29/32.0, 5/12.0),
+                                                         V2f(31/32.0, 6/12.0)));
+
+    settings_layout.add_widget(&resolution_text, Box2f(V2f(19/32.0, 3/12.0),
+                                                       V2f(29/32.0, 4/12.0)));
+    settings_layout.add_widget(&prev_resolution, Box2f(V2f(17/32.0, 3/12.0),
+                                                       V2f(19/32.0, 4/12.0)));
+    settings_layout.add_widget(&next_resolution, Box2f(V2f(29/32.0, 3/12.0),
+                                                       V2f(31/32.0, 4/12.0)));
+
+
+    settings_done.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::go_to_screen), MAIN_SCREEN));
+    
+}
+
+void Menu::go_to_screen(ScreenType screen)
+{
+    active_screen = screen;
 }
 
 void Menu::next_level(int d)
@@ -386,5 +476,12 @@ void Menu::draw(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    mainscreen_layout.draw();    
+    switch (active_screen) {
+    case MAIN_SCREEN:
+        mainscreen_layout.draw();    
+        break;
+    case SETTINGS_SCREEN:
+        settings_layout.draw();
+        break;
+    }
 }

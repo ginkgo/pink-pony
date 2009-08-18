@@ -20,6 +20,11 @@ class Menu
 
     private:
 
+    enum ScreenType {SETTINGS_SCREEN, MAIN_SCREEN };
+    ScreenType active_screen;
+
+    void go_to_screen(ScreenType screen);
+
     Config* config;
     Skydome* skydome;
     audiere::OutputStreamPtr music;
@@ -61,8 +66,27 @@ class Menu
     Slider computer_slider, human_slider;
     TextArea computer_no, human_no;
     Button computer_text, human_text;
+
     SimpleLayout mainscreen_layout;
 
+    SimpleLayout settings_layout;
+    
+    TextArea settings_text;
+    Button settings_done;
+    TextArea particles_text;
+    Button next_particles, prev_particles;
+    TextArea fullscreen_text;
+    Button next_fullscreen, prev_fullscreen;
+    TextArea minimap_text;
+    Button next_minimap, prev_minimap;
+    TextArea antialiasing_text;
+    Button next_antialiasing, prev_antialiasing;
+    TextArea hearts_text;
+    Button next_hearts, prev_hearts;
+    TextArea resolution_text;
+    Button next_resolution, prev_resolution;
+    
+    
     V2f screen_size;
 
     void setup_layout(void);
