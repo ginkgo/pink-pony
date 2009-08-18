@@ -100,7 +100,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 	bool water_collision = game->terrain()->intersects_with_water(nextline, game->config()->water_tolerance, &waterpos);
 	bool wall_collision = game->linelist()->intersects(nextline, &intersection_point);
 
-	if ((water_collision)&&((!wall_collision)||(wall_collision && (intersection_point - pos).length() > (waterpos - pos).length()))) {
+	if (((water_collision)&&((!wall_collision)||(wall_collision && (intersection_point - pos).length() > (waterpos - pos).length())))&&(!hunting_heart||game->terrain()->intersects_with_water(Line(pos, *hunting_heart), game->config()->water_tolerance, &waterpos))) {
 		accel -= game->config()->pony_acceleration;
 		if(turning==STILL) {
 			bool r = game->terrain()->below_water(waterpos+per_dir, game->config()->water_tolerance);
@@ -157,6 +157,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 						if (length < minlength) {
 							minheart_dir = heart_dir;
 							minlength = length;
+							hunting_heart = &(*heart);
 						}
 					}
 				}
@@ -169,6 +170,8 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 				} else {
 					turning = STILL;
 				}
+			} else {
+				hunting_heart = NULL;
 			}
 		}
 	}

@@ -107,6 +107,7 @@ class AIPony : public Pony
 	int turning;
 	int lastturning;
 	const static int LEFT=1,STILL=0,RIGHT=-1;
+	V2f* hunting_heart;
 
     Imath::Rand32 rand;
 
