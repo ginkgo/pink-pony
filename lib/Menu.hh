@@ -90,6 +90,17 @@ class Menu
     V2f screen_size;
 
     void setup_layout(void);
+    void setup_settings(void);
+    void load_settings(void);
+
+    int particle_setting;
+    int fullscreen_setting;
+    int minimap_setting;
+    int fsaa_setting;
+    int heart_setting;
+    int resolution_setting;
+
+    vector<V2u> resolutions;
 
     MenuStatus status;
     bool running ;
@@ -107,6 +118,15 @@ class Menu
     int computers, humans;
     void change_computers(int dir);
     void change_humans(int dir);
+
+    void change_particles(int direction);
+    void change_fullscreen(int direction);
+    void change_minimap(int direction);
+    void change_antialiasing(int direction);
+    void change_hearts(int direction);
+    void change_resolution(int direction);
+
+    bool needs_reset;
 
     public:
 

@@ -102,24 +102,25 @@ Menu::Menu (Config* config,
       humans(config->player_count - config->ai_count),
       settings_text("Settings"),
       settings_done("textures/back.png"),
-      particles_text("##############"),
+      particles_text("Some particles"),
       prev_particles("textures/left.png"),
       next_particles("textures/right.png"),
-      fullscreen_text("##############"),
+      fullscreen_text("Some particles"),
       prev_fullscreen("textures/left.png"),
       next_fullscreen("textures/right.png"),
-      minimap_text("##############"),
+      minimap_text("Some particles"),
       prev_minimap("textures/left.png"),
       next_minimap("textures/right.png"),
-      antialiasing_text("##############"),
+      antialiasing_text("Some particles"),
       prev_antialiasing("textures/left.png"),
       next_antialiasing("textures/right.png"),
-      hearts_text("##############"),
+      hearts_text("Some particles"),
       prev_hearts("textures/left.png"),
       next_hearts("textures/right.png"),
-      resolution_text("##############"),
+      resolution_text("Some particles"),
       prev_resolution("textures/left.png"),
-      next_resolution("textures/right.png")
+      next_resolution("textures/right.png"),
+      needs_reset(false)
 {
 
     // Some static test data
@@ -132,8 +133,121 @@ Menu::Menu (Config* config,
     next_level(0);
 
     setup_layout();
+    
     computer_no.set_text(to_string(computers));
     human_no.set_text(to_string(humans));
+
+    setup_settings();
+}
+
+void Menu::setup_settings(void)
+{
+    // GLFWvidmode vidmodes[100];
+
+    // int modes_found = glfwGetVideoModes(vidmodes, 100);
+    
+    // resolutions.resize(modes_found);
+
+    // for (int i = 0; i < modes_found; ++i) {
+    //     resolutions[i] = V2i(vidmodes[i].Width,
+    //                          vidmodes[i].Height);
+    // }
+
+    resolutions.push_back(V2i( 640, 480));
+    resolutions.push_back(V2i( 800, 600));
+    resolutions.push_back(V2i(1024, 768));
+    resolutions.push_back(V2i(1280,1024));
+    resolutions.push_back(V2i(1600,1200));
+
+    if(!config->use_particles) {
+        particle_setting = 0;
+    } else if (config->pony_particle_rate <= 10.0) {
+        particle_setting = 1;
+    } else {
+        particle_setting = 2;
+    }
+
+    if (config->window_mode == GLFW_WINDOW) {
+        fullscreen_setting = 0;
+    } else {
+        fullscreen_setting = 1;
+    }
+
+    if (config->show_minimap) {
+        minimap_setting = 1;
+    } else {
+        minimap_setting = 0;
+    }
+
+    fsaa_setting = config->fsaa_samples;
+
+    heart_setting = config->heart_count;
+
+    for (unsigned i = 0; i < resolutions.size(); ++i) {
+        if (resolutions[i].x * resolutions[i].y >= config->width*config->height) {
+            resolution_setting = i;
+            break;
+        }
+    }
+
+    load_settings();    
+}
+
+void Menu::load_settings(void)
+{
+    if (particle_setting == 0) {
+        particles_text.set_text("No particles");
+        config->use_particles = false;
+    } else if (particle_setting == 1) {
+        particles_text.set_text("Some particles");
+        config->use_particles = true;
+        config->heart_explosion_particles = 1000;
+        config->pony_explosion_particles = 5000;
+        config->pony_particle_rate = 10.0;
+    } else {
+        particles_text.set_text("Many particles");
+        config->use_particles = true;
+        config->heart_explosion_particles = 10000;
+        config->pony_explosion_particles = 50000;
+        config->pony_particle_rate = 100.0;        
+    }
+
+    if (fullscreen_setting == 0) {
+        fullscreen_text.set_text("Window");
+        config->window_mode = GLFW_WINDOW;
+    } else {
+        fullscreen_text.set_text("Fullscreen");
+        config->window_mode = GLFW_FULLSCREEN;
+    }
+
+    if (minimap_setting == 0) {
+        minimap_text.set_text("Hide minimap");
+        config->show_minimap = false;
+    } else {
+        minimap_text.set_text("Show minimap");
+        config->show_minimap = true;
+    }
+
+    if (fsaa_setting == 0) {
+        antialiasing_text.set_text("No FSAA");
+        config->fsaa_samples = fsaa_setting;
+    } else {
+        antialiasing_text.set_text(to_string(fsaa_setting) + "x FSAA");
+        config->fsaa_samples = fsaa_setting;
+    }
+
+    if (heart_setting == 0) {
+        hearts_text.set_text("No hearts");
+        config->heart_count = heart_setting;
+    } else {
+        hearts_text.set_text(to_string(heart_setting) + " hearts");
+        config->heart_count = heart_setting;
+    }
+
+    resolution_text.set_text(to_string(resolutions[resolution_setting].x) + "x" +
+                             to_string(resolutions[resolution_setting].y));
+    config->width = resolutions[resolution_setting].x;
+    config->height = resolutions[resolution_setting].y;
 }
 
 void Menu::load_levels(string levels_file)
@@ -353,12 +467,131 @@ void Menu::setup_layout(void)
 
     settings_done.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::go_to_screen), MAIN_SCREEN));
+
+    particles_text.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_particles), 1));
+    prev_particles.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_particles),-1));
+    next_particles.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_particles), 1));
+
+    fullscreen_text.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_fullscreen), 1));
+    prev_fullscreen.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_fullscreen),-1));
+    next_fullscreen.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_fullscreen), 1));
+
+    minimap_text.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_minimap), 1));
+    prev_minimap.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_minimap),-1));
+    next_minimap.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_minimap), 1));
+
+    antialiasing_text.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_antialiasing), 1));
+    prev_antialiasing.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_antialiasing),-1));
+    next_antialiasing.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_antialiasing), 1));
+
+    hearts_text.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_hearts), 1));
+    prev_hearts.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_hearts),-1));
+    next_hearts.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_hearts), 1));
+
+    resolution_text.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_resolution), 1));
+    prev_resolution.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_resolution),-1));
+    next_resolution.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_resolution), 1));
     
+}
+
+void Menu::change_particles(int direction)
+{
+    particle_setting = (particle_setting + 3 + direction) % 3;
+
+
+    load_settings();
+}
+
+void Menu::change_fullscreen(int direction) {
+    
+    if (fullscreen_setting == 0)
+        fullscreen_setting = 1;
+    else 
+        fullscreen_setting = 0;
+    
+    needs_reset = true;
+
+
+    load_settings();
+}
+
+void Menu::change_minimap(int direction) {
+    
+    if (minimap_setting == 0)
+        minimap_setting = 1;
+    else 
+        minimap_setting = 0;
+
+
+    load_settings();
+}
+
+void Menu::change_antialiasing(int direction) {
+    int modes[] = {0, 2, 4, 8, 16};
+    int count = 5;
+
+    int current = 4;
+
+    for (int i = 0; i < 5; ++i) {
+        if (fsaa_setting <= modes[i]) {
+            current = i;
+            break;
+        }
+    }
+
+    current = (current + 5 + direction) % 5;
+
+    fsaa_setting = modes[current];
+
+    needs_reset = true;
+
+    load_settings();    
+}
+
+void Menu::change_hearts(int direction) {
+    heart_setting += direction;
+
+    if (heart_setting < 0) heart_setting = 0;
+
+    load_settings();
+}
+
+void Menu::change_resolution(int direction) {
+    resolution_setting = (resolution_setting + 
+                          resolutions.size() + 
+                          direction) % resolutions.size();
+
+    needs_reset = true;
+
+    load_settings();    
 }
 
 void Menu::go_to_screen(ScreenType screen)
 {
     active_screen = screen;
+
+    if (needs_reset) {
+        status = RESET;
+        running = false;
+    }
 }
 
 void Menu::next_level(int d)
