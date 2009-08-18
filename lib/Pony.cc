@@ -100,7 +100,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 	bool water_collision = game->terrain()->intersects_with_water(nextline, game->config()->water_tolerance, &waterpos);
 	bool wall_collision = game->linelist()->intersects(nextline, &intersection_point);
 
-	if (((water_collision)&&((!wall_collision)||(wall_collision && (intersection_point - pos).length() > (waterpos - pos).length())))&&(!hunting_heart||game->terrain()->intersects_with_water(Line(pos, *hunting_heart), game->config()->water_tolerance, &waterpos))) {
+	if (((water_collision)&&((!wall_collision)||(wall_collision && (intersection_point - pos).length() > (waterpos - pos).length())))&&(!hunting_heart)) {
 		accel -= game->config()->pony_acceleration;
 		if(turning==STILL) {
 			bool r = game->terrain()->below_water(waterpos+per_dir, game->config()->water_tolerance);
@@ -109,7 +109,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 			else if (l&&!r) turning = LEFT;
 			else turning = lastturning;
 		} else turning = lastturning;
-	} else if (game->linelist()->intersects(nextline, &intersection)) {
+	} else if ((game->linelist()->intersects(nextline, &intersection))&&(!hunting_heart)) {
 		V2f inter_dir = intersection.b-intersection.a;
 		accel -= game->config()->pony_acceleration;
 		if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
@@ -129,7 +129,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 			Line pony_nextline(ponies->at(i)->pos,pony_nextpos);
 			if(pony_nextline.intersects(nextline)) {
 				V2f inter_dir = pony_nextline.b-pony_nextline.a;
-				accel -= game->config()->pony_acceleration;
+				accel = -1*game->config()->pony_acceleration;
 				if((pony_dir^inter_dir) < 0) inter_dir = -inter_dir;
 				if((per_dir^inter_dir) > 0) {
 					turning = LEFT;
@@ -142,7 +142,8 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 			}
 		}
 		if (!cut_road) {
-			accel = game->config()->pony_acceleration;
+			if(!game->linelist()->intersects(nextline, &intersection)) accel = game->config()->pony_acceleration;
+			else accel -= game->config()->pony_acceleration;
 			turning = STILL;
 			list<V2f>* hearts = game->hearts();
 			int minlength = 301;
