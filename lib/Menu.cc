@@ -155,9 +155,17 @@ void Menu::setup_settings(void)
 
     resolutions.push_back(V2i( 640, 480));
     resolutions.push_back(V2i( 800, 600));
+    resolutions.push_back(V2i( 960, 600));
     resolutions.push_back(V2i(1024, 768));
+    resolutions.push_back(V2i(1280, 720));
+    resolutions.push_back(V2i(1280, 768));
+    resolutions.push_back(V2i(1280, 800));
     resolutions.push_back(V2i(1280,1024));
+    resolutions.push_back(V2i(1440, 900));
     resolutions.push_back(V2i(1600,1200));
+    resolutions.push_back(V2i(1680,1050));
+    resolutions.push_back(V2i(1920,1080));
+    resolutions.push_back(V2i(1920,1200));
 
     if(!config->use_particles) {
         particle_setting = 0;

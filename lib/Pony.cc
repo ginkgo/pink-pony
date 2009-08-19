@@ -154,7 +154,7 @@ Pony::Decision AIPony::decide(PonyGame* game, int i)
 				if((heart_dir.length()<300)&&!game->linelist()->intersects(heart_line, &intersection)) {
 					int length = heart_dir.length();
 					heart_dir.normalize();
-					if((pony_dir^heart_dir) > cos(M_PI_4)) {
+					if((pony_dir^heart_dir) > cos(M_PI/4)) {
 						if (length < minlength) {
 							minheart_dir = heart_dir;
 							minlength = length;
