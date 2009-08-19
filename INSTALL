@@ -1,0 +1,43 @@
+If you just want to compile and play Pink Pony, do the following:
+
+scons
+./Pony
+
+You will need the following tools/libraries:
+
+* SCons (for building)
+* GLFW
+* IlmBase
+* DevIL
+* protobuf (You also need protobuf-compiler on ubuntu)
+* audiere
+* FTGL
+* libsigc++
+
+*** Information for package maintainers ***
+
+The best way to integrate Pink Pony as package to a distribution is to do the following:
+
+* Compile the game with 'scons'
+
+* Copy the following files & folders to a directory like /usr/share/pink-pony:
+
+  README GLSL fonts levels models music textures pony.options level.xml Pony
+
+* Modify the script 'install/pink-pony' to use the directory where you
+  installed the game resources and put it into a bin directory that is
+  in your system path.
+
+  This is a simple shell script, that changes into the resource
+  directory and calls the 'Pony' executable with
+  ~/.config/pony.options as config file.
+  This way every user gets access to the game and can configure it to
+  his/her liking.
+
+  Users can now just call '$ pink-pony' and play the game without
+  having to worry about being in the correct working directory or
+  supplying a config file.
+
+* You can use the 'install/pink-pony.desktop' and
+  'install/pink-pony.png' files to install the games in desktop
+  environments.

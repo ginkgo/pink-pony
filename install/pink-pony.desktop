@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Pink Pony
+Version=1.0
+Icon=/usr/share/pixmaps/pink-pony.png
+Comment=A Tron-like multiplayer racing game
+Exec=/usr/bin/pink-pony
+Terminal=false
+StartupNotify=false
+Type=Application
+TryExec=/usr/bin/pink-pony
+Categories=Game;ArcadeGame

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+cd /usr/share/pink-pony
+
+if [ $# -ge 1 ]; then
+    ./Pony $1
+else
+    if [ ! -f ~/.config/pony.options ]; then
+	mkdir -p ~/.config/
+	cp pony.options ~/.config/pony.options
+    fi
+    
+    ./Pony ~/.config/pony.options
+fi
