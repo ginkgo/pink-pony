@@ -22,7 +22,7 @@ The best way to integrate Pink Pony as package to a distribution is to do the fo
 
 * Copy the following files & folders to a directory like /usr/share/pink-pony:
 
-  README GLSL fonts levels models music textures pony.options level.xml Pony
+  README GLSL fonts levels models music textures pony.options levels.xml Pony
 
 * Modify the script 'install/pink-pony' to use the directory where you
   installed the game resources and put it into a bin directory that is
