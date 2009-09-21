@@ -191,7 +191,10 @@ bool PonyGame::start(PonyPoints& points)
 
         // Step simulation
 
-        particle_system->step_simulation(timeDiff);
+        if (humans_alive < 1)
+            particle_system->step_simulation(timeDiff/8);
+        else 
+            particle_system->step_simulation(timeDiff);
 
         for (int i = 0; i < m_config->player_count; i++) {
             ponies[i]->move(this, timeDiff,i);
