@@ -51,9 +51,7 @@ class Pony
 
     //Camera camera;
 
-    Pony(V2f pos, float angle, float speed,
-         int up, int down, int left, int right,
-         Config* config, ParticleSystem* particle_system);
+    Pony(int i, Config* config, ParticleSystem* particle_system);
 
     virtual ~Pony() {};
 
@@ -90,12 +88,8 @@ class PlayerPony : public Pony
 
     public:
 
-    PlayerPony(V2f pos, float angle, float speed,
-               int up, int down, int left, int right,
-               Config* config, ParticleSystem* particle_system)
-        : Pony(pos, angle, speed,
-               up, down, left, right,
-               config, particle_system) {};
+    PlayerPony(int i, Config* config, ParticleSystem* particle_system)
+        : Pony(i, config, particle_system) {};
 
 };
 
@@ -113,13 +107,9 @@ class AIPony : public Pony
 
     public:
 
-    AIPony(V2f pos, float angle, float speed,
-           int up, int down, int left, int right,
-           Config* config, ParticleSystem* particle_system)
-        : Pony(pos, angle, speed,
-               up, down, left, right,
-               config, particle_system) { turning = STILL; lastturning = LEFT;hunting_heart = NULL; };
-
+    AIPony(int i, Config* config, ParticleSystem* particle_system)
+        : Pony(i, config, particle_system),
+          turning(STILL), lastturning(LEFT), hunting_heart(NULL) {}
 };
 
 #endif

@@ -166,6 +166,15 @@ Color4f Texture2D::get_color(V2u pos)
     return ((Color4f*)pixels)[pos.y * size.x + pos.x];
 };
 
+void Texture2D::set_color(V2u pos, Color4f color)
+{
+    Box<V2u> box(V2u(0,0), size - V2u(1,1));
+    pos = clip(pos, box);
+
+    
+    ((Color4f*)pixels)[pos.y * size.x + pos.x] = color;
+};
+
 float Texture2D::get_value(V2u pos)
 {
     Box<V2u> box(V2u(0,0), size - V2u(1,1));

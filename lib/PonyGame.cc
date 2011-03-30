@@ -50,25 +50,9 @@ PonyGame::PonyGame(SplitScreen* screen,
     for (int i = 0; i < m_config->player_count; i++) {
 
         if ( i < (config->player_count - config->ai_count)) {
-            ponies.push_back(new PlayerPony(m_config->pony_start[i],
-                                            m_config->pony_start_angle[i],
-                                            m_config->pony_start_speed,
-                                            m_config->pony_up[i],
-                                            m_config->pony_down[i],
-                                            m_config->pony_left[i],
-                                            m_config->pony_right[i],
-                                            m_config,
-                                            particle_system));  
+            ponies.push_back(new PlayerPony(i, m_config, particle_system));  
         } else {
-            ponies.push_back(new AIPony(m_config->pony_start[i],
-                                        m_config->pony_start_angle[i],
-                                        m_config->pony_start_speed,
-                                        m_config->pony_up[i],
-                                        m_config->pony_down[i],
-                                        m_config->pony_left[i],
-                                        m_config->pony_right[i],
-                                        m_config,
-                                        particle_system)); 
+            ponies.push_back(new AIPony(i, m_config, particle_system)); 
 
         }       
         

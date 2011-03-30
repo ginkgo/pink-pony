@@ -58,6 +58,8 @@ class Texture2D
     Color4f get_color(V2u pos);
     Color4f get_color(V2f pos);
     
+    void set_color(V2u pos, Color4f color);
+
     /**
      * Load the pixel data as texture.
      * You only have to use this, when the pixel-data has changed.

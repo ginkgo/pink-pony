@@ -1,19 +1,112 @@
 #include "Pony.hh"
+#include <ImathColorAlgo.h>
 
-Pony::Pony(V2f pos, float angle,
-           float speed,
-           int up, int down,
-           int left, int right,
-           Config* config, ParticleSystem* particle_system)
-    : pos(pos),
-      angle(angle),
-      speed(speed),
+
+Color4f hsvColor(const Color4f& rgbColor)
+{
+    Color4f hsv = rgbColor;
+    float Min   = min(min(rgbColor.r, rgbColor.g), rgbColor.b);
+    float Max   = max(max(rgbColor.r, rgbColor.g), rgbColor.b);
+    float Delta = Max - Min;
+
+    hsv.b = Max;                               
+    	
+    if(Max != float(0))
+	    {
+		    hsv.g = Delta / hsv.b;    
+			float h = float(0);
+
+		    if(rgbColor.r == Max)
+			    // between yellow & magenta
+			    h = float(0) + float(60) * (rgbColor.g - rgbColor.b) / Delta;
+		    else if(rgbColor.g == Max)
+			    // between cyan & yellow
+			    h = float(120) + float(60) * (rgbColor.b - rgbColor.r) / Delta;
+		    else
+			    // between magenta & cyan
+			    h = float(240) + float(60) * (rgbColor.r - rgbColor.g) / Delta;
+            
+		    if(h < float(0)) 
+                hsv.r = h + float(360);
+			else
+				hsv.r = h;
+	    }
+    else
+	    {
+		    // If r = g = b = 0 then s = 0, h is undefined
+		    hsv.g = float(0);
+		    hsv.r = float(0);
+	    }
+
+    return hsv;
+}
+
+Color4f rgbColor(const Color4f& hsvColor)
+{
+    Color4f hsv = hsvColor;
+    Color4f rgbColor = hsv;
+
+    if(hsv.g == float(0))
+        // achromatic (grey)
+        rgbColor = Color4f(hsv.b,hsv.b,hsv.b,hsv.a);
+    else
+	    {
+            float sector = floor(hsv.r / float(60));
+			float frac = (hsv.r / float(60)) - sector;
+            // factorial part of h
+            float o = hsv.b * (float(1) - hsv.g);
+            float p = hsv.b * (float(1) - hsv.g * frac);
+            float q = hsv.b * (float(1) - hsv.g * (float(1) - frac));
+
+            switch(int(sector))
+                {
+                default:
+                case 0:
+                    rgbColor.r = hsv.b;
+                    rgbColor.g = q;
+                    rgbColor.b = o;
+                    break;
+                case 1:
+                    rgbColor.r = p;
+                    rgbColor.g = hsv.b;
+                    rgbColor.b = o;
+                    break;
+                case 2:
+                    rgbColor.r = o;
+                    rgbColor.g = hsv.b;
+                    rgbColor.b = q;
+                    break;
+                case 3:
+                    rgbColor.r = o;
+                    rgbColor.g = p;
+                    rgbColor.b = hsv.b;
+                    break;
+                case 4:
+                    rgbColor.r = q; 
+                    rgbColor.g = o; 
+                    rgbColor.b = hsv.b;
+                    break;
+                case 5:
+                    rgbColor.r = hsv.b; 
+                    rgbColor.g = o; 
+                    rgbColor.b = p;
+                    break;
+                }
+	    }
+
+    return rgbColor;
+}
+
+Pony::Pony(int i, Config* config, ParticleSystem* particle_system)
+    : pos(config->pony_start[i]),
+      angle(config->pony_start_angle[i]),
+      speed(config->pony_start_speed),
       slope_angle(0),
       camera_pos(pos-V2f(sin(angle), cos(angle))),
-      up(up),
-      down(down),
-      left(left),
-      right(right),
+      up(config->pony_up[i]),
+      down(config->pony_down[i]),
+      left(config->pony_left[i]),
+      right(config->pony_right[i]),
       shader(config->pony_shader),
       mesh(),
       animation("models/Pony-animated.pskeleton"),
@@ -26,6 +119,35 @@ Pony::Pony(V2f pos, float angle,
     if (!loaded) {
         cerr << "Failed to load mesh file " << config->pony_mesh << endl;
     }
+
+    Color4f pony_color = config->pony_color[i];
+
+    cout << pony_color * 255 << " -> ";
+
+    pony_color = hsvColor(pony_color);
+
+    cout << pony_color << endl;
+
+    float pony_hue = pony_color.r;
+
+    V2u size = texture.get_size();
+    V2u pos(0,0);
+    for(pos.x = 0; pos.x < size.x; ++pos.x) {
+        for (pos.y = 0; pos.y < size.y; ++pos.y) {
+            Color4f c = texture.get_color(pos);
+            c = hsvColor(c);
+            
+            c.r += pony_hue;
+
+            if (c.r > 360) c.r -= 360;
+            if (c.r < 0)   c.r += 360;
+
+            c = rgbColor(c);
+            texture.set_color(pos, c);
+        }
+    }
+
+    texture.send_to_GPU();
 
     animation.set_animation("Gallop");
 }
