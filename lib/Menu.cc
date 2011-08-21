@@ -377,8 +377,8 @@ void Menu::setup_layout(void)
     mainscreen_layout.add_widget(&logo_button, Box2f(V2f(0.0, 2.0/3.0),
                                                      V2f(1.0,     1.0)));
 
-    mainscreen_layout.add_widget(&start_button, Box2f(V2f(6.0/24.0, 10.0/24.0),
-                                                      V2f(18.0/24.0, 16.0/24.0)));
+    mainscreen_layout.add_widget(&start_button, Box2f(V2f(6.0/24.0, 11.0/24.0),
+                                                      V2f(18.0/24.0, 17.0/24.0)));
 
     mainscreen_layout.add_widget(&human_slider, Box2f(V2f(13.0/32.0, 8.0/24.0),
                                                       V2f(16.0/32.0,11.0/24.0)));

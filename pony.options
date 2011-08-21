@@ -1,10 +1,10 @@
 // Window properties
 
-width = 1280;
-height = 1024;
+width = 1024;
+height = 768;
 swap_interval = 0;
 window_mode = window;
-fsaa_samples = 4;
+fsaa_samples = 8;
 polygon_mode = fill;
 
 // Particles
@@ -17,10 +17,10 @@ use_particles = true;
 // Level properties
 
 levels_file = "levels.xml";
-selected_level = 1;
+selected_level = 0;
 heightmap_file = "levels/heart.png";
 level_size = (1500 90 1500);
-water_level = 30;
+water_level = 45;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;
@@ -28,14 +28,14 @@ heightmap_velvet_coeff = 1.5;
 sand_texture = "textures/sand.png";
 grass_texture = "textures/grass.png";
 noise_texture = "textures/noise.png";
-pony_start[0] = (-206.892 387.532);
-pony_start_angle[0] = 269.124;
-pony_start[1] = (446.401 -155.089);
-pony_start_angle[1] = 18.1327;
-pony_start[2] = (124.253 153.333);
-pony_start_angle[2] = 224.581;
-pony_start[3] = (408.513 215.328);
-pony_start_angle[3] = 136.37;
+pony_start[0] = (219.916 -156.095);
+pony_start_angle[0] = 74.4115;
+pony_start[1] = (-334.356 -109.495);
+pony_start_angle[1] = 339.431;
+pony_start[2] = (-14.2928 -169.808);
+pony_start_angle[2] = 327.902;
+pony_start[3] = (131.374 -390.921);
+pony_start_angle[3] = 350.224;
 
 // Light properties
 

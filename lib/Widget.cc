@@ -149,20 +149,20 @@ void TextArea::draw(void)
     glBlendEquation(GL_FUNC_ADD);
     glDisable(GL_DEPTH_TEST);
 
-    glColor(bgcolor);
+    // glColor(bgcolor);
 
-    glBegin(GL_QUADS);
+    // glBegin(GL_QUADS);
     
-    glTexCoord2f(0, 0);
-    glVertex2f(bgarea.min.x, bgarea.min.y);
-    glTexCoord2f(1, 0);
-    glVertex2f(bgarea.max.x, bgarea.min.y);
-    glTexCoord2f(1, 1);
-    glVertex2f(bgarea.max.x, bgarea.max.y);
-    glTexCoord2f(0, 1);
-    glVertex2f(bgarea.min.x, bgarea.max.y);
+    // glTexCoord2f(0, 0);
+    // glVertex2f(bgarea.min.x, bgarea.min.y);
+    // glTexCoord2f(1, 0);
+    // glVertex2f(bgarea.max.x, bgarea.min.y);
+    // glTexCoord2f(1, 1);
+    // glVertex2f(bgarea.max.x, bgarea.max.y);
+    // glTexCoord2f(0, 1);
+    // glVertex2f(bgarea.min.x, bgarea.max.y);
 
-    glEnd();
+    // glEnd();
     
     glPushMatrix();
 
@@ -176,7 +176,7 @@ void TextArea::draw(void)
     glTranslatef(-bbox.center().x, -bbox.center().y, 0);
     
     glDisable(GL_LIGHTING);
-    glColor4f(1,0,1,1);
+    glColor4f(255/255.f,134/255.f,255/255.f,1);
 
     font->Render(text.c_str());
 
