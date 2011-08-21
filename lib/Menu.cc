@@ -37,11 +37,11 @@ void Menu::toggle_fullscreen(void)
 
 void Menu::toggle_music(void)
 {
-    if (music->getVolume() != 0.0) {
-        music->setVolume(0.0);
-    } else {
-        music->setVolume(1.0);
-    }
+    // if (music->getVolume() != 0.0) {
+    //     music->setVolume(0.0);
+    // } else {
+    //     music->setVolume(1.0);
+    // }
 }
 
 void Menu::mouse_callback(int button, int action)
@@ -80,12 +80,10 @@ void Menu::resize_callback(int width, int height)
 }
 
 Menu::Menu (Config* config, 
-            Skydome* skydome,
-            audiere::OutputStreamPtr music)
+            Skydome* skydome)
     : active_screen(MAIN_SCREEN),
       config(config),
       skydome(skydome),
-      music(music),
       heightmap(NULL),
       logo_button("textures/logo.png"),
       start_button("Start"),
@@ -165,7 +163,8 @@ void Menu::setup_settings(void)
     resolutions.push_back(V2i(1600,1200));
     resolutions.push_back(V2i(1680,1050));
     resolutions.push_back(V2i(1920,1080));
-    resolutions.push_back(V2i(1920,1200));
+    resolutions.push_back(V2i(2560,1440));
+    resolutions.push_back(V2i(2560,1600));
 
     if(!config->use_particles) {
         particle_setting = 0;
@@ -378,24 +377,24 @@ void Menu::setup_layout(void)
     mainscreen_layout.add_widget(&logo_button, Box2f(V2f(0.0, 2.0/3.0),
                                                      V2f(1.0,     1.0)));
 
-    mainscreen_layout.add_widget(&start_button, Box2f(V2f(8.0/24.0, 6.0/12.0),
-                                                      V2f(16.0/24.0, 17.0/24.0)));
+    mainscreen_layout.add_widget(&start_button, Box2f(V2f(6.0/24.0, 10.0/24.0),
+                                                      V2f(18.0/24.0, 16.0/24.0)));
 
     mainscreen_layout.add_widget(&human_slider, Box2f(V2f(13.0/32.0, 8.0/24.0),
                                                       V2f(16.0/32.0,11.0/24.0)));
     mainscreen_layout.add_widget(&computer_slider, Box2f(V2f(16.0/32.0, 8.0/24.0),
                                                          V2f(19.0/32.0,11.0/24.0)));
-    mainscreen_layout.add_widget(&human_no, Box2f(V2f(10.0/32.0, 8.0/24.0),
-                                                  V2f(13.0/32.0,11.0/24.0)));
-    mainscreen_layout.add_widget(&computer_no, Box2f(V2f(19.0/32.0, 8.0/24.0),
-                                                     V2f(22.0/32.0,11.0/24.0)));
+    mainscreen_layout.add_widget(&human_no, Box2f(V2f(9.0/32.0, 6.0/24.0),
+                                                  V2f(14.0/32.0,12.0/24.0)));
+    mainscreen_layout.add_widget(&computer_no, Box2f(V2f(19.0/32.0, 6.0/24.0),
+                                                     V2f(23.0/32.0,12.0/24.0)));
     mainscreen_layout.add_widget(&human_text, Box2f(V2f(5.0/32.0, 7.0/24.0),
                                                     V2f(10.0/32.0,12.0/24.0)));
-    mainscreen_layout.add_widget(&computer_text, Box2f(V2f(22.0/32.0, 7.0/24.0),
-                                                       V2f(27.0/32.0,12.0/24.0)));
+    mainscreen_layout.add_widget(&computer_text, Box2f(V2f(23.0/32.0, 7.0/24.0),
+                                                       V2f(28.0/32.0,12.0/24.0)));
 
-    mainscreen_layout.add_widget(&level_name_text, Box2f(V2f(4/12.0, 1/32.0),
-                                                         V2f(8/12.0, 5/32.0)));
+    mainscreen_layout.add_widget(&level_name_text, Box2f(V2f(4/12.0, 0.5/32.0),
+                                                         V2f(8/12.0, 4.5/32.0)));
     mainscreen_layout.add_widget(&prev_level_button, Box2f(V2f(3/12.0, 1/32.0),
                                                            V2f(4/12.0, 5/32.0)));
     mainscreen_layout.add_widget(&next_level_button, Box2f(V2f(8/12.0, 1/32.0),

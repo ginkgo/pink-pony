@@ -88,7 +88,7 @@ TextArea::TextArea(string initial_text, Color4f bgcolor)
 {
     int face_size = 72;
 
-    font = new FTBufferFont("fonts/DaveDS_-_Sketchy.ttf");
+    font = new FTBufferFont("fonts/dijkstra.ttf");
 
     if (font->Error()) {
         cerr << "Something went wrong with loading the font." << endl;
@@ -137,16 +137,13 @@ void TextArea::area_clicked(V2f pos)
 
 void TextArea::draw(void)
 {
-    //int face_size = 72;
-
     FTBBox ftbbox = font->BBox(text.c_str());
     Box2f bbox(V2f(ftbbox.Lower().X(), ftbbox.Lower().Y()),
                V2f(ftbbox.Upper().X(), ftbbox.Upper().Y()));
-    // bbox.min.y = 0;
-    // bbox.max.y = face_size;
 
-    V2f es = extent.size();
-    
+    bbox.min.y = 0;
+    bbox.max.y = 72;
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
@@ -169,10 +166,14 @@ void TextArea::draw(void)
     
     glPushMatrix();
 
+
     glTranslatef(extent.center().x - bbox.center().x,
                  extent.center().y - bbox.center().y,
                  0);
-    
+  
+    glTranslatef(bbox.center().x, bbox.center().y, 0);
+    glScalef(0.7f, 0.7f, 0.7f);
+    glTranslatef(-bbox.center().x, -bbox.center().y, 0);
     
     glDisable(GL_LIGHTING);
     glColor4f(1,0,1,1);

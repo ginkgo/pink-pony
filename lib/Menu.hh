@@ -27,7 +27,6 @@ class Menu
 
     Config* config;
     Skydome* skydome;
-    audiere::OutputStreamPtr music;
 
     auto_ptr<Heightmap> heightmap;
 
@@ -134,8 +133,7 @@ class Menu
     void toggle_music(void);
 
     Menu(Config* config, 
-         Skydome* skydome,
-         audiere::OutputStreamPtr music);
+         Skydome* skydome);
 
     MenuStatus run(void);
 

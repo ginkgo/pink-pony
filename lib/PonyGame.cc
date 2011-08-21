@@ -7,14 +7,12 @@
 PonyGame::PonyGame(SplitScreen* screen,
                    Heightmap* heightmap,
                    Config* config,
-                   Skydome* skydome,
-                   audiere::OutputStreamPtr music)
+                   Skydome* skydome)
     : particle_system(ParticleSystem::make_particle_system(2000000, config)),
       m_screen(screen),
       m_heightmap(heightmap),
       m_config(config),
       skydome(skydome),
-      music(music),
       heart(),
       heart_drawer(&heart),
       heart_shader("GLSL/heart")
@@ -395,11 +393,11 @@ bool PonyGame::start(PonyPoints& points)
         }
 
         if (glfwGetKey(GLFW_KEY_F1) && !f1_pressed) {
-            if (music->getVolume() != 0.0) {
-                music->setVolume(0.0);
-            } else {
-                music->setVolume(1.0);
-            }            
+            // if (music->getVolume() != 0.0) {
+            //     music->setVolume(0.0);
+            // } else {
+            //     music->setVolume(1.0);
+            // }                     
         }
 
         space_pressed = glfwGetKey(GLFW_KEY_SPACE);

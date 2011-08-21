@@ -3,24 +3,24 @@ import os
 env = Environment()
 env['CC'] = 'g++'
 env['CCFLAGS'] = '-Wall -Wextra -Wno-unused-parameter -O3 -I/usr/include/OpenEXR -I./lib -I./external/tinyXML'
-env['LIBS'] = ['GLU', 'GL', 'protobuf', 'IL', 'ILUT', 'audiere']
+env['LIBS'] = ['GLU', 'GL', 'protobuf', 'IL', 'ILUT']
 env.ParseConfig("pkg-config IlmBase --cflags --libs")
 env.ParseConfig("pkg-config libglfw --cflags --libs")
 env.ParseConfig("pkg-config ftgl --cflags --libs")
 env.ParseConfig("pkg-config sigc++-2.0 --cflags --libs")
 
 
-conf = Configure(env)
-if not conf.CheckLib('protobuf'):
-    print 'You have to install Google protocol buffers to compile this game.'
-    Exit(1)
-if not conf.CheckLib('audiere'):
-    print 'You have to install the audiere sound library to compile this game.'
-    Exit(1)
-if not conf.CheckLib('IL'):
-    print 'You have to install the DevIL image loading library to compile this game.'
-    Exit(1)
-env = conf.Finish()
+# conf = Configure(env)
+# if not conf.CheckLib('protobuf'):
+#     print 'You have to install Google protocol buffers to compile this game.'
+#     Exit(1)
+# if not conf.CheckLib('audiere'):
+#     print 'You have to install the audiere sound library to compile this game.'
+#     Exit(1)
+# if not conf.CheckLib('IL'):
+#     print 'You have to install the DevIL image loading library to compile this game.'
+#     Exit(1)
+# env = conf.Finish()
 
 
 env.Command(['lib/mesh.pb.cc', 'lib/mesh.pb.h'], 'mesh.proto', 

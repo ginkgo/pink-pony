@@ -3,9 +3,6 @@
 
 #include "Menu.hh"
 
-#include <audiere.h>
-using namespace audiere;
-
 #include <algorithm>
 #include "ImathRandom.h"
 
@@ -28,25 +25,6 @@ int main(int argc, char** argv)
         return 1;
     }
     
-    AudioDevicePtr device(OpenDevice());
-    if (!device) {
-        cerr << "Could not open audio device. :<" << endl;
-    }
-    
-    OutputStreamPtr music(OpenSound(device, 
-                                    config.background_music.c_str(), 
-                                    true));
-    
-    if (!music) {
-        cerr << "Could not load music file. :<" << endl;
-    } else {
-        
-        music->setRepeat(true);
-        music->setVolume(1.0);
-        music->play();
-        
-    }
-
     glfwInit();
     glfwOpenWindowHint(GLFW_FSAA_SAMPLES, config.fsaa_samples);
 
@@ -88,7 +66,7 @@ int main(int argc, char** argv)
             Menu::MenuStatus menu_status;
         
             {
-                Menu menu(&config, &skydome, music);
+                Menu menu(&config, &skydome);
 
                 menu_status = menu.run();
             }
@@ -131,8 +109,7 @@ int main(int argc, char** argv)
                     PonyGame game(&screen,
                                   &heightmap,
                                   &config,
-                                  &skydome,
-                                  music);
+                                  &skydome);
 
                     run_game = game.start(points);
                 }

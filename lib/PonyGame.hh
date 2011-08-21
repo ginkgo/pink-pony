@@ -24,8 +24,7 @@ class PonyGame
     Heightmap* m_heightmap;
     Config* m_config;
     Skydome* skydome;
-    audiere::OutputStreamPtr music;
-
+    
     LineList line_list;
     vector<Pony*> ponies;
 
@@ -40,8 +39,7 @@ class PonyGame
     PonyGame(SplitScreen* screen,
              Heightmap* heightmap,
              Config* config,
-             Skydome* skydome,
-             audiere::OutputStreamPtr music);
+             Skydome* skydome);
 
     ~PonyGame();
 
