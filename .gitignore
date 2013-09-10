@@ -1,0 +1,8 @@
+*.o
+.sconsign.dblite
+lib/mesh.pb*
+mesh_compile
+skeleton_compile
+Pony
+MapView
+ConfigFile

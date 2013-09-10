@@ -28,14 +28,14 @@ heightmap_velvet_coeff = 1.5;
 sand_texture = "textures/sand.png";
 grass_texture = "textures/grass.png";
 noise_texture = "textures/noise.png";
-pony_start[0] = (219.916 -156.095);
-pony_start_angle[0] = 74.4115;
-pony_start[1] = (-334.356 -109.495);
-pony_start_angle[1] = 339.431;
-pony_start[2] = (-14.2928 -169.808);
-pony_start_angle[2] = 327.902;
-pony_start[3] = (131.374 -390.921);
-pony_start_angle[3] = 350.224;
+pony_start[0] = (-299.115 -265.72);
+pony_start_angle[0] = 325.808;
+pony_start[1] = (-370.752 409.027);
+pony_start_angle[1] = 197.288;
+pony_start[2] = (338.218 -117.071);
+pony_start_angle[2] = 6.06025;
+pony_start[3] = (12.7986 -268.108);
+pony_start_angle[3] = 276.504;
 
 // Light properties
 

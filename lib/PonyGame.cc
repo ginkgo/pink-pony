@@ -2,7 +2,6 @@
 #include "ParticleSystem.hh"
 #include <ImathRandom.h>
 
-#include <IL/ilut.h>
 
 PonyGame::PonyGame(SplitScreen* screen,
                    Heightmap* heightmap,
@@ -385,12 +384,6 @@ bool PonyGame::start(PonyPoints& points)
             delay = 0.0;
         }
 
-        if (glfwGetKey(GLFW_KEY_SPACE) && !space_pressed) {
-            glViewport(0,0,
-                       m_screen->get_size().x, 
-                       m_screen->get_size().y);
-            ilutGLScreenie(); // Take screenshot;
-        }
 
         if (glfwGetKey(GLFW_KEY_F1) && !f1_pressed) {
             // if (music->getVolume() != 0.0) {

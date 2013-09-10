@@ -2,7 +2,7 @@
 
 #include "cinquo.hh"
 #include "IL/il.h"
-#include "IL/ilut.h"
+//#include "IL/ilut.h"
 
 /**
  * Texture2D is our image texture class.
