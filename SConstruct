@@ -8,6 +8,7 @@ env.ParseConfig("pkg-config IlmBase --cflags --libs")
 env.ParseConfig("pkg-config libglfw --cflags --libs")
 env.ParseConfig("pkg-config ftgl --cflags --libs")
 env.ParseConfig("pkg-config sigc++-2.0 --cflags --libs")
+env.ParseConfig("pkg-config SDL_mixer --cflags --libs")
 
 
 # conf = Configure(env)

@@ -6,8 +6,15 @@
 #include <algorithm>
 #include "ImathRandom.h"
 
+// SDL_mixer includes
+#include "SDL.h"
+#include "SDL_mixer.h"
+
 void permute_start_positions(Config& config);
 void randomize_start_positions(Config& config, Heightmap& heightmap);
+
+void start_music(Mix_Music** music, const string& music_file);
+void stop_music(Mix_Music** music);
 
 int main(int argc, char** argv)
 {
@@ -37,6 +44,9 @@ int main(int argc, char** argv)
     glfwSwapInterval(config.swap_interval);
 
     bool reset_video = false;
+
+    Mix_Music* music = NULL;
+    start_music(&music, config.background_music);
     
     while (running) {
 
@@ -125,6 +135,8 @@ int main(int argc, char** argv)
 
     }
 
+    stop_music(&music);
+
     if (!GLEE_VERSION_2_0) {
         cout << endl
              << "Your computer does not support OpenGL 2.0" << endl
@@ -194,4 +206,42 @@ void randomize_start_positions(Config& config, Heightmap& heightmap)
         }
         
     }
+}
+
+
+void start_music(Mix_Music** music, const string& music_file)
+{
+    
+    int audio_rate = 22050;
+    Uint16 audio_format = AUDIO_S16; /* 16-bit stereo */
+    int audio_channels = 2;
+    int audio_buffers = 4096;
+
+    SDL_Init(SDL_INIT_AUDIO);
+
+    // Open audio device
+    if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
+        printf("Unable to open audio!\n");
+        exit(1);
+    }
+
+    // Query audio properties
+    Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
+
+    // Load music file
+    *music = Mix_LoadMUS(music_file.c_str());
+
+    // Play music in infinite loop
+    Mix_PlayMusic(*music, -1);
+    
+}
+
+
+void stop_music(Mix_Music** music)
+{
+    Mix_HaltMusic();
+    Mix_FreeMusic(*music);
+    *music = NULL;
+    Mix_CloseAudio();
+    SDL_Quit();
 }

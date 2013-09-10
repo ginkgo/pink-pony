@@ -28,14 +28,14 @@ heightmap_velvet_coeff = 1.5;
 sand_texture = "textures/sand.png";
 grass_texture = "textures/grass.png";
 noise_texture = "textures/noise.png";
-pony_start[0] = (-299.115 -265.72);
-pony_start_angle[0] = 325.808;
-pony_start[1] = (-370.752 409.027);
-pony_start_angle[1] = 197.288;
-pony_start[2] = (338.218 -117.071);
-pony_start_angle[2] = 6.06025;
-pony_start[3] = (12.7986 -268.108);
-pony_start_angle[3] = 276.504;
+pony_start[0] = (-59.8047 -552.767);
+pony_start_angle[0] = 40.4679;
+pony_start[1] = (-509.314 99.2308);
+pony_start_angle[1] = 63.0137;
+pony_start[2] = (-103.091 -223.633);
+pony_start_angle[2] = 190.709;
+pony_start[3] = (266.484 -152.893);
+pony_start_angle[3] = 257.628;
 
 // Light properties
 
@@ -58,7 +58,7 @@ pony_height = 3;
 
 // Game properties
 
-ai_count = 4;
+ai_count = 3;
 player_count = 4;
 heart_count = 3;
 pony_start_speed = 15;
