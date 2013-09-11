@@ -15,9 +15,9 @@ void getErrors()
     if (errCode != lastError && errCode != GL_NO_ERROR) {
         errString = gluErrorString(errCode);
         std::cout << "OpenGL Error: " << errString << std::endl;
+        lastError = errCode;
     }
     
-    lastError = errCode;
 }
 
 void calc_fps()

@@ -1,5 +1,7 @@
 #include "Widget.hh"
 
+#include "Config.hh"
+
 void Widget::set_available_area(Box2f area) 
 {
     V2f s = area.size();
@@ -82,13 +84,13 @@ void Button::draw(void)
     glEnable(GL_DEPTH_TEST);   
 }
 
-TextArea::TextArea(string initial_text, Color4f bgcolor)
+TextArea::TextArea(string initial_text, Config* config, Color4f bgcolor)
     : Widget(1.0), 
       text(initial_text), bgcolor(bgcolor)
 {
     int face_size = 72;
 
-    font = new FTBufferFont("fonts/dijkstra.ttf");
+    font = new FTBufferFont((config->resource_dir + "fonts/dijkstra.ttf").c_str());
 
     if (font->Error()) {
         cerr << "Something went wrong with loading the font." << endl;
@@ -245,10 +247,10 @@ void SimpleLayout::draw(void)
     }    
 }
 
-Slider::Slider()
+Slider::Slider(Config* config)
     : Widget(1.0),
-      up_button("textures/up.png"),
-      down_button("textures/down.png")
+      up_button(config->resource_dir + "textures/up.png"),
+      down_button(config->resource_dir + "textures/down.png")
 {
     up_button.on_click()
         .connect(sigc::bind(sigc::mem_fun(this, &Slider::change), 1));

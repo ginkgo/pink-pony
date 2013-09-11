@@ -14,7 +14,7 @@ PonyGame::PonyGame(SplitScreen* screen,
       skydome(skydome),
       heart(),
       heart_drawer(&heart),
-      heart_shader("GLSL/heart")
+      heart_shader(config->resource_dir + "GLSL/heart")
 {
     int human_count = m_config->player_count - m_config->ai_count;
     if (human_count == 0) human_count = m_config->player_count;
@@ -67,7 +67,7 @@ PonyGame::PonyGame(SplitScreen* screen,
     }
 
 
-    if (!load_mesh(heart, config->heart_mesh)) {
+    if (!load_mesh(heart, config->resource_dir + config->heart_mesh)) {
         cerr << "Could not load " << config->heart_mesh << "." << endl;
     };
 

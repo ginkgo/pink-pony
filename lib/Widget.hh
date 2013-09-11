@@ -5,6 +5,7 @@
 #include <FTGL/ftgl.h>
 
 #include "Texture2D.hh"
+#include "Config.hh"
 
 #include <sigc++/sigc++.h>
 
@@ -66,7 +67,7 @@ class TextArea : public Widget
     
     public:
 
-    TextArea(string initial_text, Color4f bgcolor = Color4f(1,1,1,0));
+    TextArea(string initial_text, Config* config, Color4f bgcolor = Color4f(1,1,1,0));
     ~TextArea();
 
     void set_text(string text);
@@ -111,7 +112,7 @@ class Slider : public Widget
 
     public:
 
-    Slider();
+    Slider(Config* config);
 
     virtual void set_available_area(Box2f area);
 

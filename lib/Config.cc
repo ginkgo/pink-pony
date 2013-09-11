@@ -8,6 +8,7 @@ Config::Config()
       fsaa_samples(4),
       swap_interval(1),
       polygon_mode(GL_FILL),
+      resource_dir("resources/"),
       levels_file("levels.xml"),
       selected_level(0),
       heightmap_file("levels/heightmap-heart.exr"),
@@ -177,6 +178,7 @@ void Config::set_value(string name, string value)
     else if (name == "fsaa_samples") fsaa_samples = ival;
     else if (name == "swap_interval") swap_interval = ival;
     else if (name == "polygon_mode") polygon_mode = polymodeval;
+    else if (name == "resource_dir") resource_dir = sval;
     else if (name == "heightmap_file") heightmap_file = sval;
     else if (name == "level_size") level_size
                                        = Box3f(V3f(-vec3val.x/2, 0, -vec3val.z/2),
@@ -324,8 +326,10 @@ bool Config::write_file(string filename)
     else
         os << "fill;" << endl;
 
-    os << endl << "// Particles" << endl << endl;
+    os << endl << "// Resource directory" << endl << endl;
+    os << "resource_dir = \"" << resource_dir << "\";" << endl;
 
+    os << endl << "// Particles" << endl << endl;
     os << "pony_explosion_particles = " << pony_explosion_particles << ";" << endl;
     os << "heart_explosion_particles = " << heart_explosion_particles << ";" << endl;
     os << "pony_particle_rate = " << pony_particle_rate << ";" << endl;

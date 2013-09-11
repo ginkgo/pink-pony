@@ -13,7 +13,7 @@ class PonyPoints
 
     public:
 
-    PonyPoints(int i);
+    PonyPoints(int i, Config* config);
     ~PonyPoints();
 
     void add_point(int i, Color4f color);

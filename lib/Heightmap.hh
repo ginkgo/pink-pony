@@ -36,7 +36,8 @@ class Heightmap
 
     Heightmap(string filename,
               Box3f extent, float water_level,
-              string sand, string grass, string noise);
+              string sand, string grass, string noise,
+              Config* config);
     virtual ~Heightmap();
 
     V2u size()

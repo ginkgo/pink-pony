@@ -14,6 +14,9 @@ class Config
     int fsaa_samples;
     int swap_interval;
     GLenum polygon_mode;
+
+    // Resource directory
+    string resource_dir;    
     
     // Level properties:
     

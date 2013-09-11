@@ -85,44 +85,47 @@ Menu::Menu (Config* config,
       config(config),
       skydome(skydome),
       heightmap(NULL),
-      logo_button("textures/logo.png"),
-      start_button("Start"),
-      quit_button("textures/quit.png"),
-      options_button("textures/settings.png"),
-      level_name_text("Lagoon"),
-      next_level_button("textures/right.png"),
-      prev_level_button("textures/left.png"),
-      computer_no("0"),
-      human_no("0"),
-      computer_text("textures/computer.png"),
-      human_text("textures/human.png"),
-      computers(config->ai_count),
-      humans(config->player_count - config->ai_count),
-      settings_text("Settings"),
-      settings_done("textures/back.png"),
-      particles_text("Some particles", Color4f(1,1,1,0.5)),
-      prev_particles("textures/left.png"),
-      next_particles("textures/right.png"),
-      fullscreen_text("Some particles", Color4f(1,1,1,0.5)),
-      prev_fullscreen("textures/left.png"),
-      next_fullscreen("textures/right.png"),
-      minimap_text("Some particles", Color4f(1,1,1,0.5)),
-      prev_minimap("textures/left.png"),
-      next_minimap("textures/right.png"),
-      antialiasing_text("Some particles", Color4f(1,1,1,0.5)),
-      prev_antialiasing("textures/left.png"),
-      next_antialiasing("textures/right.png"),
-      hearts_text("Some particles", Color4f(1,1,1,0.5)),
-      prev_hearts("textures/left.png"),
-      next_hearts("textures/right.png"),
-      resolution_text("Some particles", Color4f(1,1,1,0.5)),
-      prev_resolution("textures/left.png"),
-      next_resolution("textures/right.png"),
-      needs_reset(false)
+      logo_button(config->resource_dir + "textures/logo.png"),
+      start_button("Start", config),
+      quit_button(config->resource_dir + "textures/quit.png"),
+      options_button(config->resource_dir + "textures/settings.png"),
+      level_name_text("Lagoon", config),
+      next_level_button(config->resource_dir + "textures/right.png"),
+      prev_level_button(config->resource_dir + "textures/left.png"),
+      computer_no("0", config),
+      human_no("0", config),
+    computer_text(config->resource_dir + "textures/computer.png"),
+    human_text(config->resource_dir + "textures/human.png"),
+    computers(config->ai_count),
+    humans(config->player_count - config->ai_count),
+    settings_text("Settings", config),
+    settings_done(config->resource_dir + "textures/back.png"),
+    particles_text("Some particles", config, Color4f(1,1,1,0.5)),
+    prev_particles(config->resource_dir + "textures/left.png"),
+    next_particles(config->resource_dir + "textures/right.png"),
+    fullscreen_text("Some particles", config, Color4f(1,1,1,0.5)),
+    prev_fullscreen(config->resource_dir + "textures/left.png"),
+    next_fullscreen(config->resource_dir + "textures/right.png"),
+    minimap_text("Some particles", config, Color4f(1,1,1,0.5)),
+    prev_minimap(config->resource_dir + "textures/left.png"),
+    next_minimap(config->resource_dir + "textures/right.png"),
+    antialiasing_text("Some particles", config, Color4f(1,1,1,0.5)),
+    prev_antialiasing(config->resource_dir + "textures/left.png"),
+    next_antialiasing(config->resource_dir + "textures/right.png"),
+    hearts_text("Some particles", config, Color4f(1,1,1,0.5)),
+    prev_hearts(config->resource_dir + "textures/left.png"),
+    next_hearts(config->resource_dir + "textures/right.png"),
+    resolution_text("Some particles", config, Color4f(1,1,1,0.5)),
+    prev_resolution(config->resource_dir + "textures/left.png"),
+    next_resolution(config->resource_dir + "textures/right.png"),
+    needs_reset(false),
+    computer_slider(config),
+    human_slider(config)
+    
 {
 
     // Some static test data
-    load_levels(config->levels_file);
+    load_levels(config->resource_dir + config->levels_file);
 
     int w,h;
     glfwGetWindowSize(&w,&h);
@@ -623,12 +626,13 @@ void Menu::reload_level(string level)
     config->level_size = Box3f(V3f(-s.x/2,   0,-s.z/2),
                               V3f( s.x/2, s.y, s.z/2));
 
-    heightmap.reset(new Heightmap(config->heightmap_file,
+    heightmap.reset(new Heightmap(config->resource_dir + config->heightmap_file,
                                   config->level_size,
                                   config->water_level,
                                   config->sand_texture,
                                   config->grass_texture,
-                                  config->noise_texture));
+                                  config->noise_texture,
+                                  config));
 
     camera_distance = s.length() / 2;
 

@@ -45,9 +45,9 @@ void InactiveParticleSystem::step_simulation(float time_diff)
 CPUParticleSystem::CPUParticleSystem
     (GLuint max_particles, Config* config)
         : last_stat_print(glfwGetTime()),
-          draw_shader("GLSL/draw_particles_cpu"),
-          particle_tex("textures/heart-particle.png"),
-          heightmap(config->heightmap_file.c_str()),
+          draw_shader(config->resource_dir + "GLSL/draw_particles_cpu"),
+          particle_tex((config->resource_dir + "textures/heart-particle.png").c_str()),
+          heightmap((config->resource_dir + config->heightmap_file).c_str()),
           level_size(config->level_size),
           water_level(config->water_level),
           rel_water_level(0),
@@ -253,19 +253,19 @@ void CPUParticleSystem::draw(Camera& camera)
 TransformFeedbackParticleSystem::TransformFeedbackParticleSystem
     (GLuint max_particles, Config* config)
         : last_stat_print(glfwGetTime()), calculating(false),
-          step_shader("GLSL/step_particles",
-                      "GLSL/step_particles",
-                      "GLSL/step_particles",
+          step_shader(config->resource_dir + "GLSL/step_particles",
+                      config->resource_dir + "GLSL/step_particles",
+                      config->resource_dir + "GLSL/step_particles",
                       GL_POINTS, GL_POINTS, 1),
-          draw_shader("GLSL/draw_particles",
-                      "GLSL/draw_particles",
-                      "GLSL/draw_particles",
+          draw_shader(config->resource_dir + "GLSL/draw_particles",
+                      config->resource_dir + "GLSL/draw_particles",
+                      config->resource_dir + "GLSL/draw_particles",
                       GL_POINTS, GL_TRIANGLE_STRIP, 4),
           feedback(step_shader, GL_POINTS,
                    "out_pos out_color out_vel out_life",
                    max_particles, true),
-          particle_tex("textures/heart-particle.png"),
-          heightmap(config->heightmap_file.c_str())
+          particle_tex((config->resource_dir + "textures/heart-particle.png").c_str()),
+          heightmap((config->resource_dir + config->heightmap_file).c_str())
 {
     heightmap.normalize();
     heightmap.send_to_GPU();

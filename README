@@ -44,6 +44,19 @@ You can configure a lot of things in the games config file
 "pony.options".
 You can supply an alternative config file as option in the "./Pony" call.
 
+== INSTALLATION ==
+
+Pink Pony can be started directly in the source directory. If you want to
+install it in at a permanent location in the system, then you can use the
+files in the 'install' directory for this.
+
+The shell script 'pink-pony' is a simple wrapper that checks if a config file
+is installed in the user's home directory and creates one if need be. It then
+starts the game with this config file.
+
+The location of the game resource files can be configured in the pony.options
+config file. This way no patching of the source should be necessary.
+
 == LICENSE ==
 
 Different parts of Pink Pony are available under different terms.

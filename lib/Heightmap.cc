@@ -3,16 +3,17 @@
 
 Heightmap::Heightmap(string filename,
                      Box3f extent, float water_level,
-                     string sand, string grass, string noise)
+                     string sand, string grass, string noise,
+                     Config* config)
     : mesh(),
       mesh_drawer(&mesh),
-      terrain_shader("GLSL/heightmap"),
-      water_shader("GLSL/water"),
+      terrain_shader(config->resource_dir + "GLSL/heightmap"),
+      water_shader(config->resource_dir + "GLSL/water"),
       heightmap(filename.c_str(),
                 GL_CLAMP, GL_CLAMP, GL_LINEAR, GL_LINEAR),
-      sand_texture(sand.c_str()),
-      grass_texture(grass.c_str()),
-      noise_texture(noise.c_str()),
+      sand_texture((config->resource_dir + sand).c_str()),
+      grass_texture((config->resource_dir + grass).c_str()),
+      noise_texture((config->resource_dir + noise).c_str()),
       extent(extent),
       water_level(water_level)
 {

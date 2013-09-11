@@ -107,17 +107,17 @@ Pony::Pony(int i, Config* config, ParticleSystem* particle_system)
       down(config->pony_down[i]),
       left(config->pony_left[i]),
       right(config->pony_right[i]),
-      shader(config->pony_shader),
+      shader(config->resource_dir + config->pony_shader),
       mesh(),
-      animation("models/Pony-animated.pskeleton"),
+      animation(config->resource_dir + "models/Pony-animated.pskeleton"),
       mesh_drawer(&mesh),
-      texture(config->pony_texture.c_str()),
+      texture((config->resource_dir + config->pony_texture).c_str()),
 	  out(false), out_delay(false), particle_source(particle_system)
 {
-    bool loaded = load_mesh(mesh, config->pony_mesh);
+    bool loaded = load_mesh(mesh, config->resource_dir + config->pony_mesh);
 
     if (!loaded) {
-        cerr << "Failed to load mesh file " << config->pony_mesh << endl;
+        cerr << "Failed to load mesh file " << config->resource_dir + config->pony_mesh << endl;
     }
 
     Color4f pony_color = config->pony_color[i];

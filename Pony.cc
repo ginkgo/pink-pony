@@ -46,7 +46,7 @@ int main(int argc, char** argv)
     bool reset_video = false;
 
     Mix_Music* music = NULL;
-    start_music(&music, config.background_music);
+    start_music(&music, config.resource_dir + config.background_music);
     
     while (running) {
 
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
         // between braces, so that stack variables that need a GL context
         // are destructed, while the context still exists.
         {
-            Skydome skydome("textures/sky.png");
+            Skydome skydome(config.resource_dir + "textures/sky.png");
             Menu::MenuStatus menu_status;
         
             {
@@ -91,14 +91,15 @@ int main(int argc, char** argv)
             }
 
             if (menu_status == Menu::START) {        
-                Heightmap heightmap(config.heightmap_file,
+                Heightmap heightmap(config.resource_dir + config.heightmap_file,
                                     config.level_size,
                                     config.water_level,
                                     config.sand_texture,
                                     config.grass_texture,
-                                    config.noise_texture);
+                                    config.noise_texture,
+                                    &config);
     
-                PonyPoints points(config.player_count);
+                PonyPoints points(config.player_count, &config);
 
                 bool run_game = true;
 

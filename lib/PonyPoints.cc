@@ -65,13 +65,13 @@ namespace local
 };
 
 
-PonyPoints::PonyPoints(int i) : points(i)
+PonyPoints::PonyPoints(int i, Config* config) : points(i)
 {
 
-    digits.push_back(new Texture2D("textures/one.png"));
-    digits.push_back(new Texture2D("textures/two.png"));
-    digits.push_back(new Texture2D("textures/three.png"));
-    digits.push_back(new Texture2D("textures/four.png"));
+    digits.push_back(new Texture2D((config->resource_dir + "textures/one.png").c_str()));
+    digits.push_back(new Texture2D((config->resource_dir + "textures/two.png").c_str()));
+    digits.push_back(new Texture2D((config->resource_dir + "textures/three.png").c_str()));
+    digits.push_back(new Texture2D((config->resource_dir + "textures/four.png").c_str()));
 }
 
 PonyPoints::~PonyPoints()
