@@ -9,7 +9,7 @@ You will need the following tools and libraries to build the game:
 * IlmBase
 * DevIL
 * protobuf (You also need protobuf-compiler on ubuntu)
-* audiere
+* SDL_mixer
 * FTGL
 * libsigc++
 
