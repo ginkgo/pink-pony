@@ -143,31 +143,31 @@ Menu::Menu (Config* config,
 
 void Menu::setup_settings(void)
 {
-    // GLFWvidmode vidmodes[100];
+    GLFWvidmode vidmodes[100];
 
-    // int modes_found = glfwGetVideoModes(vidmodes, 100);
+    int modes_found = glfwGetVideoModes(vidmodes, 100);
     
-    // resolutions.resize(modes_found);
+    resolutions.resize(modes_found);
 
-    // for (int i = 0; i < modes_found; ++i) {
-    //     resolutions[i] = V2i(vidmodes[i].Width,
-    //                          vidmodes[i].Height);
-    // }
+    for (int i = 0; i < modes_found; ++i) {
+        resolutions[i] = V2i(vidmodes[i].Width,
+                             vidmodes[i].Height);
+    }
 
-    resolutions.push_back(V2i( 640, 480));
-    resolutions.push_back(V2i( 800, 600));
-    resolutions.push_back(V2i( 960, 600));
-    resolutions.push_back(V2i(1024, 768));
-    resolutions.push_back(V2i(1280, 720));
-    resolutions.push_back(V2i(1280, 768));
-    resolutions.push_back(V2i(1280, 800));
-    resolutions.push_back(V2i(1280,1024));
-    resolutions.push_back(V2i(1440, 900));
-    resolutions.push_back(V2i(1600,1200));
-    resolutions.push_back(V2i(1680,1050));
-    resolutions.push_back(V2i(1920,1080));
-    resolutions.push_back(V2i(2560,1440));
-    resolutions.push_back(V2i(2560,1600));
+    // resolutions.push_back(V2i( 640, 480));
+    // resolutions.push_back(V2i( 800, 600));
+    // resolutions.push_back(V2i( 960, 600));
+    // resolutions.push_back(V2i(1024, 768));
+    // resolutions.push_back(V2i(1280, 720));
+    // resolutions.push_back(V2i(1280, 768));
+    // resolutions.push_back(V2i(1280, 800));
+    // resolutions.push_back(V2i(1280,1024));
+    // resolutions.push_back(V2i(1440, 900));
+    // resolutions.push_back(V2i(1600,1200));
+    // resolutions.push_back(V2i(1680,1050));
+    // resolutions.push_back(V2i(1920,1080));
+    // resolutions.push_back(V2i(2560,1440));
+    // resolutions.push_back(V2i(2560,1600));
 
     if(!config->use_particles) {
         particle_setting = 0;
