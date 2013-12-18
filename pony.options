@@ -1,7 +1,7 @@
 // Window properties
 
-width = 800;
-height = 600;
+width = 1280;
+height = 960;
 swap_interval = 0;
 window_mode = window;
 fsaa_samples = 8;
@@ -32,10 +32,10 @@ heightmap_velvet_coeff = 1.5;
 sand_texture = "textures/sand.png";
 grass_texture = "textures/grass.png";
 noise_texture = "textures/noise.png";
-pony_start[0] = (-469.547 57.6262);
-pony_start_angle[0] = 41.1448;
-pony_start[1] = (135.296 -140.152);
-pony_start_angle[1] = 24.7631;
+pony_start[0] = (297.955 -81.4905);
+pony_start_angle[0] = 156.682;
+pony_start[1] = (-447.994 86.9048);
+pony_start_angle[1] = 180.591;
 pony_start[2] = (-317.212 -125.705);
 pony_start_angle[2] = 327.641;
 pony_start[3] = (177.68 421.375);

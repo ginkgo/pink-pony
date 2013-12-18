@@ -19,7 +19,7 @@ ParticleSystem* ParticleSystem::make_particle_system(GLuint max_particles,
 {
     if (!config->use_particles) {
         return new InactiveParticleSystem(max_particles, config);
-    } else if (!GLEE_EXT_geometry_shader4 || !GLEE_NV_transform_feedback) {
+    } else if (!FLEXT_EXT_geometry_shader4 || !FLEXT_NV_transform_feedback) {
         cout << "No hardware accelerated particles. :("
              << " Using CPU fallback." << endl;
         return new CPUParticleSystem(max_particles/10, config);

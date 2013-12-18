@@ -2,8 +2,9 @@ import os
 
 env = Environment()
 env['CC'] = 'g++'
-env['CCFLAGS'] = '-Wall -Wextra -Wno-reorder -Wno-unused-parameter -O0 -ggdb -I/usr/include/OpenEXR -I./lib -I./external/tinyXML'
+env['CCFLAGS'] = ['-Wall', '-Wextra', '-Wno-reorder', '-Wno-unused-parameter', '-O3']
 env['LIBS'] = ['GLU', 'GL', 'protobuf', 'IL']
+env['CPPPATH'] = ['#/lib', '#/external/tinyXML', '#/flextGL/', '/usr/include/OpenEXR']
 env.ParseConfig("pkg-config IlmBase --cflags --libs")
 env.ParseConfig("pkg-config libglfw --cflags --libs")
 env.ParseConfig("pkg-config ftgl --cflags --libs")
@@ -27,20 +28,6 @@ env.ParseConfig("pkg-config SDL_mixer --cflags --libs")
 env.Command(['lib/mesh.pb.cc', 'lib/mesh.pb.h'], 'mesh.proto', 
             'protoc --cpp_out=lib mesh.proto')
 
-
-env.Program('mesh_compile', 
-            ['mesh_compile.cc', 'lib/GL/GLee.c'] 
-            + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))
-env.Program('skeleton_compile', 
-            ['skeleton_compile.cc', 'lib/GL/GLee.c'] 
-            + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))
-
 env.Program('Pony', 
-            ['Pony.cc', 'lib/GL/GLee.c'] 
-            + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))
-env.Program('MapView', 
-            ['MapView.cc', 'lib/GL/GLee.c'] 
-            + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))
-env.Program('ConfigFile', 
-            ['ConfigFile.cc', 'lib/GL/GLee.c'] 
+            ['Pony.cc', 'flextGL/flextGL.c'] 
             + Glob('lib/*cc') + Glob('external/tinyXML/*cpp'))

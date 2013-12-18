@@ -43,6 +43,10 @@ int main(int argc, char** argv)
     glfwSetWindowTitle("Pink Pony <3");
     glfwSwapInterval(config.swap_interval);
 
+    if (!flextInit()) {
+        return 1;
+    }
+    
     bool reset_video = false;
 
     Mix_Music* music = NULL;
@@ -138,12 +142,6 @@ int main(int argc, char** argv)
 
     stop_music(&music);
 
-    if (!GLEE_VERSION_2_0) {
-        cout << endl
-             << "Your computer does not support OpenGL 2.0" << endl
-             << "OpenGL 2.0 is needed for Pink Pony to work." << endl
-             << "Try to update your graphics card's driver. This could help." << endl;
-    }
     glfwTerminate();
 
     return 0;   

@@ -2,8 +2,7 @@
 
 #define ILUT_USE_OPENGL
 
-#include "GL/GLee.h"
-#include <GL/gl.h>
+#include "flextGL.h"
 #include <GL/glfw.h>
 #include <string>
 #include <iostream>
