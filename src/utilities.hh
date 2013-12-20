@@ -57,4 +57,7 @@ template<class T> string to_string(T t)
     return ss.str();
 }
 
+void read_tokens(const string& input, vector<const char*>& token_list);
+void free_tokens(vector<const char*>& token_list);
+
 #endif

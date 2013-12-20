@@ -24,8 +24,8 @@ int flextInit(void)
     
     /* --- Check for minimal version and profile --- */
 
-    if (major * 10 + minor < 21) {
-	fprintf(stderr, "Error: OpenGL version 2.1 not supported.\n");
+    if (major * 10 + minor < 20) {
+	fprintf(stderr, "Error: OpenGL version 2.0 not supported.\n");
         fprintf(stderr, "       Your version is %d.%d.\n", major, minor);
         fprintf(stderr, "       Try updating your graphics driver.\n");
         return GL_FALSE;
@@ -40,12 +40,12 @@ int flextInit(void)
         return GL_FALSE;
     }
 
-    if (glfwExtensionSupported("GL_EXT_geometry_shader4")) {
-        FLEXT_EXT_geometry_shader4 = GL_TRUE;
+    if (glfwExtensionSupported("GL_ARB_geometry_shader4")) {
+        FLEXT_ARB_geometry_shader4 = GL_TRUE;
     }
 
-    if (glfwExtensionSupported("GL_NV_transform_feedback")) {
-        FLEXT_NV_transform_feedback = GL_TRUE;
+    if (glfwExtensionSupported("GL_EXT_transform_feedback")) {
+        FLEXT_EXT_transform_feedback = GL_TRUE;
     }
 
 
@@ -57,6 +57,14 @@ int flextInit(void)
 void flextLoadOpenGLFunctions(void)
 {
     /* --- Function pointer loading --- */
+
+
+    /* GL_ARB_geometry_shader4 */
+
+    glpfProgramParameteriARB = (PFNGLPROGRAMPARAMETERIARB_PROC*)glfwGetProcAddress("glProgramParameteriARB");
+    glpfFramebufferTextureARB = (PFNGLFRAMEBUFFERTEXTUREARB_PROC*)glfwGetProcAddress("glFramebufferTextureARB");
+    glpfFramebufferTextureLayerARB = (PFNGLFRAMEBUFFERTEXTURELAYERARB_PROC*)glfwGetProcAddress("glFramebufferTextureLayerARB");
+    glpfFramebufferTextureFaceARB = (PFNGLFRAMEBUFFERTEXTUREFACEARB_PROC*)glfwGetProcAddress("glFramebufferTextureFaceARB");
 
 
     /* GL_EXT_framebuffer_object */
@@ -80,25 +88,15 @@ void flextLoadOpenGLFunctions(void)
     glpfGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXT_PROC*)glfwGetProcAddress("glGenerateMipmapEXT");
 
 
-    /* GL_EXT_geometry_shader4 */
+    /* GL_EXT_transform_feedback */
 
-    glpfProgramParameteriEXT = (PFNGLPROGRAMPARAMETERIEXT_PROC*)glfwGetProcAddress("glProgramParameteriEXT");
-
-
-    /* GL_NV_transform_feedback */
-
-    glpfBeginTransformFeedbackNV = (PFNGLBEGINTRANSFORMFEEDBACKNV_PROC*)glfwGetProcAddress("glBeginTransformFeedbackNV");
-    glpfEndTransformFeedbackNV = (PFNGLENDTRANSFORMFEEDBACKNV_PROC*)glfwGetProcAddress("glEndTransformFeedbackNV");
-    glpfTransformFeedbackAttribsNV = (PFNGLTRANSFORMFEEDBACKATTRIBSNV_PROC*)glfwGetProcAddress("glTransformFeedbackAttribsNV");
-    glpfBindBufferRangeNV = (PFNGLBINDBUFFERRANGENV_PROC*)glfwGetProcAddress("glBindBufferRangeNV");
-    glpfBindBufferOffsetNV = (PFNGLBINDBUFFEROFFSETNV_PROC*)glfwGetProcAddress("glBindBufferOffsetNV");
-    glpfBindBufferBaseNV = (PFNGLBINDBUFFERBASENV_PROC*)glfwGetProcAddress("glBindBufferBaseNV");
-    glpfTransformFeedbackVaryingsNV = (PFNGLTRANSFORMFEEDBACKVARYINGSNV_PROC*)glfwGetProcAddress("glTransformFeedbackVaryingsNV");
-    glpfActiveVaryingNV = (PFNGLACTIVEVARYINGNV_PROC*)glfwGetProcAddress("glActiveVaryingNV");
-    glpfGetVaryingLocationNV = (PFNGLGETVARYINGLOCATIONNV_PROC*)glfwGetProcAddress("glGetVaryingLocationNV");
-    glpfGetActiveVaryingNV = (PFNGLGETACTIVEVARYINGNV_PROC*)glfwGetProcAddress("glGetActiveVaryingNV");
-    glpfGetTransformFeedbackVaryingNV = (PFNGLGETTRANSFORMFEEDBACKVARYINGNV_PROC*)glfwGetProcAddress("glGetTransformFeedbackVaryingNV");
-    glpfTransformFeedbackStreamAttribsNV = (PFNGLTRANSFORMFEEDBACKSTREAMATTRIBSNV_PROC*)glfwGetProcAddress("glTransformFeedbackStreamAttribsNV");
+    glpfBeginTransformFeedbackEXT = (PFNGLBEGINTRANSFORMFEEDBACKEXT_PROC*)glfwGetProcAddress("glBeginTransformFeedbackEXT");
+    glpfEndTransformFeedbackEXT = (PFNGLENDTRANSFORMFEEDBACKEXT_PROC*)glfwGetProcAddress("glEndTransformFeedbackEXT");
+    glpfBindBufferRangeEXT = (PFNGLBINDBUFFERRANGEEXT_PROC*)glfwGetProcAddress("glBindBufferRangeEXT");
+    glpfBindBufferOffsetEXT = (PFNGLBINDBUFFEROFFSETEXT_PROC*)glfwGetProcAddress("glBindBufferOffsetEXT");
+    glpfBindBufferBaseEXT = (PFNGLBINDBUFFERBASEEXT_PROC*)glfwGetProcAddress("glBindBufferBaseEXT");
+    glpfTransformFeedbackVaryingsEXT = (PFNGLTRANSFORMFEEDBACKVARYINGSEXT_PROC*)glfwGetProcAddress("glTransformFeedbackVaryingsEXT");
+    glpfGetTransformFeedbackVaryingEXT = (PFNGLGETTRANSFORMFEEDBACKVARYINGEXT_PROC*)glfwGetProcAddress("glGetTransformFeedbackVaryingEXT");
 
 
     /* GL_VERSION_1_2 */
@@ -362,24 +360,21 @@ void flextLoadOpenGLFunctions(void)
     glpfVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTER_PROC*)glfwGetProcAddress("glVertexAttribPointer");
 
 
-    /* GL_VERSION_2_1 */
-
-    glpfUniformMatrix2x3fv = (PFNGLUNIFORMMATRIX2X3FV_PROC*)glfwGetProcAddress("glUniformMatrix2x3fv");
-    glpfUniformMatrix3x2fv = (PFNGLUNIFORMMATRIX3X2FV_PROC*)glfwGetProcAddress("glUniformMatrix3x2fv");
-    glpfUniformMatrix2x4fv = (PFNGLUNIFORMMATRIX2X4FV_PROC*)glfwGetProcAddress("glUniformMatrix2x4fv");
-    glpfUniformMatrix4x2fv = (PFNGLUNIFORMMATRIX4X2FV_PROC*)glfwGetProcAddress("glUniformMatrix4x2fv");
-    glpfUniformMatrix3x4fv = (PFNGLUNIFORMMATRIX3X4FV_PROC*)glfwGetProcAddress("glUniformMatrix3x4fv");
-    glpfUniformMatrix4x3fv = (PFNGLUNIFORMMATRIX4X3FV_PROC*)glfwGetProcAddress("glUniformMatrix4x3fv");
-
-
 }
 
 /* ----------------------- Extension flag definitions ---------------------- */
 int FLEXT_EXT_framebuffer_object = GL_FALSE;
-int FLEXT_EXT_geometry_shader4 = GL_FALSE;
-int FLEXT_NV_transform_feedback = GL_FALSE;
+int FLEXT_ARB_geometry_shader4 = GL_FALSE;
+int FLEXT_EXT_transform_feedback = GL_FALSE;
 
 /* ---------------------- Function pointer definitions --------------------- */
+
+/* GL_ARB_geometry_shader4 */
+
+PFNGLPROGRAMPARAMETERIARB_PROC* glpfProgramParameteriARB = NULL;
+PFNGLFRAMEBUFFERTEXTUREARB_PROC* glpfFramebufferTextureARB = NULL;
+PFNGLFRAMEBUFFERTEXTURELAYERARB_PROC* glpfFramebufferTextureLayerARB = NULL;
+PFNGLFRAMEBUFFERTEXTUREFACEARB_PROC* glpfFramebufferTextureFaceARB = NULL;
 
 /* GL_EXT_framebuffer_object */
 
@@ -401,24 +396,15 @@ PFNGLFRAMEBUFFERRENDERBUFFEREXT_PROC* glpfFramebufferRenderbufferEXT = NULL;
 PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXT_PROC* glpfGetFramebufferAttachmentParameterivEXT = NULL;
 PFNGLGENERATEMIPMAPEXT_PROC* glpfGenerateMipmapEXT = NULL;
 
-/* GL_EXT_geometry_shader4 */
+/* GL_EXT_transform_feedback */
 
-PFNGLPROGRAMPARAMETERIEXT_PROC* glpfProgramParameteriEXT = NULL;
-
-/* GL_NV_transform_feedback */
-
-PFNGLBEGINTRANSFORMFEEDBACKNV_PROC* glpfBeginTransformFeedbackNV = NULL;
-PFNGLENDTRANSFORMFEEDBACKNV_PROC* glpfEndTransformFeedbackNV = NULL;
-PFNGLTRANSFORMFEEDBACKATTRIBSNV_PROC* glpfTransformFeedbackAttribsNV = NULL;
-PFNGLBINDBUFFERRANGENV_PROC* glpfBindBufferRangeNV = NULL;
-PFNGLBINDBUFFEROFFSETNV_PROC* glpfBindBufferOffsetNV = NULL;
-PFNGLBINDBUFFERBASENV_PROC* glpfBindBufferBaseNV = NULL;
-PFNGLTRANSFORMFEEDBACKVARYINGSNV_PROC* glpfTransformFeedbackVaryingsNV = NULL;
-PFNGLACTIVEVARYINGNV_PROC* glpfActiveVaryingNV = NULL;
-PFNGLGETVARYINGLOCATIONNV_PROC* glpfGetVaryingLocationNV = NULL;
-PFNGLGETACTIVEVARYINGNV_PROC* glpfGetActiveVaryingNV = NULL;
-PFNGLGETTRANSFORMFEEDBACKVARYINGNV_PROC* glpfGetTransformFeedbackVaryingNV = NULL;
-PFNGLTRANSFORMFEEDBACKSTREAMATTRIBSNV_PROC* glpfTransformFeedbackStreamAttribsNV = NULL;
+PFNGLBEGINTRANSFORMFEEDBACKEXT_PROC* glpfBeginTransformFeedbackEXT = NULL;
+PFNGLENDTRANSFORMFEEDBACKEXT_PROC* glpfEndTransformFeedbackEXT = NULL;
+PFNGLBINDBUFFERRANGEEXT_PROC* glpfBindBufferRangeEXT = NULL;
+PFNGLBINDBUFFEROFFSETEXT_PROC* glpfBindBufferOffsetEXT = NULL;
+PFNGLBINDBUFFERBASEEXT_PROC* glpfBindBufferBaseEXT = NULL;
+PFNGLTRANSFORMFEEDBACKVARYINGSEXT_PROC* glpfTransformFeedbackVaryingsEXT = NULL;
+PFNGLGETTRANSFORMFEEDBACKVARYINGEXT_PROC* glpfGetTransformFeedbackVaryingEXT = NULL;
 
 /* GL_VERSION_1_2 */
 
@@ -675,15 +661,6 @@ PFNGLVERTEXATTRIB4UBV_PROC* glpfVertexAttrib4ubv = NULL;
 PFNGLVERTEXATTRIB4UIV_PROC* glpfVertexAttrib4uiv = NULL;
 PFNGLVERTEXATTRIB4USV_PROC* glpfVertexAttrib4usv = NULL;
 PFNGLVERTEXATTRIBPOINTER_PROC* glpfVertexAttribPointer = NULL;
-
-/* GL_VERSION_2_1 */
-
-PFNGLUNIFORMMATRIX2X3FV_PROC* glpfUniformMatrix2x3fv = NULL;
-PFNGLUNIFORMMATRIX3X2FV_PROC* glpfUniformMatrix3x2fv = NULL;
-PFNGLUNIFORMMATRIX2X4FV_PROC* glpfUniformMatrix2x4fv = NULL;
-PFNGLUNIFORMMATRIX4X2FV_PROC* glpfUniformMatrix4x2fv = NULL;
-PFNGLUNIFORMMATRIX3X4FV_PROC* glpfUniformMatrix3x4fv = NULL;
-PFNGLUNIFORMMATRIX4X3FV_PROC* glpfUniformMatrix4x3fv = NULL;
 
 
 

@@ -2,9 +2,9 @@
 # It defines the targetted OpenGL version and lists the used extensions.
 # For more information: https://github.com/ginkgo/flextGL
 
-version 2.1 compatibility
+version 2.0 compatibility
 
 extension EXT_framebuffer_object required
 
-extension EXT_geometry_shader4 optional
-extension NV_transform_feedback optional
+extension ARB_geometry_shader4 optional
+extension EXT_transform_feedback optional

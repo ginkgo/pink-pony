@@ -1,5 +1,8 @@
 #include "utilities.hh"
+
+#include <sstream>
 #include <stdio.h>
+#include <string.h>
 
 using std::ios_base;
 
@@ -199,4 +202,31 @@ std::istream& operator>>(std::istream& is, Color4f& v)
     is.ignore(1);
     
     return is;
+}
+
+
+void read_tokens(const string& input, vector<const char*>& token_list)
+{
+    std::stringstream ss(input);
+    
+    while (!ss.eof()) {
+        string s;
+        ss >> s;
+
+        char *cs = new char[s.size() + 1];
+        strncpy(cs, s.data(), s.size()+1);
+
+        token_list.push_back(cs);
+
+    }
+}
+
+
+void free_tokens(vector<const char*>& token_list)
+{
+    for (size_t i = 0; i < token_list.size(); ++i) {
+        delete[] token_list[i];
+    }
+
+    token_list.clear();
 }

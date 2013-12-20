@@ -194,7 +194,7 @@ void Menu::setup_settings(void)
     heart_setting = config->heart_count;
 
     for (unsigned i = 0; i < resolutions.size(); ++i) {
-        if (resolutions[i].x * resolutions[i].y >= config->width*config->height) {
+        if (resolutions[i].x * resolutions[i].y >= (int)config->width*config->height) {
             resolution_setting = i;
             break;
         }
@@ -556,7 +556,6 @@ void Menu::change_minimap(int direction) {
 
 void Menu::change_antialiasing(int direction) {
     int modes[] = {0, 2, 4, 8, 16};
-    int count = 5;
 
     int current = 4;
 

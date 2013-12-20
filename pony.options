@@ -13,10 +13,10 @@ resource_dir = "resources/";
 
 // Particles
 
-pony_explosion_particles = 5000;
-heart_explosion_particles = 1000;
-pony_particle_rate = 10;
-use_particles = true;
+pony_explosion_particles = 50000;
+heart_explosion_particles = 10000;
+pony_particle_rate = 100;
+use_particles = false;
 
 // Level properties
 
@@ -32,14 +32,14 @@ heightmap_velvet_coeff = 1.5;
 sand_texture = "textures/sand.png";
 grass_texture = "textures/grass.png";
 noise_texture = "textures/noise.png";
-pony_start[0] = (297.955 -81.4905);
-pony_start_angle[0] = 156.682;
-pony_start[1] = (-447.994 86.9048);
-pony_start_angle[1] = 180.591;
-pony_start[2] = (-317.212 -125.705);
-pony_start_angle[2] = 327.641;
-pony_start[3] = (177.68 421.375);
-pony_start_angle[3] = 137.425;
+pony_start[0] = (-201.991 -367.845);
+pony_start_angle[0] = 11.5357;
+pony_start[1] = (164.635 -151.544);
+pony_start_angle[1] = 197.381;
+pony_start[2] = (-379.183 79.0567);
+pony_start_angle[2] = 185.795;
+pony_start[3] = (70.6803 343.818);
+pony_start_angle[3] = 50.4693;
 
 // Light properties
 
@@ -62,8 +62,8 @@ pony_height = 3;
 
 // Game properties
 
-ai_count = 1;
-player_count = 2;
+ai_count = 3;
+player_count = 4;
 heart_count = 3;
 pony_start_speed = 15;
 pony_min_speed = 5;

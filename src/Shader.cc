@@ -195,14 +195,14 @@ Shader::Shader(string vertex_shader_file,
     glAttachShader(program, geometry_shader);
     glAttachShader(program, fragment_shader);
 
-    glProgramParameteriEXT(program, 
-                           GL_GEOMETRY_INPUT_TYPE_EXT, 
+    glProgramParameteriARB(program, 
+                           GL_GEOMETRY_INPUT_TYPE_ARB, 
                            geometry_input_type);
-    glProgramParameteriEXT(program, 
-                           GL_GEOMETRY_OUTPUT_TYPE_EXT, 
+    glProgramParameteriARB(program, 
+                           GL_GEOMETRY_OUTPUT_TYPE_ARB, 
                            geometry_output_type);
-    glProgramParameteriEXT(program,
-                           GL_GEOMETRY_VERTICES_OUT_EXT, 
+    glProgramParameteriARB(program,
+                           GL_GEOMETRY_VERTICES_OUT_ARB, 
                            geometry_vertex_out);
 
     glLinkProgram(program);

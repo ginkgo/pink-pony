@@ -28,49 +28,40 @@ TransformFeedback::TransformFeedback(GLuint program,
         front_buffer = back_buffer;
     }
 
-    stringstream ss(varyings);
+    vector<const char*> varying_list;
+    read_tokens(varyings, varying_list);
 
-    while(!ss.eof()) {
-        Parameter varying;
-
-        ss >> varying.name;
-        varying.location = 
-            glGetVaryingLocationNV(program, varying.name.c_str());
-        this->varyings.push_back(varying);
-    }
-
+    glTransformFeedbackVaryingsEXT(program, varying_list.size(), varying_list.data(), GL_INTERLEAVED_ATTRIBS_EXT);
     getErrors();
-    GLint active_varyings;
-    glGetProgramiv(program, GL_ACTIVE_VARYINGS_NV, &active_varyings);
-
-    for (GLuint i = 0; i < (GLuint)active_varyings; ++i) {
-
+    glLinkProgram(program);
+    getErrors();
+    
+    GLint varying_count;
+    glGetProgramiv(program, GL_TRANSFORM_FEEDBACK_VARYINGS_EXT, &varying_count);
+    for (GLuint i = 0; i < (GLuint)varying_count; ++i) {
+        Parameter varying;
+        
         char name[100];
         GLsizei size;
         GLenum type;
-            
-        glGetActiveVaryingNV(program, i,
-                             100, NULL, &size, &type, name);
 
-        for (unsigned int j = 0; j < this->varyings.size(); ++j) {
-            if (this->varyings[j].name == name) {
-
-                type_convert(type, size,
-                             this->varyings[j].type,
-                             this->varyings[j].size,
-                             this->varyings[j].mem_size);
-            }
-        }
-
+        glGetTransformFeedbackVaryingEXT(program, i, sizeof(name), NULL, &size, &type, name);
+        
+        varying.name = string(name);
+        type_convert(type, size, varying.type, varying.size, varying.mem_size);
+        
+        this->varyings.push_back(varying);        
     }
     
-    getErrors();    
+    free_tokens(varying_list);
+
+    getErrors();
+    
     GLsizei size = 0;
     vector<GLint> locations;
     for (unsigned int i = 0; i < this->varyings.size(); ++i) {
         this->varyings[i].offset = size;
         size += this->varyings[i].mem_size;
-        locations.push_back(this->varyings[i].location);
     }
     for (unsigned int i = 0; i < this->varyings.size(); ++i) {
         this->varyings[i].stride = size;
@@ -98,15 +89,6 @@ TransformFeedback::TransformFeedback(GLuint program,
 
     getErrors();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    getErrors();
-
-    glUseProgram(program);
-    glTransformFeedbackVaryingsNV(program, 
-                                  locations.size(), &(locations[0]),
-                                  GL_INTERLEAVED_ATTRIBS_NV);
-
-    getErrors();
 }
 
 TransformFeedback::~TransformFeedback()
@@ -121,18 +103,18 @@ TransformFeedback::~TransformFeedback()
 
 void TransformFeedback::begin()
 {
-    glBindBufferOffsetNV(GL_TRANSFORM_FEEDBACK_BUFFER_NV, 0, back_buffer, 0);
-    glBeginTransformFeedbackNV(primitive_type);
-    glEnable(GL_RASTERIZER_DISCARD_NV);
-    glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_NV, query);
+    glBindBufferOffsetEXT(GL_TRANSFORM_FEEDBACK_BUFFER_EXT, 0, back_buffer, 0);
+    glBeginTransformFeedbackEXT(primitive_type);
+    glEnable(GL_RASTERIZER_DISCARD_EXT);
+    glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_EXT, query);
     getErrors();
 }
 
 void TransformFeedback::end()
 {
-    glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_NV);
-    glEndTransformFeedbackNV();
-    glDisable(GL_RASTERIZER_DISCARD_NV);
+    glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_EXT);
+    glEndTransformFeedbackEXT();
+    glDisable(GL_RASTERIZER_DISCARD_EXT);
     getErrors();
 }
 

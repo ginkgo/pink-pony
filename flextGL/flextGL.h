@@ -5471,6 +5471,24 @@ typedef GLint GLfixed;
 /* --------------------------- FUNCTION PROTOTYPES --------------------------- */
 
 
+/* GL_ARB_geometry_shader4 */
+
+typedef GLvoid (APIENTRY PFNGLPROGRAMPARAMETERIARB_PROC (const GLuint program, const GLenum pname, const GLint value));
+typedef GLvoid (APIENTRY PFNGLFRAMEBUFFERTEXTUREARB_PROC (const GLenum target, const GLenum attachment, const GLuint texture, const GLint level));
+typedef GLvoid (APIENTRY PFNGLFRAMEBUFFERTEXTURELAYERARB_PROC (const GLenum target, const GLenum attachment, const GLuint texture, const GLint level, const GLint layer));
+typedef GLvoid (APIENTRY PFNGLFRAMEBUFFERTEXTUREFACEARB_PROC (const GLenum target, const GLenum attachment, const GLuint texture, const GLint level, const GLenum face));
+
+GLAPI PFNGLPROGRAMPARAMETERIARB_PROC* glpfProgramParameteriARB;
+GLAPI PFNGLFRAMEBUFFERTEXTUREARB_PROC* glpfFramebufferTextureARB;
+GLAPI PFNGLFRAMEBUFFERTEXTURELAYERARB_PROC* glpfFramebufferTextureLayerARB;
+GLAPI PFNGLFRAMEBUFFERTEXTUREFACEARB_PROC* glpfFramebufferTextureFaceARB;
+
+#define glProgramParameteriARB glpfProgramParameteriARB
+#define glFramebufferTextureARB glpfFramebufferTextureARB
+#define glFramebufferTextureLayerARB glpfFramebufferTextureLayerARB
+#define glFramebufferTextureFaceARB glpfFramebufferTextureFaceARB
+
+
 /* GL_EXT_framebuffer_object */
 
 typedef GLboolean (APIENTRY PFNGLISRENDERBUFFEREXT_PROC (const GLuint renderbuffer));
@@ -5528,55 +5546,31 @@ GLAPI PFNGLGENERATEMIPMAPEXT_PROC* glpfGenerateMipmapEXT;
 #define glGenerateMipmapEXT glpfGenerateMipmapEXT
 
 
-/* GL_EXT_geometry_shader4 */
+/* GL_EXT_transform_feedback */
 
-typedef GLvoid (APIENTRY PFNGLPROGRAMPARAMETERIEXT_PROC (const GLuint program, const GLenum pname, const GLint value));
+typedef GLvoid (APIENTRY PFNGLBEGINTRANSFORMFEEDBACKEXT_PROC (const GLenum primitiveMode));
+typedef GLvoid (APIENTRY PFNGLENDTRANSFORMFEEDBACKEXT_PROC (void));
+typedef GLvoid (APIENTRY PFNGLBINDBUFFERRANGEEXT_PROC (const GLenum target, const GLuint index, const GLuint buffer, const GLintptr offset, const GLsizeiptr size));
+typedef GLvoid (APIENTRY PFNGLBINDBUFFEROFFSETEXT_PROC (const GLenum target, const GLuint index, const GLuint buffer, const GLintptr offset));
+typedef GLvoid (APIENTRY PFNGLBINDBUFFERBASEEXT_PROC (const GLenum target, const GLuint index, const GLuint buffer));
+typedef GLvoid (APIENTRY PFNGLTRANSFORMFEEDBACKVARYINGSEXT_PROC (const GLuint program, const GLsizei count, const GLchar** varyings, const GLenum bufferMode));
+typedef GLvoid (APIENTRY PFNGLGETTRANSFORMFEEDBACKVARYINGEXT_PROC (const GLuint program, const GLuint index, const GLsizei bufSize, GLsizei* length, GLsizei* size, GLenum* type, GLchar* name));
 
-GLAPI PFNGLPROGRAMPARAMETERIEXT_PROC* glpfProgramParameteriEXT;
+GLAPI PFNGLBEGINTRANSFORMFEEDBACKEXT_PROC* glpfBeginTransformFeedbackEXT;
+GLAPI PFNGLENDTRANSFORMFEEDBACKEXT_PROC* glpfEndTransformFeedbackEXT;
+GLAPI PFNGLBINDBUFFERRANGEEXT_PROC* glpfBindBufferRangeEXT;
+GLAPI PFNGLBINDBUFFEROFFSETEXT_PROC* glpfBindBufferOffsetEXT;
+GLAPI PFNGLBINDBUFFERBASEEXT_PROC* glpfBindBufferBaseEXT;
+GLAPI PFNGLTRANSFORMFEEDBACKVARYINGSEXT_PROC* glpfTransformFeedbackVaryingsEXT;
+GLAPI PFNGLGETTRANSFORMFEEDBACKVARYINGEXT_PROC* glpfGetTransformFeedbackVaryingEXT;
 
-#define glProgramParameteriEXT glpfProgramParameteriEXT
-
-
-/* GL_NV_transform_feedback */
-
-typedef GLvoid (APIENTRY PFNGLBEGINTRANSFORMFEEDBACKNV_PROC (const GLenum primitiveMode));
-typedef GLvoid (APIENTRY PFNGLENDTRANSFORMFEEDBACKNV_PROC (void));
-typedef GLvoid (APIENTRY PFNGLTRANSFORMFEEDBACKATTRIBSNV_PROC (const GLuint count, const GLint* attribs, const GLenum bufferMode));
-typedef GLvoid (APIENTRY PFNGLBINDBUFFERRANGENV_PROC (const GLenum target, const GLuint index, const GLuint buffer, const GLintptr offset, const GLsizeiptr size));
-typedef GLvoid (APIENTRY PFNGLBINDBUFFEROFFSETNV_PROC (const GLenum target, const GLuint index, const GLuint buffer, const GLintptr offset));
-typedef GLvoid (APIENTRY PFNGLBINDBUFFERBASENV_PROC (const GLenum target, const GLuint index, const GLuint buffer));
-typedef GLvoid (APIENTRY PFNGLTRANSFORMFEEDBACKVARYINGSNV_PROC (const GLuint program, const GLsizei count, const GLint* locations, const GLenum bufferMode));
-typedef GLvoid (APIENTRY PFNGLACTIVEVARYINGNV_PROC (const GLuint program, const GLchar* name));
-typedef GLint (APIENTRY PFNGLGETVARYINGLOCATIONNV_PROC (const GLuint program, const GLchar* name));
-typedef GLvoid (APIENTRY PFNGLGETACTIVEVARYINGNV_PROC (const GLuint program, const GLuint index, const GLsizei bufSize, GLsizei* length, GLsizei* size, GLenum* type, GLchar* name));
-typedef GLvoid (APIENTRY PFNGLGETTRANSFORMFEEDBACKVARYINGNV_PROC (const GLuint program, const GLuint index, GLint* location));
-typedef GLvoid (APIENTRY PFNGLTRANSFORMFEEDBACKSTREAMATTRIBSNV_PROC (const GLsizei count, const GLint* attribs, const GLsizei nbuffers, const GLint* bufstreams, const GLenum bufferMode));
-
-GLAPI PFNGLBEGINTRANSFORMFEEDBACKNV_PROC* glpfBeginTransformFeedbackNV;
-GLAPI PFNGLENDTRANSFORMFEEDBACKNV_PROC* glpfEndTransformFeedbackNV;
-GLAPI PFNGLTRANSFORMFEEDBACKATTRIBSNV_PROC* glpfTransformFeedbackAttribsNV;
-GLAPI PFNGLBINDBUFFERRANGENV_PROC* glpfBindBufferRangeNV;
-GLAPI PFNGLBINDBUFFEROFFSETNV_PROC* glpfBindBufferOffsetNV;
-GLAPI PFNGLBINDBUFFERBASENV_PROC* glpfBindBufferBaseNV;
-GLAPI PFNGLTRANSFORMFEEDBACKVARYINGSNV_PROC* glpfTransformFeedbackVaryingsNV;
-GLAPI PFNGLACTIVEVARYINGNV_PROC* glpfActiveVaryingNV;
-GLAPI PFNGLGETVARYINGLOCATIONNV_PROC* glpfGetVaryingLocationNV;
-GLAPI PFNGLGETACTIVEVARYINGNV_PROC* glpfGetActiveVaryingNV;
-GLAPI PFNGLGETTRANSFORMFEEDBACKVARYINGNV_PROC* glpfGetTransformFeedbackVaryingNV;
-GLAPI PFNGLTRANSFORMFEEDBACKSTREAMATTRIBSNV_PROC* glpfTransformFeedbackStreamAttribsNV;
-
-#define glBeginTransformFeedbackNV glpfBeginTransformFeedbackNV
-#define glEndTransformFeedbackNV glpfEndTransformFeedbackNV
-#define glTransformFeedbackAttribsNV glpfTransformFeedbackAttribsNV
-#define glBindBufferRangeNV glpfBindBufferRangeNV
-#define glBindBufferOffsetNV glpfBindBufferOffsetNV
-#define glBindBufferBaseNV glpfBindBufferBaseNV
-#define glTransformFeedbackVaryingsNV glpfTransformFeedbackVaryingsNV
-#define glActiveVaryingNV glpfActiveVaryingNV
-#define glGetVaryingLocationNV glpfGetVaryingLocationNV
-#define glGetActiveVaryingNV glpfGetActiveVaryingNV
-#define glGetTransformFeedbackVaryingNV glpfGetTransformFeedbackVaryingNV
-#define glTransformFeedbackStreamAttribsNV glpfTransformFeedbackStreamAttribsNV
+#define glBeginTransformFeedbackEXT glpfBeginTransformFeedbackEXT
+#define glEndTransformFeedbackEXT glpfEndTransformFeedbackEXT
+#define glBindBufferRangeEXT glpfBindBufferRangeEXT
+#define glBindBufferOffsetEXT glpfBindBufferOffsetEXT
+#define glBindBufferBaseEXT glpfBindBufferBaseEXT
+#define glTransformFeedbackVaryingsEXT glpfTransformFeedbackVaryingsEXT
+#define glGetTransformFeedbackVaryingEXT glpfGetTransformFeedbackVaryingEXT
 
 
 /* GL_VERSION_1_0 */
@@ -6676,40 +6670,16 @@ GLAPI PFNGLVERTEXATTRIBPOINTER_PROC* glpfVertexAttribPointer;
 #define glVertexAttribPointer glpfVertexAttribPointer
 
 
-/* GL_VERSION_2_1 */
-
-typedef GLvoid (APIENTRY PFNGLUNIFORMMATRIX2X3FV_PROC (const GLint location, const GLsizei count, const GLboolean transpose, const GLfloat* value));
-typedef GLvoid (APIENTRY PFNGLUNIFORMMATRIX3X2FV_PROC (const GLint location, const GLsizei count, const GLboolean transpose, const GLfloat* value));
-typedef GLvoid (APIENTRY PFNGLUNIFORMMATRIX2X4FV_PROC (const GLint location, const GLsizei count, const GLboolean transpose, const GLfloat* value));
-typedef GLvoid (APIENTRY PFNGLUNIFORMMATRIX4X2FV_PROC (const GLint location, const GLsizei count, const GLboolean transpose, const GLfloat* value));
-typedef GLvoid (APIENTRY PFNGLUNIFORMMATRIX3X4FV_PROC (const GLint location, const GLsizei count, const GLboolean transpose, const GLfloat* value));
-typedef GLvoid (APIENTRY PFNGLUNIFORMMATRIX4X3FV_PROC (const GLint location, const GLsizei count, const GLboolean transpose, const GLfloat* value));
-
-GLAPI PFNGLUNIFORMMATRIX2X3FV_PROC* glpfUniformMatrix2x3fv;
-GLAPI PFNGLUNIFORMMATRIX3X2FV_PROC* glpfUniformMatrix3x2fv;
-GLAPI PFNGLUNIFORMMATRIX2X4FV_PROC* glpfUniformMatrix2x4fv;
-GLAPI PFNGLUNIFORMMATRIX4X2FV_PROC* glpfUniformMatrix4x2fv;
-GLAPI PFNGLUNIFORMMATRIX3X4FV_PROC* glpfUniformMatrix3x4fv;
-GLAPI PFNGLUNIFORMMATRIX4X3FV_PROC* glpfUniformMatrix4x3fv;
-
-#define glUniformMatrix2x3fv glpfUniformMatrix2x3fv
-#define glUniformMatrix3x2fv glpfUniformMatrix3x2fv
-#define glUniformMatrix2x4fv glpfUniformMatrix2x4fv
-#define glUniformMatrix4x2fv glpfUniformMatrix4x2fv
-#define glUniformMatrix3x4fv glpfUniformMatrix3x4fv
-#define glUniformMatrix4x3fv glpfUniformMatrix4x3fv
-
-
 /* ---------------------- Flags for optional extensions ---------------------- */
 
 extern int FLEXT_EXT_framebuffer_object;
-extern int FLEXT_EXT_geometry_shader4;
-extern int FLEXT_NV_transform_feedback;
+extern int FLEXT_ARB_geometry_shader4;
+extern int FLEXT_EXT_transform_feedback;
 
 int flextInit(void);
 
 #define FLEXT_MAJOR_VERSION 2
-#define FLEXT_MINOR_VERSION 1
+#define FLEXT_MINOR_VERSION 0
 #define FLEXT_CORE_PROFILE 0
 
 #ifdef __cplusplus
