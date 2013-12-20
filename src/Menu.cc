@@ -173,8 +173,10 @@ void Menu::setup_settings(void)
         particle_setting = 0;
     } else if (config->pony_particle_rate <= 10.0) {
         particle_setting = 1;
-    } else {
+    } else if (config->pony_particle_rate <= 100.0) {
         particle_setting = 2;
+    } else {
+        particle_setting = 3;
     }
 
     if (config->window_mode == GLFW_WINDOW) {
@@ -214,12 +216,18 @@ void Menu::load_settings(void)
         config->heart_explosion_particles = 1000;
         config->pony_explosion_particles = 5000;
         config->pony_particle_rate = 10.0;
-    } else {
+    } else if (particle_setting == 2) {
         particles_text.set_text("Many particles");
         config->use_particles = true;
         config->heart_explosion_particles = 10000;
         config->pony_explosion_particles = 50000;
-        config->pony_particle_rate = 100.0;        
+        config->pony_particle_rate = 100.0;    
+    } else {
+        particles_text.set_text("Too many particles");
+        config->use_particles = true;
+        config->heart_explosion_particles = 40000;
+        config->pony_explosion_particles = 200000;
+        config->pony_particle_rate = 400.0;        
     }
 
     if (fullscreen_setting == 0) {
@@ -524,7 +532,7 @@ void Menu::setup_layout(void)
 
 void Menu::change_particles(int direction)
 {
-    particle_setting = (particle_setting + 3 + direction) % 3;
+    particle_setting = (particle_setting + 4 + direction) % 4;
 
 
     load_settings();
