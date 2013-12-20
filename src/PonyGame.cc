@@ -3,6 +3,10 @@
 #include <ImathRandom.h>
 
 
+// SDL_mixer includes
+#include "SDL.h"
+#include "SDL_mixer.h"
+
 PonyGame::PonyGame(SplitScreen* screen,
                    Heightmap* heightmap,
                    Config* config,
@@ -386,11 +390,9 @@ bool PonyGame::start(PonyPoints& points)
 
 
         if (glfwGetKey(GLFW_KEY_F1) && !f1_pressed) {
-            // if (music->getVolume() != 0.0) {
-            //     music->setVolume(0.0);
-            // } else {
-            //     music->setVolume(1.0);
-            // }                     
+            int current_volume = Mix_VolumeMusic(-1);
+            Mix_VolumeMusic(std::min(128, current_volume + 64) % 128);
+            m_config->music_volume = Mix_VolumeMusic(-1);
         }
 
         space_pressed = glfwGetKey(GLFW_KEY_SPACE);

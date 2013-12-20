@@ -1,4 +1,3 @@
-Pink Pony is kind of beta, so don't expect *too* much. :)
 
 == COMPILING ==
 
@@ -20,7 +19,6 @@ a dualcore CPU, you can use "scons -j2" for parallel building.
 
 To start the game, call "./Pony". ESC stops the game.
 
-You can take screenshots with the SPACE bar.
 
 Controls:
 
@@ -28,6 +26,8 @@ Pony 1: Arrow Keys
 Pony 2: WASD
 Pony 3: 8456 on the Numpad
 Pony 4: IJKL
+
+F1 toggles music
 
 Additionally you can use gamepads. Joystick 1 controls Pony 1, etc.
 You steer the ponies with the left/right axis of the main stick and

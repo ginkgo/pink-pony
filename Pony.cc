@@ -16,13 +16,13 @@ void randomize_start_positions(Config& config, Heightmap& heightmap);
 void start_music(Mix_Music** music, const string& music_file);
 void stop_music(Mix_Music** music);
 
+Config config;
+
 int main(int argc, char** argv)
 {
     string config_file = "pony.options";
     bool running = true;
     
-    Config config;
-
     if (argc > 1) {
         config_file = string(argv[1]);
     }
@@ -232,6 +232,9 @@ void start_music(Mix_Music** music, const string& music_file)
 
     // Play music in infinite loop
     Mix_PlayMusic(*music, -1);
+
+    
+    Mix_VolumeMusic(config.music_volume);
     
 }
 

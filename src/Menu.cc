@@ -1,6 +1,10 @@
 #include "Menu.hh"
 #include <tinyxml.h>
 
+// SDL_mixer includes
+#include "SDL.h"
+#include "SDL_mixer.h"
+
 Menu* Menu::callback_menu = NULL;
 
 void GLFWCALL menu_mouse_callback(int button, int action)
@@ -37,11 +41,9 @@ void Menu::toggle_fullscreen(void)
 
 void Menu::toggle_music(void)
 {
-    // if (music->getVolume() != 0.0) {
-    //     music->setVolume(0.0);
-    // } else {
-    //     music->setVolume(1.0);
-    // }
+    int current_volume = Mix_VolumeMusic(-1);
+    Mix_VolumeMusic(std::min(128, current_volume + 64) % 128);
+    config->music_volume = Mix_VolumeMusic(-1);
 }
 
 void Menu::mouse_callback(int button, int action)

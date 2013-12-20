@@ -62,7 +62,8 @@ Config::Config()
       pony_mesh("models/Pony.pmesh"),
       pony_particle_rate(100.0),
       pony_explosion_particles(50000),
-      background_music("music/To be happy.mp3")
+      background_music("music/To be happy.mp3"),
+      music_volume(64)
 {
     pony_up[0] = GLFW_KEY_UP;
     pony_down[0] = GLFW_KEY_DOWN;
@@ -264,6 +265,7 @@ void Config::set_value(string name, string value)
     else if (name == "pony_particle_rate") pony_particle_rate = fval;
     else if (name == "use_particles") use_particles = bval;
     else if (name == "background_music") background_music = sval;
+    else if (name == "music_volume") music_volume = std::max(0,std::min(127,ival));
     else if (name == "levels_file") levels_file = sval;
     else if (name == "selected_level") selected_level = ival;
 }
@@ -418,6 +420,7 @@ bool Config::write_file(string filename)
 
     os << endl << "// Sounds" << endl << endl;
     os << "background_music = \"" << background_music << "\";" << endl;   
+    os << "music_volume = " << music_volume << ";" << endl;   
     
     return true;
 }

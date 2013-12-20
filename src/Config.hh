@@ -101,6 +101,7 @@ class Config
 
     // Sounds
     string background_music;
+    int music_volume;
     
 
     Config();
