@@ -40,8 +40,8 @@ Texture2D::Texture2D(const char* path,
         ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
     }
 
-    cout << "Loading file \"" << path << "\"";
-    cout.flush();
+    //cout << "Loading file \"" << path << "\"";
+    //cout.flush();
 
     ILuint image;
 
@@ -50,9 +50,9 @@ Texture2D::Texture2D(const char* path,
 
     bool success = ilLoadImage(path);
 
-    if (!success) {
-        cerr << " Failed";
-    }
+    // if (!success) {
+    //     cerr << " Failed";
+    // }
     
     size.x = ilGetInteger(IL_IMAGE_WIDTH);
     size.y = ilGetInteger(IL_IMAGE_HEIGHT);
@@ -78,7 +78,7 @@ Texture2D::Texture2D(const char* path,
     
     setup(wrapS, wrapT, mag_filter, min_filter);
 
-    cout << " - Done: " << size.x << "x" << size.y << " pixels." << endl;
+    //cout << " - Done: " << size.x << "x" << size.y << " pixels." << endl;
 };
 
 Texture2D::~Texture2D()

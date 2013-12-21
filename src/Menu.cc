@@ -42,7 +42,7 @@ void Menu::toggle_fullscreen(void)
 void Menu::toggle_music(void)
 {
     int current_volume = Mix_VolumeMusic(-1);
-    Mix_VolumeMusic(std::min(128, current_volume + 64) % 128);
+    Mix_VolumeMusic(std::min(128, current_volume + 63) % 128);
     config->music_volume = Mix_VolumeMusic(-1);
 }
 

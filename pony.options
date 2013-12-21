@@ -13,18 +13,18 @@ resource_dir = "resources/";
 
 // Particles
 
-pony_explosion_particles = 200000;
-heart_explosion_particles = 40000;
-pony_particle_rate = 400;
-use_particles = false;
+pony_explosion_particles = 50000;
+heart_explosion_particles = 10000;
+pony_particle_rate = 100;
+use_particles = true;
 
 // Level properties
 
 levels_file = "levels.xml";
-selected_level = 0;
-heightmap_file = "levels/heart.png";
+selected_level = 5;
+heightmap_file = "levels/strange.png";
 level_size = (1500 90 1500);
-water_level = 45;
+water_level = 30;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;
@@ -32,14 +32,14 @@ heightmap_velvet_coeff = 1.5;
 sand_texture = "textures/sand.png";
 grass_texture = "textures/grass.png";
 noise_texture = "textures/noise.png";
-pony_start[0] = (143.947 325.171);
-pony_start_angle[0] = 273.963;
-pony_start[1] = (-337.921 250.575);
-pony_start_angle[1] = 326.485;
-pony_start[2] = (259.436 -192.584);
-pony_start_angle[2] = 259.786;
-pony_start[3] = (-260.975 -156.536);
-pony_start_angle[3] = 129.036;
+pony_start[0] = (382.804 -137.966);
+pony_start_angle[0] = 344.286;
+pony_start[1] = (-457.014 -136.516);
+pony_start_angle[1] = 163.743;
+pony_start[2] = (82.2203 88.8652);
+pony_start_angle[2] = 293.368;
+pony_start[3] = (-98.8677 -258.915);
+pony_start_angle[3] = 208.103;
 
 // Light properties
 
@@ -62,7 +62,7 @@ pony_height = 3;
 
 // Game properties
 
-ai_count = 3;
+ai_count = 4;
 player_count = 4;
 heart_count = 3;
 pony_start_speed = 15;
@@ -115,4 +115,4 @@ pony_color[3] = (0.484375 0.984375 0 1);
 // Sounds
 
 background_music = "music/To be happy.mp3";
-music_volume = 64;
+music_volume = 0;

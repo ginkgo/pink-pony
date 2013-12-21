@@ -122,11 +122,11 @@ Pony::Pony(int i, Config* config, ParticleSystem* particle_system)
 
     Color4f pony_color = config->pony_color[i];
 
-    cout << pony_color * 255 << " -> ";
+    // cout << pony_color * 255 << " -> ";
 
     pony_color = hsvColor(pony_color);
 
-    cout << pony_color << endl;
+    // cout << pony_color << endl;
 
     float pony_hue = pony_color.r;
 

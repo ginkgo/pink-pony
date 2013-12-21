@@ -5,14 +5,14 @@ using namespace google::protobuf;
 
 bool load_mesh(Mesh& mesh, string filename)
 {    
-    cout << "Loading mesh file \"" << filename << "\". ";
+    //    cout << "Loading mesh file \"" << filename << "\". ";
     bool success = load_protobuf(mesh, filename);
 
-    if (success) {
-        cout << "Success " << mesh.layers(0).rows() << " vertices." << endl; 
-    } else {
-        cerr << "Failed to parse mesh file." << endl;
-    }
+    // if (success) {
+    //     cout << "Success " << mesh.layers(0).rows() << " vertices." << endl; 
+    // } else {
+    //     cerr << "Failed to parse mesh file." << endl;
+    // }
 
     return success;
 }

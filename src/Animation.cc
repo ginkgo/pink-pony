@@ -73,14 +73,14 @@ My::Animation::Animation(string skeleton_file)
     current_keyframe = 0;
     current_time = 0.0f;
 
-    cout << animations.size() << " Animations loaded:";
+    // cout << animations.size() << " Animations loaded:";
 
-    for (std::map<string, std::pair<float, vector<Animation::Keyframe> > >::iterator i = animations.begin();
-         i != animations.end(); ++i) {
-        cout << " " << i->first;
-    }
+    // for (std::map<string, std::pair<float, vector<Animation::Keyframe> > >::iterator i = animations.begin();
+    //      i != animations.end(); ++i) {
+    //     cout << " " << i->first;
+    // }
 
-    cout << "." << endl;
+    // cout << "." << endl;
     
     for (unsigned i = 0; i < keyframes->at(0).transformations.size(); ++i) {
         const Transform& t1 = skeleton.bones(i).transform();

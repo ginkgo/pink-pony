@@ -22,8 +22,8 @@ PonyGame::PonyGame(SplitScreen* screen,
 {
     int human_count = m_config->player_count - m_config->ai_count;
     if (human_count == 0) human_count = m_config->player_count;
-    // Init OpenGL states
 
+    // Init OpenGL states
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -391,7 +391,7 @@ bool PonyGame::start(PonyPoints& points)
 
         if (glfwGetKey(GLFW_KEY_F1) && !f1_pressed) {
             int current_volume = Mix_VolumeMusic(-1);
-            Mix_VolumeMusic(std::min(128, current_volume + 64) % 128);
+            Mix_VolumeMusic(std::min(128, current_volume + 63) % 128);
             m_config->music_volume = Mix_VolumeMusic(-1);
         }
 
