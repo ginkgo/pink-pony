@@ -105,6 +105,8 @@ void LineList::draw_lines(Config* config)
 
         int pony_no = i;
 
+        glLineWidth(2.0f);
+        
         glColor(config->pony_color[pony_no]);
 
         glEnableClientState(GL_VERTEX_ARRAY);
@@ -113,6 +115,8 @@ void LineList::draw_lines(Config* config)
         glDrawArrays(GL_LINE_STRIP, 0, line_strips[i].size());
 
         glDisableClientState(GL_VERTEX_ARRAY);
+        
+        glLineWidth(1.0f);
     }
 }
 
