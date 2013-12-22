@@ -22,6 +22,7 @@ Config::Config()
       sand_texture("textures/sand.png"),
       grass_texture("textures/grass.png"),
       noise_texture("textures/noise.png"),
+      sky_texture("textures/sky.png"),
       light_specular(1,1,1,1),
       light_diffuse(1,1,1,1),
       light_ambient(0.05,0.05,0.05,1),
@@ -192,6 +193,7 @@ void Config::set_value(string name, string value)
     else if (name == "sand_texture") sand_texture = sval;
     else if (name == "grass_texture") grass_texture = sval;
     else if (name == "noise_texture") noise_texture = sval;
+    else if (name == "sky_texture") sky_texture = sval;
     else if (name == "light_specular") light_specular = colorval;
     else if (name == "light_diffuse") light_diffuse = colorval;
     else if (name == "light_ambient") light_ambient = colorval;
@@ -350,6 +352,7 @@ bool Config::write_file(string filename)
     os << "sand_texture = \"" << sand_texture << "\";" << endl;
     os << "grass_texture = \"" << grass_texture << "\";" << endl;
     os << "noise_texture = \"" << noise_texture << "\";" << endl;
+    os << "sky_texture = \"" << sky_texture << "\";" << endl;
     for (int i = 0; i < 4; i++) {
         os << "pony_start[" << i << "] = " << pony_start[i]
            << ";" << endl;

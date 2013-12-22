@@ -641,6 +641,7 @@ void Menu::reload_level(string level)
                                   config->sand_texture,
                                   config->grass_texture,
                                   config->noise_texture,
+                                  config->sky_texture,
                                   config));
 
     camera_distance = s.length() / 2;

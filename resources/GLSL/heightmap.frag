@@ -8,6 +8,7 @@ uniform vec4 hemi_sky;
 uniform vec4 hemi_ground;
 
 uniform float velvet_coeff;
+uniform vec3 water_color;
 
 varying vec3 eye;
 varying vec3 light;
@@ -69,7 +70,7 @@ void main (void)
 
     if (world_coord.y < water_level) {
         gl_FragColor =
-            mix(gl_FragColor, vec4(0.2,0.4,0.85,1.0),
+            mix(gl_FragColor, vec4(water_color,1.0),
                 pow((water_level - world_coord.y) / water_level, 0.5));
         
     }

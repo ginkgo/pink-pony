@@ -76,7 +76,7 @@ int main(int argc, char** argv)
         // between braces, so that stack variables that need a GL context
         // are destructed, while the context still exists.
         {
-            Skydome skydome(config.resource_dir + "textures/sky.png");
+            Skydome skydome(config.resource_dir + config.sky_texture);
             Menu::MenuStatus menu_status;
         
             {
@@ -101,6 +101,7 @@ int main(int argc, char** argv)
                                     config.sand_texture,
                                     config.grass_texture,
                                     config.noise_texture,
+                                    config.sky_texture,
                                     &config);
     
                 PonyPoints points(config.player_count, &config);

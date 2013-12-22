@@ -3,22 +3,33 @@
 
 Heightmap::Heightmap(string filename,
                      Box3f extent, float water_level,
-                     string sand, string grass, string noise,
+                     string sand, string grass, string noise, string sky,
                      Config* config)
     : mesh(),
       mesh_drawer(&mesh),
       terrain_shader(config->resource_dir + "GLSL/heightmap"),
       water_shader(config->resource_dir + "GLSL/water"),
-      heightmap(filename.c_str(),
-                GL_CLAMP, GL_CLAMP, GL_LINEAR, GL_LINEAR),
+      heightmap(filename.c_str(), GL_CLAMP, GL_CLAMP, GL_LINEAR, GL_LINEAR),
       sand_texture((config->resource_dir + sand).c_str()),
       grass_texture((config->resource_dir + grass).c_str()),
-      noise_texture((config->resource_dir + noise).c_str()),
-      extent(extent),
-      water_level(water_level)
+    noise_texture((config->resource_dir + noise).c_str()),
+    sky_texture((config->resource_dir + sky).c_str(), GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR),
+    extent(extent),
+    water_level(water_level)
 {
     heightmap.normalize();
     set_resolution (heightmap.get_size() / 2);
+
+    V3f water_color = V3f(0.3f,0.6f,0.95f) * V3f(0.5,0.5,1.0);
+    
+    terrain_shader.bind();
+    terrain_shader.set_uniform("water_color", water_color);
+    terrain_shader.unbind();
+
+    water_shader.bind();
+    water_shader.set_uniform("camera_far", config->camera_far);
+    water_shader.set_uniform("water_color", water_color);
+    water_shader.unbind();
 }
 
 Heightmap::~Heightmap()
@@ -181,16 +192,20 @@ void Heightmap::draw(Config* config)
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
 
+    sky_texture.bind(GL_TEXTURE0);
+    
     water_shader.bind();
+
+    water_shader.set_uniform("sky", 0);
 
     glBegin(GL_QUADS);
 
     glNormal3f(0.0,1.0,0.0);
     glColor4f(0.2,0.4,0.85,1.0);
-    glVertex3f(area.min.x, 0, area.max.y); // front left
-    glVertex3f(area.max.x, 0, area.max.y); // front right
-    glVertex3f(area.max.x, 0, area.min.y); // back  right
-    glVertex3f(area.min.x, 0, area.min.y); // back left
+    glVertex3f(1.000 * area.min.x, 0, 1.000 * area.max.y); // front left
+    glVertex3f(1.000 * area.max.x, 0, 1.000 * area.max.y); // front right
+    glVertex3f(1.000 * area.max.x, 0, 1.000 * area.min.y); // back  right
+    glVertex3f(1.000 * area.min.x, 0, 1.000 * area.min.y); // back left
     
     glEnd();
 
@@ -204,17 +219,20 @@ void Heightmap::draw(Config* config)
     glBegin(GL_QUADS);
 
     glNormal3f(0.0,1.0,0.0);
-    glColor4f(0.2,0.4,0.85,0.125);
-    glVertex3f(0.125 * area.min.x, water_level, 0.125 * area.max.y); // front left
-    glVertex3f(0.125 * area.max.x, water_level, 0.125 * area.max.y); // front right
-    glVertex3f(0.125 * area.max.x, water_level, 0.125 * area.min.y); // back  right
-    glVertex3f(0.125 * area.min.x, water_level, 0.125 * area.min.y); // back left
+    glColor4f(0.2,0.4,0.85,0.125 * 0);
+    glVertex3f(1.000 * area.min.x, water_level, 1.000 * area.max.y); // front left
+    glVertex3f(1.000 * area.max.x, water_level, 1.000 * area.max.y); // front right
+    glVertex3f(1.000 * area.max.x, water_level, 1.000 * area.min.y); // back  right
+    glVertex3f(1.000 * area.min.x, water_level, 1.000 * area.min.y); // back left
     
     glEnd();
 
     glDepthMask(GL_TRUE);
 
     water_shader.unbind();
+
+    
+    sky_texture.unbind(GL_TEXTURE0);
     
     glEnable(GL_LIGHTING);
     glDisable(GL_BLEND);

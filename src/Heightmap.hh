@@ -25,6 +25,7 @@ class Heightmap
     Texture2D sand_texture;
     Texture2D grass_texture;
     Texture2D noise_texture;
+    Texture2D sky_texture;
 
     
     Box3f extent;
@@ -36,7 +37,7 @@ class Heightmap
 
     Heightmap(string filename,
               Box3f extent, float water_level,
-              string sand, string grass, string noise,
+              string sand, string grass, string noise, string sky,
               Config* config);
     virtual ~Heightmap();
 
