@@ -1,4 +1,6 @@
 <levels>
+  <level name="Flower Atoll"  file="levels/flower.png"  size="(1500 80 1500)" water_level="60"/> 
+  <level name="Flower"  file="levels/flower.png"  size="(1500 80 1500)" water_level="45"/> 
   <level name="Lagoon"  file="levels/heart.png"   size="(1500 90 1500)" water_level="45"/> 
   <level name="Heart"   file="levels/heart.png"   size="(1500 90 1500)" water_level="30"/> 
   <level name="Ring"    file="levels/ring.png"    size="(1500 90 1500)" water_level="30"/> 
