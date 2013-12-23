@@ -5,6 +5,5 @@
   <level name="Heart"   file="levels/heart.png"   size="(1500 90 1500)" water_level="30"/> 
   <level name="Ring"    file="levels/ring.png"    size="(1500 90 1500)" water_level="30"/> 
   <level name="Long"    file="levels/long.png"    size="(1500 90 1500)" water_level="30"/> 
-  <level name="Skull"   file="levels/skull.png"   size="(1500 90 1500)" water_level="30"/>
   <level name="Strange" file="levels/strange.png" size="(1500 90 1500)" water_level="30"/> 
 </levels>

@@ -21,10 +21,10 @@ use_particles = true;
 // Level properties
 
 levels_file = "levels.xml";
-selected_level = 2;
+selected_level = 3;
 heightmap_file = "levels/heart.png";
 level_size = (1500 90 1500);
-water_level = 45;
+water_level = 30;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;
