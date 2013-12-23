@@ -193,11 +193,14 @@ void Heightmap::draw(Config* config)
     glEnable(GL_BLEND);
 
     sky_texture.bind(GL_TEXTURE0);
+    noise_texture.bind(GL_TEXTURE1);
     
     water_shader.bind();
 
     water_shader.set_uniform("sky", 0);
-
+    water_shader.set_uniform("noise", 1);
+    water_shader.set_uniform("time", (float)glfwGetTime() * 2);
+    
     glBegin(GL_QUADS);
 
     glNormal3f(0.0,1.0,0.0);
@@ -233,6 +236,7 @@ void Heightmap::draw(Config* config)
 
     
     sky_texture.unbind(GL_TEXTURE0);
+    noise_texture.unbind(GL_TEXTURE1);
     
     glEnable(GL_LIGHTING);
     glDisable(GL_BLEND);
