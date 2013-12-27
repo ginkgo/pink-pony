@@ -12,9 +12,9 @@ void main (void)
     light = normalize(light_position.xyz);
 
     world_coord = gl_Vertex.xyz;
-    gl_ClipVertex = gl_Vertex;
+    //gl_ClipVertex = gl_Vertex;
     
-    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    gl_Position = ftransform();
 
     eye = (gl_ModelViewMatrix * gl_Vertex).xyz;
 }

@@ -3,7 +3,7 @@
 Skydome::Skydome(string texture_file)
     : texture(texture_file.c_str())
 {
-
+    
 }
 
 void Skydome::draw()
@@ -50,4 +50,5 @@ void Skydome::draw()
     
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHTING);
+
 }

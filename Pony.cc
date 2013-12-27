@@ -70,6 +70,8 @@ int main(int argc, char** argv)
             glfwSwapInterval(config.swap_interval);
 
             reset_video = false;
+
+            getErrors();
         }
 
         // We put everything between glfwOpenWindow & glfwTerminate
@@ -77,6 +79,9 @@ int main(int argc, char** argv)
         // are destructed, while the context still exists.
         {
             Skydome skydome(config.resource_dir + config.sky_texture);
+
+            getErrors();
+            
             Menu::MenuStatus menu_status;
         
             {

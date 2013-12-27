@@ -125,7 +125,8 @@ Menu::Menu (Config* config,
     human_slider(config)
     
 {
-
+    getErrors();
+    
     // Some static test data
     load_levels(config->resource_dir + config->levels_file);
 
@@ -627,6 +628,8 @@ void Menu::next_level(int d)
 
 void Menu::reload_level(string level)
 {
+    getErrors();
+    
     config->heightmap_file = levels[level].filename;
     config->water_level = levels[level].water_level;
     
@@ -635,6 +638,7 @@ void Menu::reload_level(string level)
     config->level_size = Box3f(V3f(-s.x/2,   0,-s.z/2),
                               V3f( s.x/2, s.y, s.z/2));
 
+    getErrors();
     heightmap.reset(new Heightmap(config->resource_dir + config->heightmap_file,
                                   config->level_size,
                                   config->water_level,

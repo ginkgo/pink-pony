@@ -6675,6 +6675,7 @@ GLAPI PFNGLVERTEXATTRIBPOINTER_PROC* glpfVertexAttribPointer;
 extern int FLEXT_EXT_framebuffer_object;
 extern int FLEXT_ARB_geometry_shader4;
 extern int FLEXT_EXT_transform_feedback;
+extern int FLEXT_EXT_texture_filter_anisotropic;
 
 int flextInit(void);
 

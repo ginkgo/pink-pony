@@ -8,7 +8,7 @@ Heightmap::Heightmap(string filename,
     : mesh(),
       mesh_drawer(&mesh),
       terrain_shader(config->resource_dir + "GLSL/heightmap"),
-      water_shader(config->resource_dir + "GLSL/water"),
+      water_shader(config->resource_dir + (config->use_water_fallback ? "GLSL/water_fallback" : "GLSL/water")),
       heightmap(filename.c_str(), GL_CLAMP, GL_CLAMP, GL_LINEAR, GL_LINEAR),
       sand_texture((config->resource_dir + sand).c_str()),
       grass_texture((config->resource_dir + grass).c_str()),
@@ -17,6 +17,8 @@ Heightmap::Heightmap(string filename,
     extent(extent),
     water_level(water_level)
 {
+    getErrors();
+    
     heightmap.normalize();
     set_resolution (heightmap.get_size() / 2);
 
@@ -189,8 +191,9 @@ void Heightmap::draw(Config* config)
     
     // Draw ocean
     
-    glDisable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
 
     sky_texture.bind(GL_TEXTURE0);
     noise_texture.bind(GL_TEXTURE1);
@@ -200,33 +203,25 @@ void Heightmap::draw(Config* config)
     water_shader.set_uniform("sky", 0);
     water_shader.set_uniform("noise", 1);
     water_shader.set_uniform("time", (float)glfwGetTime() * 2);
-    
-    glBegin(GL_QUADS);
 
-    glNormal3f(0.0,1.0,0.0);
-    glColor4f(0.2,0.4,0.85,1.0);
-    glVertex3f(1.000 * area.min.x, 0, 1.000 * area.max.y); // front left
-    glVertex3f(1.000 * area.max.x, 0, 1.000 * area.max.y); // front right
-    glVertex3f(1.000 * area.max.x, 0, 1.000 * area.min.y); // back  right
-    glVertex3f(1.000 * area.min.x, 0, 1.000 * area.min.y); // back left
-    
-    glEnd();
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glBlendEquation(GL_FUNC_ADD);
-
-    glDisable(GL_LIGHTING);
-
+    //glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
     
     glBegin(GL_QUADS);
 
     glNormal3f(0.0,1.0,0.0);
-    glColor4f(0.2,0.4,0.85,0.125 * 0);
-    glVertex3f(1.000 * area.min.x, water_level, 1.000 * area.max.y); // front left
-    glVertex3f(1.000 * area.max.x, water_level, 1.000 * area.max.y); // front right
-    glVertex3f(1.000 * area.max.x, water_level, 1.000 * area.min.y); // back  right
-    glVertex3f(1.000 * area.min.x, water_level, 1.000 * area.min.y); // back left
+    glColor4f(0.2,0.4,0.85,1.0);
+    glVertex3f(4.000 * area.min.x, 0, 4.000 * area.max.y); // front left
+    glVertex3f(4.000 * area.max.x, 0, 4.000 * area.max.y); // front right
+    glVertex3f(4.000 * area.max.x, 0, 4.000 * area.min.y); // back  right
+    glVertex3f(4.000 * area.min.x, 0, 4.000 * area.min.y); // back left
+    
+    glNormal3f(0.0,1.0,0.0);
+    glColor4f(0.2,0.4,0.85,0.125);
+    glVertex3f(4.000 * area.min.x, water_level, 4.000 * area.max.y); // front left
+    glVertex3f(4.000 * area.max.x, water_level, 4.000 * area.max.y); // front right
+    glVertex3f(4.000 * area.max.x, water_level, 4.000 * area.min.y); // back  right
+    glVertex3f(4.000 * area.min.x, water_level, 4.000 * area.min.y); // back left
     
     glEnd();
 

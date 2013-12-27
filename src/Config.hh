@@ -7,19 +7,20 @@ class Config
 {
     public:
 
+    
     // Window properties:
-
     int width, height;
     int window_mode;
     int fsaa_samples;
     int swap_interval;
     GLenum polygon_mode;
 
+    
     // Resource directory
     string resource_dir;    
+
     
     // Level properties:
-    
     string levels_file;
     int selected_level;
 
@@ -36,9 +37,9 @@ class Config
     string grass_texture;
     string noise_texture;
     string sky_texture;
+
     
     // Light properties:
-
     Color4f light_specular;
     Color4f light_diffuse;
     Color4f light_ambient;
@@ -47,9 +48,9 @@ class Config
     V3f hemilight_pole;
     Color4f hemilight_sky;
     Color4f hemilight_ground;
+
     
     // Camera properties:
-
     float camera_fov;
     float camera_near;
     float camera_far;
@@ -57,9 +58,9 @@ class Config
 
     float camera_height;
     float pony_height;
+
     
     // Game properties:
-
     int ai_count;
     int player_count;
     int heart_count;
@@ -82,6 +83,7 @@ class Config
     bool randomize_start_positions;
     float min_start_distance;
 
+    
     // General appearance:
     bool use_particles;
     string digit_one;
@@ -90,7 +92,8 @@ class Config
     string digit_four;
     string heart_mesh;
     int heart_explosion_particles;
-
+    bool use_water_fallback;
+    
     // Pony appearance:
     Color4f pony_color[4];
     string pony_shader;

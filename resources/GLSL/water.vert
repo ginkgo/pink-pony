@@ -2,6 +2,9 @@
 varying vec3 world_coord;
 varying vec3 camera_coord;
 varying vec3 normal;
+varying vec4 color;
+
+uniform vec3 water_color;
 
 void main (void)
 {
@@ -10,5 +13,5 @@ void main (void)
     normal = gl_Normal;
     
     gl_Position = ftransform();
-    gl_FrontColor = gl_Color;
+    color = vec4(water_color, gl_Color.a);
 }

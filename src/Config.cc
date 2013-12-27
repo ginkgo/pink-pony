@@ -57,6 +57,7 @@ Config::Config()
       digit_four("textures/four.png"),
       heart_mesh("models/Heart.pmesh"),
       heart_explosion_particles(10000),
+      use_water_fallback(false),
       pony_shader("GLSL/pony"),
       pony_velvet_coeff(2.0),
       pony_texture("textures/pony.png"),
@@ -264,6 +265,7 @@ void Config::set_value(string name, string value)
     else if (name == "heart_mesh") heart_mesh = sval;
     else if (name == "pony_explosion_particles") pony_explosion_particles = ival;
     else if (name == "heart_explosion_particles") heart_explosion_particles = ival;
+    else if (name == "use_water_fallback") use_water_fallback = bval;
     else if (name == "pony_particle_rate") pony_particle_rate = fval;
     else if (name == "use_particles") use_particles = bval;
     else if (name == "background_music") background_music = sval;
@@ -353,12 +355,14 @@ bool Config::write_file(string filename)
     os << "grass_texture = \"" << grass_texture << "\";" << endl;
     os << "noise_texture = \"" << noise_texture << "\";" << endl;
     os << "sky_texture = \"" << sky_texture << "\";" << endl;
-    for (int i = 0; i < 4; i++) {
-        os << "pony_start[" << i << "] = " << pony_start[i]
-           << ";" << endl;
-        os << "pony_start_angle[" << i << "] = "
-           << pony_start_angle[i] * 180/M_PI << ";" << endl;
-    }
+
+    
+    // for (int i = 0; i < 4; i++) {
+    //     os << "pony_start[" << i << "] = " << pony_start[i]
+    //        << ";" << endl;
+    //     os << "pony_start_angle[" << i << "] = "
+    //        << pony_start_angle[i] * 180/M_PI << ";" << endl;
+    // }
     
 
     os << endl << "// Light properties" << endl << endl;    
@@ -411,6 +415,7 @@ bool Config::write_file(string filename)
     os << "digit_three = \"" << digit_three << "\";" << endl;
     os << "digit_four = \"" << digit_four << "\";" << endl;
     os << "heart_mesh = \"" << heart_mesh << "\";" << endl;
+    os << "use_water_fallback = \"" << (use_water_fallback?"true":"false") << "\";" << endl;
 
     os << endl << "// Pony appearance" << endl << endl;   
     os << "pony_shader = \"" << pony_shader << "\";" << endl;

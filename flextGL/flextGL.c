@@ -48,6 +48,10 @@ int flextInit(void)
         FLEXT_EXT_transform_feedback = GL_TRUE;
     }
 
+    if (glfwExtensionSupported("GL_EXT_texture_filter_anisotropic")) {
+        FLEXT_EXT_texture_filter_anisotropic = GL_TRUE;
+    }
+
 
     return GL_TRUE;
 }
@@ -366,6 +370,7 @@ void flextLoadOpenGLFunctions(void)
 int FLEXT_EXT_framebuffer_object = GL_FALSE;
 int FLEXT_ARB_geometry_shader4 = GL_FALSE;
 int FLEXT_EXT_transform_feedback = GL_FALSE;
+int FLEXT_EXT_texture_filter_anisotropic = GL_FALSE;
 
 /* ---------------------- Function pointer definitions --------------------- */
 

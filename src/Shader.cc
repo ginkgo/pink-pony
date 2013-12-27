@@ -80,9 +80,13 @@ Shader::Shader(string file_name)
     program = 0;
     vertex_shader = 0;
     fragment_shader = 0;
- 
+
+    getErrors();
+    
     GLint status = GL_FALSE;
   
+    getErrors();
+    
     vertex_source = read_file(file_name + string(".vert"));
     fragment_source = read_file(file_name + string(".frag"));
 
@@ -94,10 +98,14 @@ Shader::Shader(string file_name)
                                      file_name + string(".frag"),
                                      GL_FRAGMENT_SHADER);
   
+    getErrors();
+    
     program = glCreateProgram();
     glAttachShader(program, vertex_shader);
     glAttachShader(program, fragment_shader);
 
+    getErrors();
+    
     glLinkProgram(program);
 
     glGetProgramiv(program, GL_LINK_STATUS, &status);

@@ -164,7 +164,7 @@ bool PonyGame::start(PonyPoints& points)
     while (running || delay > 0.0) {
 
         double now = glfwGetTime();
-        double timeDiff = now - then;
+        double timeDiff = min(0.05, now - then); // Limit maximum timediff to 50ms
         then = now;
         
         if (humans_alive < 1)

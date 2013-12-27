@@ -32,7 +32,8 @@ Texture2D::Texture2D(const char* path,
     min_filter(min_filter),
     mag_filter(mag_filter)
 {
-
+    getErrors();
+    
     if (!initialized_IL) {
         initialized_IL = true;
         ilInit();
@@ -50,9 +51,10 @@ Texture2D::Texture2D(const char* path,
 
     bool success = ilLoadImage(path);
 
-    // if (!success) {
-    //     cerr << " Failed";
-    // }
+    if (!success) {
+        cerr << "Loading file \"" << path <<  "\" ... Failed";
+        return;
+    }
     
     size.x = ilGetInteger(IL_IMAGE_WIDTH);
     size.y = ilGetInteger(IL_IMAGE_HEIGHT);
@@ -74,11 +76,15 @@ Texture2D::Texture2D(const char* path,
         format = GL_RGBA;
     }
 
+    getErrors();
+    
     ilDeleteImages(1, &image);
     
     setup(wrapS, wrapT, mag_filter, min_filter);
 
     //cout << " - Done: " << size.x << "x" << size.y << " pixels." << endl;
+
+    getErrors();
 };
 
 Texture2D::~Texture2D()
@@ -100,13 +106,21 @@ void Texture2D::setup( GLenum wrapS,
     glGenTextures(1, &texture_name);
     glBindTexture(GL_TEXTURE_2D, texture_name);
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0);
+    getErrors();
+
+    if (FLEXT_EXT_texture_filter_anisotropic) {
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.0);
+    }
+
+    getErrors();
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
+    getErrors();
+    
     send_to_GPU();
 
     glBindTexture(GL_TEXTURE_2D, active_texture);
