@@ -84,6 +84,8 @@ class Menu
     Button next_hearts, prev_hearts;
     TextArea resolution_text;
     Button next_resolution, prev_resolution;
+    TextArea water_text;
+    Button next_water, prev_water;
     
     
     V2f screen_size;
@@ -98,6 +100,7 @@ class Menu
     int fsaa_setting;
     int heart_setting;
     int resolution_setting;
+    int water_setting;
 
     vector<V2u> resolutions;
 
@@ -124,6 +127,7 @@ class Menu
     void change_antialiasing(int direction);
     void change_hearts(int direction);
     void change_resolution(int direction);
+    void change_water(int direction);
 
     bool needs_reset;
 

@@ -81,6 +81,8 @@ void Menu::resize_callback(int width, int height)
     settings_layout.set_available_area(Box2f(V2f(0,0), screen_size));
 }
 
+#define TEXT_COLOR Color4f(1,1,1,0.5)
+
 Menu::Menu (Config* config, 
             Skydome* skydome)
     : active_screen(MAIN_SCREEN),
@@ -102,24 +104,27 @@ Menu::Menu (Config* config,
     humans(config->player_count - config->ai_count),
     settings_text("Settings", config),
     settings_done(config->resource_dir + "textures/back.png"),
-    particles_text("Some particles", config, Color4f(1,1,1,0.5)),
+    particles_text("Some particles", config, TEXT_COLOR),
     prev_particles(config->resource_dir + "textures/left.png"),
     next_particles(config->resource_dir + "textures/right.png"),
-    fullscreen_text("Some particles", config, Color4f(1,1,1,0.5)),
+    fullscreen_text("Some particles", config, TEXT_COLOR),
     prev_fullscreen(config->resource_dir + "textures/left.png"),
     next_fullscreen(config->resource_dir + "textures/right.png"),
-    minimap_text("Some particles", config, Color4f(1,1,1,0.5)),
+    minimap_text("Some particles", config, TEXT_COLOR),
     prev_minimap(config->resource_dir + "textures/left.png"),
     next_minimap(config->resource_dir + "textures/right.png"),
-    antialiasing_text("Some particles", config, Color4f(1,1,1,0.5)),
+    antialiasing_text("Some particles", config, TEXT_COLOR),
     prev_antialiasing(config->resource_dir + "textures/left.png"),
     next_antialiasing(config->resource_dir + "textures/right.png"),
-    hearts_text("Some particles", config, Color4f(1,1,1,0.5)),
+    hearts_text("Some particles", config, TEXT_COLOR),
     prev_hearts(config->resource_dir + "textures/left.png"),
     next_hearts(config->resource_dir + "textures/right.png"),
-    resolution_text("Some particles", config, Color4f(1,1,1,0.5)),
+    resolution_text("Some particles", config, TEXT_COLOR),
     prev_resolution(config->resource_dir + "textures/left.png"),
     next_resolution(config->resource_dir + "textures/right.png"),
+    water_text("Simple water", config, TEXT_COLOR),
+    prev_water(config->resource_dir + "textures/left.png"),
+    next_water(config->resource_dir + "textures/right.png"),
     needs_reset(false),
     computer_slider(config),
     human_slider(config)
@@ -205,6 +210,8 @@ void Menu::setup_settings(void)
         }
     }
 
+    water_setting = config->use_water_fallback ? 0 : 1;
+    
     load_settings();    
 }
 
@@ -269,6 +276,14 @@ void Menu::load_settings(void)
                              to_string(resolutions[resolution_setting].y));
     config->width = resolutions[resolution_setting].x;
     config->height = resolutions[resolution_setting].y;
+
+    if (water_setting == 0) {
+        water_text.set_text("Simple water");
+        config->use_water_fallback = true;
+    } else {
+        water_text.set_text("Fancy water");
+        config->use_water_fallback = false;
+    }
 }
 
 void Menu::load_levels(string levels_file)
@@ -485,6 +500,13 @@ void Menu::setup_layout(void)
     settings_layout.add_widget(&next_resolution, Box2f(V2f(29/32.0, 3/12.0),
                                                        V2f(31/32.0, 4/12.0)));
 
+    settings_layout.add_widget(&water_text, Box2f(V2f(19/32.0, 1/12.0),
+                                                  V2f(29/32.0, 2/12.0)));
+    settings_layout.add_widget(&prev_water, Box2f(V2f(17/32.0, 1/12.0),
+                                                  V2f(19/32.0, 2/12.0)));
+    settings_layout.add_widget(&next_water, Box2f(V2f(29/32.0, 1/12.0),
+                                                  V2f(31/32.0, 2/12.0)));
+
 
     settings_done.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::go_to_screen), MAIN_SCREEN));
@@ -530,6 +552,13 @@ void Menu::setup_layout(void)
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_resolution),-1));
     next_resolution.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_resolution), 1));
+
+    water_text.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_water), 1));
+    prev_water.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_water),-1));
+    next_water.on_click()
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_water), 1));
     
 }
 
@@ -598,6 +627,14 @@ void Menu::change_resolution(int direction) {
     resolution_setting = (resolution_setting + 
                           resolutions.size() + 
                           direction) % resolutions.size();
+
+    needs_reset = true;
+
+    load_settings();    
+}
+
+void Menu::change_water(int direction) {
+    water_setting = (water_setting + direction + 2) % 2;
 
     needs_reset = true;
 

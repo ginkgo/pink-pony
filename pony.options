@@ -93,7 +93,7 @@ digit_two = "textures/two.png";
 digit_three = "textures/three.png";
 digit_four = "textures/four.png";
 heart_mesh = "models/Heart.pmesh";
-use_water_fallback = "false";
+use_water_fallback = "true";
 
 // Pony appearance
 
