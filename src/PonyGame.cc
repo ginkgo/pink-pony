@@ -156,7 +156,6 @@ bool PonyGame::start(PonyPoints& points)
 
     cout << m_config->player_count << " ponies." << endl;
 
-    GLboolean space_pressed = glfwGetKey(GLFW_KEY_SPACE);
     GLboolean f1_pressed = glfwGetKey(GLFW_KEY_F1);
 
     ParticleExplosionSource explosion_source(particle_system);
@@ -395,7 +394,6 @@ bool PonyGame::start(PonyPoints& points)
             m_config->music_volume = Mix_VolumeMusic(-1);
         }
 
-        space_pressed = glfwGetKey(GLFW_KEY_SPACE);
         f1_pressed = glfwGetKey(GLFW_KEY_F1);
     }
 

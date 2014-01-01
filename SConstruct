@@ -1,7 +1,7 @@
 import os
 
-#optimization_flags = ['-O3']
-optimization_flags = ['-O0', '-ggdb']
+optimization_flags = ['-O3']
+#optimization_flags = ['-O0', '-ggdb']
 
 env = Environment()
 env['CC'] = 'g++'
