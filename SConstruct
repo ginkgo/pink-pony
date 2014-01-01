@@ -7,7 +7,7 @@ env = Environment()
 env['CC'] = 'g++'
 env['CCFLAGS'] = ['-Wall', '-Wextra', '-Wno-reorder', '-Wno-unused-parameter'] + optimization_flags
 env['LIBS'] = ['GLU', 'GL', 'protobuf', 'IL']
-env['CPPPATH'] = ['#/src', '#/external/tinyXML', '#/external/flextGL/', '/usr/include/OpenEXR']
+env['CPPPATH'] = ['#', '#/src', '#/external/tinyXML', '#/external/flextGL/', '/usr/include/OpenEXR']
 
 env.ParseConfig("pkg-config IlmBase --cflags --libs")
 env.ParseConfig("pkg-config libglfw --cflags --libs")
