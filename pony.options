@@ -55,9 +55,9 @@ pony_height = 3;
 
 // Game properties
 
-ai_count = 4;
+ai_count = 3;
 player_count = 4;
-heart_count = 3;
+heart_count = 10;
 pony_start_speed = 15;
 pony_min_speed = 5;
 pony_max_speed = 50;
@@ -93,7 +93,7 @@ digit_two = "textures/two.png";
 digit_three = "textures/three.png";
 digit_four = "textures/four.png";
 heart_mesh = "models/Heart.pmesh";
-use_water_fallback = "true";
+use_water_fallback = "false";
 
 // Pony appearance
 
@@ -109,4 +109,4 @@ pony_color[3] = (0.484375 0.984375 0 1);
 // Sounds
 
 background_music = "music/To be happy.mp3";
-music_volume = 63;
+music_volume = 0;

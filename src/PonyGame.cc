@@ -96,30 +96,30 @@ PonyGame::PonyGame(SplitScreen* screen,
             if (!heightmap->below_water(pos, config->water_tolerance)) {
                 // Valid position found.
                 // Searching local maximum..
-                bool found_maximum = false;
                 float delta = 1;
-                while (!found_maximum) {
-                    float height = heightmap->get_pos(pos, false).y;
-                    if (height < heightmap->get_pos(pos+V2f(delta,0), false).y) {
-                        pos += V2f(delta,0);
-                        continue;
+                for (int j = 0; j < 1000; ++j) {
+                    float heights[2][2];
+
+                    for (int x = 0; x < 2; x++) {
+                        for (int y = 0; y < 2; y++) {
+                            V2f p = pos + V2f(0.5f * (x * 2 - 1), 0.5f * (y * 2 -1));
+                            
+                            heights[x][y] = heightmap->get_pos(p, false).y;
+                            
+                            for (list<V2f>::iterator i = heart_positions.begin(); i != heart_positions.end(); ++i) {
+                                heights[x][y] -= 5.0/powf((*i - p).length2(),0.25f);
+                            }
+                        }
                     }
-                    if (height < heightmap->get_pos(pos+V2f(-delta,0), false).y) {
-                        pos += V2f(-delta,0);
-                        continue;
-                    }
-                    if (height < heightmap->get_pos(pos+V2f(0,delta), false).y) {
-                        pos += V2f(0,delta);
-                        continue;
-                    }
-                    if (height < heightmap->get_pos(pos+V2f(0,-delta), false).y) {
-                        pos += V2f(0,-delta);
-                        continue;
-                    }
-                    found_maximum = true;
+
+                    V2f gradient((heights[1][0] + heights[1][1] - heights[0][0] - heights[0][1]) * 0.5f,
+                                 (heights[0][1] + heights[1][1] - heights[0][0] - heights[1][0]) * 0.5f);
+
+                    if (gradient.length2() < 0.01f) break;
+
+                    pos += gradient * delta * 10;
                 }
                 heart_positions.push_back(pos);
-
                 
                 found = true;
             }                    
