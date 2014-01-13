@@ -156,6 +156,11 @@ void SplitScreen::set_subscreen(int i)
                screen.size().x, screen.size().y);
 }
 
+void SplitScreen::set_whole_screen()
+{
+    glViewport(0,0, size.x, size.y);
+}
+
 void SplitScreen::set_point_hud(int i)
 {
     current = i;

@@ -60,4 +60,7 @@ template<class T> string to_string(T t)
 void read_tokens(const string& input, vector<const char*>& token_list);
 void free_tokens(vector<const char*>& token_list);
 
+bool file_exists(const string& filename);
+void make_screenshot();
+
 #endif

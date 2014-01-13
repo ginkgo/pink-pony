@@ -29,6 +29,7 @@ class SplitScreen
     void split(int subscreens);
     void resize(int width, int height);
     void set_subscreen(int i);
+    void set_whole_screen();
 
     void set_map();
 

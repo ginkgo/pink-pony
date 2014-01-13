@@ -157,6 +157,7 @@ bool PonyGame::start(PonyPoints& points)
     cout << m_config->player_count << " ponies." << endl;
 
     GLboolean f1_pressed = glfwGetKey(GLFW_KEY_F1);
+    GLboolean f12_pressed = glfwGetKey(GLFW_KEY_F12);
 
     ParticleExplosionSource explosion_source(particle_system);
 
@@ -374,6 +375,8 @@ bool PonyGame::start(PonyPoints& points)
             glEnable(GL_CULL_FACE);
         }
 
+
+
         getErrors();
         calc_fps();
         glfwSwapBuffers();
@@ -387,6 +390,10 @@ bool PonyGame::start(PonyPoints& points)
             delay = 0.0;
         }
 
+        if (glfwGetKey(GLFW_KEY_F12) && !f12_pressed) {
+            m_screen->set_whole_screen();
+            make_screenshot();
+        }
 
         if (glfwGetKey(GLFW_KEY_F1) && !f1_pressed) {
             int current_volume = Mix_VolumeMusic(-1);
@@ -395,6 +402,7 @@ bool PonyGame::start(PonyPoints& points)
         }
 
         f1_pressed = glfwGetKey(GLFW_KEY_F1);
+        f12_pressed = glfwGetKey(GLFW_KEY_F12);
     }
 
     return run_game;

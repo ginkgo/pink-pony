@@ -2,7 +2,7 @@
 
 width = 800;
 height = 600;
-swap_interval = 0;
+swap_interval = 1;
 window_mode = window;
 fsaa_samples = 2;
 polygon_mode = fill;
@@ -13,9 +13,9 @@ resource_dir = "resources/";
 
 // Particles
 
-pony_explosion_particles = 5000;
-heart_explosion_particles = 1000;
-pony_particle_rate = 10;
+pony_explosion_particles = 200000;
+heart_explosion_particles = 40000;
+pony_particle_rate = 400;
 use_particles = true;
 
 // Level properties
