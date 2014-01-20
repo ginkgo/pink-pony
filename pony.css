@@ -63,6 +63,7 @@ h2 { text-align: center; }
 .controls { width: 720px; }
 li { margin-top: 2px; }
 li span { padding: 2px 4px; }
+.key span { border-radius: 2px; }
 .pony1 span { color: black; background-color: #F04F98; }
 .pony2 span { color: black; background-color: #50BDE8; }
 .pony3 span { color: black; background-color: #FFDD28; }
