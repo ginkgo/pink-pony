@@ -13,13 +13,13 @@
    height="484"
    id="svg602"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="keys.svg"
+   sodipodi:docname="pp-keyboard.svg"
    sodipodi:version="0.32"
    width="1698"
    xml:space="preserve"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
-   inkscape:export-filename="./chainjam-keyboard-layout.png"
+   inkscape:export-filename="./pp-keyboard.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"><defs
      id="defs604"><linearGradient
@@ -1416,11 +1416,11 @@
        r="0.49999923"
        xlink:href="#linearGradient795" /></defs><sodipodi:namedview
      id="base"
-     inkscape:cx="784.65413"
-     inkscape:cy="505.68303"
+     inkscape:cx="866.88506"
+     inkscape:cy="133.9722"
      inkscape:window-height="1181"
-     inkscape:window-width="1920"
-     inkscape:window-x="0"
+     inkscape:window-width="1518"
+     inkscape:window-x="395"
      inkscape:window-y="19"
      inkscape:zoom="0.5"
      showgrid="false"
@@ -1859,7 +1859,7 @@
      inkscape:connector-curvature="0" /><path
      id="path3856"
      d="m 1464.2841,249.52751 59.9998,0 c 2.77,0 5,2.23 5,5 l 0,59.99988 c 0,2.77 -2.23,5 -5,5 l -59.9998,0 c -2.77,0 -5,-2.23 -5,-5 l 0,-59.99988 c 0,-2.77 2.23,-5 5,-5 z"
-     style="font-size:12px;fill:#808080;fill-opacity:0.08939999;fill-rule:evenodd;stroke:none"
+     style="font-size:12px;fill:#ffdd28;fill-opacity:1;fill-rule:evenodd;stroke:none"
      inkscape:connector-curvature="0" /><path
      id="path3858"
      d="m 1536.3586,249.52751 59.9999,0 c 2.77,0 5,2.23 5,5 l 0,60.00016 c 0,2.77 -2.23,5 -5,5 l -59.9999,0 c -2.77,0 -5,-2.23 -5,-5 l 0,-60.00016 c 0,-2.77 2.23,-5 5,-5 z"
@@ -1872,7 +1872,7 @@
      inkscape:connector-curvature="0" /><path
      id="path3862"
      d="m 1464.2839,321.83748 59.9995,0 c 2.77,0 5,2.23 5,5 l 0,59.99988 c 0,2.77 -2.23,5 -5,5 l -59.9995,0 c -2.77,0 -5,-2.23 -5,-5 l 0,-59.99988 c 0,-2.77 2.23,-5 5,-5 z"
-     style="font-size:12px;fill:#ffdd28;fill-opacity:1;fill-rule:evenodd;stroke:none"
+     style="font-size:12px;fill:#808080;fill-opacity:0.09019608;fill-rule:evenodd;stroke:none"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="sssssssss" /><path
      id="path3864"
@@ -1986,14 +1986,14 @@
 <text
      xml:space="preserve"
      style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;line-height:125%;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
-     x="1510.2212"
-     y="374.64993"
+     x="1509.8231"
+     y="301.68369"
      id="text4773"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan4775"
-       x="1510.2212"
-       y="374.64993">2</tspan></text>
+       x="1509.8231"
+       y="301.68369">5</tspan></text>
 <text
      xml:space="preserve"
      style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;line-height:125%;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
