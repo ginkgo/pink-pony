@@ -1,7 +1,7 @@
 // Window properties
 
-width = 800;
-height = 600;
+width = 1600;
+height = 900;
 swap_interval = 1;
 window_mode = window;
 fsaa_samples = 2;
@@ -13,18 +13,18 @@ resource_dir = "resources/";
 
 // Particles
 
-pony_explosion_particles = 200000;
-heart_explosion_particles = 40000;
-pony_particle_rate = 400;
+pony_explosion_particles = 5000;
+heart_explosion_particles = 1000;
+pony_particle_rate = 10;
 use_particles = true;
 
 // Level properties
 
 levels_file = "levels.xml";
-selected_level = 2;
-heightmap_file = "levels/heart.png";
+selected_level = 4;
+heightmap_file = "levels/ring.png";
 level_size = (1500 90 1500);
-water_level = 45;
+water_level = 30;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;
@@ -55,7 +55,7 @@ pony_height = 3;
 
 // Game properties
 
-ai_count = 3;
+ai_count = 0;
 player_count = 4;
 heart_count = 10;
 pony_start_speed = 15;
@@ -65,18 +65,18 @@ pony_acceleration = 25;
 pony_turn_speed = 1.25;
 water_tolerance = 1;
 show_minimap = true;
-pony_up[0] = 283;
-pony_down[0] = 284;
-pony_left[0] = 285;
-pony_right[0] = 286;
+pony_up[0] = 265;
+pony_down[0] = 264;
+pony_left[0] = 263;
+pony_right[0] = 262;
 pony_up[1] = 87;
 pony_down[1] = 83;
 pony_left[1] = 65;
 pony_right[1] = 68;
-pony_up[2] = 310;
-pony_down[2] = 307;
-pony_left[2] = 306;
-pony_right[2] = 308;
+pony_up[2] = 328;
+pony_down[2] = 325;
+pony_left[2] = 324;
+pony_right[2] = 326;
 pony_up[3] = 73;
 pony_down[3] = 75;
 pony_left[3] = 74;

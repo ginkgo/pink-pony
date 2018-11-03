@@ -382,7 +382,8 @@ bool PonyGame::start(PonyPoints& points)
         getErrors();
         calc_fps();
         glfwSwapBuffers(window);
-
+        glfwPollEvents();
+        
         // Check if still running
         
         if(glfwGetKey(window, GLFW_KEY_ESCAPE ) ||

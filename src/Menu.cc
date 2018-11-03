@@ -77,6 +77,9 @@ void Menu::resize_callback(int width, int height)
 
     screen_size = V2f(width, height);
 
+    config->width = width;
+    config->height = height;
+
     mainscreen_layout.set_available_area(Box2f(V2f(0,0), screen_size));
     settings_layout.set_available_area(Box2f(V2f(0,0), screen_size));
 }
@@ -690,7 +693,6 @@ Menu::MenuStatus Menu::run(void)
     glfwSetWindowSizeCallback(window, menu_resize_callback);
     glfwSetKeyCallback(window, menu_key_callback);
 
-
     while (running) {
 
         glClear(GL_COLOR_BUFFER_BIT |
@@ -698,7 +700,8 @@ Menu::MenuStatus Menu::run(void)
                 GL_STENCIL_BUFFER_BIT);
 
         draw();
-        
+
+        glfwPollEvents();
         glfwSwapBuffers(window);
 
         if (glfwGetKey( window, GLFW_KEY_ESCAPE ) || 
