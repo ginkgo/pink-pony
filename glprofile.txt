@@ -5,6 +5,7 @@
 version 2.0 compatibility
 
 extension EXT_framebuffer_object required
+extension ARB_texture_float required
 
 extension ARB_geometry_shader4 optional
 extension EXT_transform_feedback optional

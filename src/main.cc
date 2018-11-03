@@ -33,17 +33,21 @@ int main(int argc, char** argv)
     }
     
     glfwInit();
-    glfwOpenWindowHint(GLFW_FSAA_SAMPLES, config.fsaa_samples);
 
-    glfwOpenWindow(config.width, config.height, // width, height
-                   0, 0, 0, 0,                  // R, G, B, A
-                   24, 8,                       // depth, stencil
-                   config.window_mode);         // GLFW_WINDOW | GLFW_FULLSCREEN
-
-    glfwSetWindowTitle("Pink Pony <3");
+    glfwWindowHint(GLFW_SAMPLES, config.fsaa_samples);
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+    
+    GLFWwindow* window = glfwCreateWindow(config.width, config.height,
+                                          "Pink Pony <3",
+                                          config.window_mode==FULLSCREEN ? glfwGetPrimaryMonitor() : NULL,
+                                          NULL);
+    glfwMakeContextCurrent(window);
     glfwSwapInterval(config.swap_interval);
 
-    if (!flextInit()) {
+    if (!flextInit(window)) {
         return 1;
     }
     
@@ -56,18 +60,12 @@ int main(int argc, char** argv)
 
         if (reset_video) {
 
-            glfwTerminate();
-
-            glfwInit();
-            glfwOpenWindowHint(GLFW_FSAA_SAMPLES, config.fsaa_samples);
+            glfwDestroyWindow(window);
             
-            glfwOpenWindow(config.width, config.height, // width, height
-                           0, 0, 0, 0,                  // R, G, B, A
-                           24, 8,                       // depth, stencil
-                           config.window_mode);         // GLFW_WINDOW | GLFW_FULLSCREEN
-
-            glfwSetWindowTitle("Pink Pony <3");
-            glfwSwapInterval(config.swap_interval);
+            window = glfwCreateWindow(config.width, config.height,
+                                      "Pink Pony <3",
+                                      config.window_mode==FULLSCREEN ? glfwGetPrimaryMonitor() : NULL,
+                                      NULL);
 
             reset_video = false;
 
@@ -85,7 +83,7 @@ int main(int argc, char** argv)
             Menu::MenuStatus menu_status;
         
             {
-                Menu menu(&config, &skydome);
+                Menu menu(&config, &skydome, window);
 
                 menu_status = menu.run();
             }
@@ -124,13 +122,14 @@ int main(int argc, char** argv)
                     int human_count = config.player_count - config.ai_count;
                     if (human_count == 0) human_count = config.player_count;
 
-                    SplitScreen screen(config.width, config.height, human_count);
+                    SplitScreen screen(window, config.width, config.height, human_count);
                     screen.set_glfw_callback();
 
                     PonyGame game(&screen,
                                   &heightmap,
                                   &config,
-                                  &skydome);
+                                  &skydome,
+                                  window);
 
                     run_game = game.start(points);
                 }
@@ -139,7 +138,7 @@ int main(int argc, char** argv)
                 running = false;
             }
         
-            if (!glfwGetWindowParam(GLFW_OPENED)) {
+            if (glfwWindowShouldClose( window )) {
                 running = false;
             }
         }

@@ -20,8 +20,6 @@ void Skydome::draw()
 
     glMatrixMode(GL_TEXTURE);
     //     glScalef(1,-1,1);
-    //     glTranslatef(0,-1,0);
-    //     glScalef(1,2,1);
     glMatrixMode(GL_MODELVIEW);
     
 

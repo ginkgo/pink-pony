@@ -10,7 +10,7 @@ env['LIBS'] = ['GLU', 'GL', 'protobuf', 'IL']
 env['CPPPATH'] = ['#', '#/src', '#/external/tinyXML', '#/external/flextGL/', '/usr/include/OpenEXR']
 
 env.ParseConfig("pkg-config IlmBase --cflags --libs")
-env.ParseConfig("pkg-config libglfw --cflags --libs")
+env.ParseConfig("pkg-config glfw3 --cflags --libs")
 env.ParseConfig("pkg-config ftgl --cflags --libs")
 env.ParseConfig("pkg-config sigc++-2.0 --cflags --libs")
 env.ParseConfig("pkg-config SDL_mixer --cflags --libs")

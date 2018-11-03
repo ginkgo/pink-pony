@@ -34,12 +34,15 @@ class PonyGame
 
     list<V2f> heart_positions;
 
+    GLFWwindow* window;
+    
     public:
 
     PonyGame(SplitScreen* screen,
              Heightmap* heightmap,
              Config* config,
-             Skydome* skydome);
+             Skydome* skydome,
+             GLFWwindow* window);
 
     ~PonyGame();
 
@@ -74,6 +77,8 @@ class PonyGame
     }
 
     bool start(PonyPoints& points);
+
+    GLFWwindow* get_window() { return window; }
 };
 
 #endif

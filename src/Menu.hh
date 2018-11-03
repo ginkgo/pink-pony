@@ -131,13 +131,16 @@ class Menu
 
     bool needs_reset;
 
+    GLFWwindow* window;
+    
     public:
 
     void toggle_fullscreen(void);
     void toggle_music(void);
 
     Menu(Config* config, 
-         Skydome* skydome);
+         Skydome* skydome,
+         GLFWwindow* window);
 
     MenuStatus run(void);
 
@@ -147,6 +150,7 @@ class Menu
     void next_level(int d);
 
     static Menu* callback_menu;
+
 };
 
 #endif

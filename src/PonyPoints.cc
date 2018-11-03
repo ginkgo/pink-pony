@@ -20,8 +20,6 @@ namespace local
 
     void draw_floret_colors(float c, list<Color4f>& colors) {
       
-        GLUquadric *q = gluNewQuadric();
-
         static double golden_angle = 360. / ((1.+sqrt(5.)) * (1.+sqrt(5.))/4.);
 
         double off = .25;
@@ -54,13 +52,10 @@ namespace local
             glBegin(GL_LINE_LOOP);
             draw_heart(x);
             glEnd();
-
-//             gluDisk(q,0,size,16,1);
     
             glPopMatrix();
         }
 
-        gluDeleteQuadric(q);
     }
 };
 

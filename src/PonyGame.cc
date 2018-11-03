@@ -10,7 +10,8 @@
 PonyGame::PonyGame(SplitScreen* screen,
                    Heightmap* heightmap,
                    Config* config,
-                   Skydome* skydome)
+                   Skydome* skydome,
+                   GLFWwindow* window)
     : particle_system(ParticleSystem::make_particle_system(2000000, config)),
       m_screen(screen),
       m_heightmap(heightmap),
@@ -18,7 +19,8 @@ PonyGame::PonyGame(SplitScreen* screen,
       skydome(skydome),
       heart(),
       heart_drawer(&heart),
-      heart_shader(config->resource_dir + "GLSL/heart")
+      heart_shader(config->resource_dir + "GLSL/heart"),
+      window(window)
 {
     int human_count = m_config->player_count - m_config->ai_count;
     if (human_count == 0) human_count = m_config->player_count;
@@ -156,8 +158,8 @@ bool PonyGame::start(PonyPoints& points)
 
     cout << m_config->player_count << " ponies." << endl;
 
-    GLboolean f1_pressed = glfwGetKey(GLFW_KEY_F1);
-    GLboolean f12_pressed = glfwGetKey(GLFW_KEY_F12);
+    GLboolean f1_pressed = glfwGetKey(window, GLFW_KEY_F1);
+    GLboolean f12_pressed = glfwGetKey(window, GLFW_KEY_F12);
 
     ParticleExplosionSource explosion_source(particle_system);
 
@@ -379,30 +381,30 @@ bool PonyGame::start(PonyPoints& points)
 
         getErrors();
         calc_fps();
-        glfwSwapBuffers();
+        glfwSwapBuffers(window);
 
         // Check if still running
         
-        if(glfwGetKey( GLFW_KEY_ESC ) ||
-           !glfwGetWindowParam( GLFW_OPENED )) {
+        if(glfwGetKey(window, GLFW_KEY_ESCAPE ) ||
+           glfwWindowShouldClose( window )) {
             running = false;
             run_game = false;
             delay = 0.0;
         }
 
-        if (glfwGetKey(GLFW_KEY_F12) && !f12_pressed) {
+        if (glfwGetKey(window, GLFW_KEY_F12) && !f12_pressed) {
             m_screen->set_whole_screen();
             make_screenshot();
         }
 
-        if (glfwGetKey(GLFW_KEY_F1) && !f1_pressed) {
+        if (glfwGetKey(window, GLFW_KEY_F1) && !f1_pressed) {
             int current_volume = Mix_VolumeMusic(-1);
             Mix_VolumeMusic(std::min(128, current_volume + 63) % 128);
             m_config->music_volume = Mix_VolumeMusic(-1);
         }
 
-        f1_pressed = glfwGetKey(GLFW_KEY_F1);
-        f12_pressed = glfwGetKey(GLFW_KEY_F12);
+        f1_pressed = glfwGetKey(window, GLFW_KEY_F1);
+        f12_pressed = glfwGetKey(window, GLFW_KEY_F12);
     }
 
     return run_game;

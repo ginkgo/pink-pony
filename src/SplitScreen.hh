@@ -14,10 +14,12 @@ class SplitScreen
     vector<Box2i> point_huds;
 
     int current;
+
+    GLFWwindow* window;
     
     public:
 
-    SplitScreen(int width, int height, int subscreens);
+    SplitScreen(GLFWwindow* window, int width, int height, int subscreens);
     ~SplitScreen();
 
     V2i get_size()

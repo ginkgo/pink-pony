@@ -192,7 +192,7 @@ Shader::Shader(string vertex_shader_file,
   
     geometry_shader = compile_shader(geometry_source.c_str(),
                                      geometry_shader_file + string(".geom"),
-                                     GL_GEOMETRY_SHADER_EXT);
+                                     GL_GEOMETRY_SHADER_ARB);
   
     fragment_shader = compile_shader(fragment_source.c_str(),
                                      fragment_shader_file + string(".frag"),
