@@ -221,7 +221,12 @@ void start_music(Mix_Music** music, const string& music_file)
     int audio_channels = 2;
     int audio_buffers = 4096;
 
-    SDL_Init(SDL_INIT_AUDIO);
+
+    // start SDL with audio support
+    if(SDL_Init(SDL_INIT_AUDIO)==-1) {
+        printf("SDL_Init: %s\n", SDL_GetError());
+        exit(1);
+    }
 
     // Open audio device
     if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
