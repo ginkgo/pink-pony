@@ -21,7 +21,7 @@ install:
 	install -m 755 -o root install/pink-pony $(PREFIXBIN)
 	install -m 644 -o root pony.options $(PREFIXETC)
 	install -m 755 -o root Pony $(PREFIXLIB)
-	install -m 644 -o root  README pony.options
+	install -m 644 -o root  README $(PREFIXSHARE)
 	rsync -r --chown root:root --chmod D755,F664  resources $(PREFIXSHARE) --delete-after
 	install -m 644 -o root install/pink-pony.desktop $(PREFIXAPPS)
 	install -m 644 -o root install/pink-pony.png $(PREFIXPIXMAPS)

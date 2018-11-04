@@ -216,8 +216,8 @@ void randomize_start_positions(Config& config, Heightmap& heightmap)
 void start_music(Mix_Music** music, const string& music_file)
 {
     
-    int audio_rate = 22050;
-    Uint16 audio_format = AUDIO_S16; /* 16-bit stereo */
+    int audio_rate = 44100;
+    Uint16 audio_format = MIX_DEFAULT_FORMAT; /* 16-bit stereo */
     int audio_channels = 2;
     int audio_buffers = 4096;
 
