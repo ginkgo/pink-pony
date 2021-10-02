@@ -16,7 +16,7 @@ You will need the following tools and libraries to build the game:
 
 * SCons
 * GLFW
-* IlmBase
+* Imath
 * DevIL
 * protobuf (You also need protobuf-compiler on ubuntu)
 * SDL_mixer
