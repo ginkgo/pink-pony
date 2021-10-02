@@ -158,22 +158,26 @@ Pony::Decision PlayerPony::decide(PonyGame* game, int i)
     float& accel = decision.acceleration;
     float& steer = decision.steer;
 
-    if (glfwGetKey(up) == GLFW_PRESS)
+    GLFWwindow* window = game->get_window();
+    
+    if (glfwGetKey(window, up) == GLFW_PRESS)
         accel += 1.0;
-    if (glfwGetKey(down) == GLFW_PRESS)
+    if (glfwGetKey(window, down) == GLFW_PRESS)
         accel -= 1.0;
 
-    if (glfwGetKey(left) == GLFW_PRESS)
+    if (glfwGetKey(window, left) == GLFW_PRESS)
         steer += 1.0;
-    if (glfwGetKey(right) == GLFW_PRESS)
+    if (glfwGetKey(window, right) == GLFW_PRESS)
         steer -= 1.0;
 
-    if (glfwGetJoystickParam(i,GLFW_PRESENT) == GL_TRUE) {
+    if (glfwJoystickPresent(i) == GL_TRUE) {
 
+        int n;
+        const float* axes_c = glfwGetJoystickAxes(i,&n);
         float axes[10];
 
-        int n = glfwGetJoystickPos(i,axes,10);
-
+        std::copy(axes_c, axes_c+n, axes);
+        
         if (n >= 2) {
 
             if (fabs(axes[0]) < 0.2) axes[0] = 0.0;
@@ -181,9 +185,8 @@ Pony::Decision PlayerPony::decide(PonyGame* game, int i)
             steer -= axes[0]*2;
         }
 
-        unsigned char buttons[20];
-
-        int button_count = glfwGetJoystickButtons(i, buttons, 20);
+        int button_count;
+        const unsigned char* buttons = glfwGetJoystickButtons(i, &button_count);
 
         if (button_count >= 2) {
             if (buttons[0] == GLFW_PRESS)

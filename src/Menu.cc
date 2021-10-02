@@ -7,19 +7,19 @@
 
 Menu* Menu::callback_menu = NULL;
 
-void GLFWCALL menu_mouse_callback(int button, int action)
+void menu_mouse_callback(GLFWwindow* window, int button, int action, int mods)
 {
     if (Menu::callback_menu != NULL)
         Menu::callback_menu->mouse_callback(button, action);
 }
 
-void GLFWCALL menu_resize_callback(int width, int height)
+void menu_resize_callback(GLFWwindow* window, int width, int height)
 {
     if (Menu::callback_menu != NULL)
         Menu::callback_menu->resize_callback(width, height);
 }
 
-void GLFWCALL menu_key_callback(int key, int state)
+void menu_key_callback(GLFWwindow* window, int key, int scancode, int state, int mods)
 {
     if (state != GLFW_PRESS || Menu::callback_menu == NULL ) 
         return;
@@ -34,7 +34,7 @@ void GLFWCALL menu_key_callback(int key, int state)
 
 void Menu::toggle_fullscreen(void)
 {
-    config->window_mode = (config->window_mode == GLFW_WINDOW)?GLFW_FULLSCREEN:GLFW_WINDOW;
+    config->window_mode = (config->window_mode == WINDOW)?FULLSCREEN:WINDOW;
     status = RESET;
     running = false;    
 }
@@ -48,9 +48,9 @@ void Menu::toggle_music(void)
 
 void Menu::mouse_callback(int button, int action)
 {
-    int x,y;
+    double x,y;
 
-    glfwGetMousePos(&x, &y);
+    glfwGetCursorPos(window, &x, &y);
 
     if (action == GLFW_PRESS) {
         V2f pos(x,screen_size.y - y);
@@ -77,6 +77,9 @@ void Menu::resize_callback(int width, int height)
 
     screen_size = V2f(width, height);
 
+    config->width = width;
+    config->height = height;
+
     mainscreen_layout.set_available_area(Box2f(V2f(0,0), screen_size));
     settings_layout.set_available_area(Box2f(V2f(0,0), screen_size));
 }
@@ -84,7 +87,8 @@ void Menu::resize_callback(int width, int height)
 #define TEXT_COLOR Color4f(1,1,1,0.5)
 
 Menu::Menu (Config* config, 
-            Skydome* skydome)
+            Skydome* skydome,
+            GLFWwindow* window)
     : active_screen(MAIN_SCREEN),
       config(config),
       skydome(skydome),
@@ -98,36 +102,37 @@ Menu::Menu (Config* config,
       prev_level_button(config->resource_dir + "textures/left.png"),
       computer_no("0", config),
       human_no("0", config),
-    computer_text(config->resource_dir + "textures/computer.png"),
-    human_text(config->resource_dir + "textures/human.png"),
-    computers(config->ai_count),
-    humans(config->player_count - config->ai_count),
-    settings_text("Settings", config),
-    settings_done(config->resource_dir + "textures/back.png"),
-    particles_text("Some particles", config, TEXT_COLOR),
-    prev_particles(config->resource_dir + "textures/left.png"),
-    next_particles(config->resource_dir + "textures/right.png"),
-    fullscreen_text("Some particles", config, TEXT_COLOR),
-    prev_fullscreen(config->resource_dir + "textures/left.png"),
-    next_fullscreen(config->resource_dir + "textures/right.png"),
-    minimap_text("Some particles", config, TEXT_COLOR),
-    prev_minimap(config->resource_dir + "textures/left.png"),
-    next_minimap(config->resource_dir + "textures/right.png"),
-    antialiasing_text("Some particles", config, TEXT_COLOR),
-    prev_antialiasing(config->resource_dir + "textures/left.png"),
-    next_antialiasing(config->resource_dir + "textures/right.png"),
-    hearts_text("Some particles", config, TEXT_COLOR),
-    prev_hearts(config->resource_dir + "textures/left.png"),
-    next_hearts(config->resource_dir + "textures/right.png"),
-    resolution_text("Some particles", config, TEXT_COLOR),
-    prev_resolution(config->resource_dir + "textures/left.png"),
-    next_resolution(config->resource_dir + "textures/right.png"),
-    water_text("Simple water", config, TEXT_COLOR),
-    prev_water(config->resource_dir + "textures/left.png"),
-    next_water(config->resource_dir + "textures/right.png"),
-    needs_reset(false),
-    computer_slider(config),
-    human_slider(config)
+      computer_text(config->resource_dir + "textures/computer.png"),
+      human_text(config->resource_dir + "textures/human.png"),
+      computers(config->ai_count),
+      humans(config->player_count - config->ai_count),
+      settings_text("Settings", config),
+      settings_done(config->resource_dir + "textures/back.png"),
+      particles_text("Some particles", config, TEXT_COLOR),
+      prev_particles(config->resource_dir + "textures/left.png"),
+      next_particles(config->resource_dir + "textures/right.png"),
+      fullscreen_text("Some particles", config, TEXT_COLOR),
+      prev_fullscreen(config->resource_dir + "textures/left.png"),
+      next_fullscreen(config->resource_dir + "textures/right.png"),
+      minimap_text("Some particles", config, TEXT_COLOR),
+      prev_minimap(config->resource_dir + "textures/left.png"),
+      next_minimap(config->resource_dir + "textures/right.png"),
+      antialiasing_text("Some particles", config, TEXT_COLOR),
+      prev_antialiasing(config->resource_dir + "textures/left.png"),
+      next_antialiasing(config->resource_dir + "textures/right.png"),
+      hearts_text("Some particles", config, TEXT_COLOR),
+      prev_hearts(config->resource_dir + "textures/left.png"),
+      next_hearts(config->resource_dir + "textures/right.png"),
+      resolution_text("Some particles", config, TEXT_COLOR),
+      prev_resolution(config->resource_dir + "textures/left.png"),
+      next_resolution(config->resource_dir + "textures/right.png"),
+      water_text("Simple water", config, TEXT_COLOR),
+      prev_water(config->resource_dir + "textures/left.png"),
+      next_water(config->resource_dir + "textures/right.png"),
+      needs_reset(false),
+      window(window),
+      computer_slider(config),
+      human_slider(config)
     
 {
     getErrors();
@@ -136,7 +141,7 @@ Menu::Menu (Config* config,
     load_levels(config->resource_dir + config->levels_file);
 
     int w,h;
-    glfwGetWindowSize(&w,&h);
+    glfwGetWindowSize(window, &w,&h);
     resize_callback(w,h);
 
     next_level(0);
@@ -151,31 +156,15 @@ Menu::Menu (Config* config,
 
 void Menu::setup_settings(void)
 {
-    GLFWvidmode vidmodes[100];
-
-    int modes_found = glfwGetVideoModes(vidmodes, 100);
+    int modes_found;
+    const GLFWvidmode* vidmodes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &modes_found);
     
     resolutions.resize(modes_found);
 
     for (int i = 0; i < modes_found; ++i) {
-        resolutions[i] = V2i(vidmodes[i].Width,
-                             vidmodes[i].Height);
+        resolutions[i] = V2i(vidmodes[i].width,
+                             vidmodes[i].height);
     }
-
-    // resolutions.push_back(V2i( 640, 480));
-    // resolutions.push_back(V2i( 800, 600));
-    // resolutions.push_back(V2i( 960, 600));
-    // resolutions.push_back(V2i(1024, 768));
-    // resolutions.push_back(V2i(1280, 720));
-    // resolutions.push_back(V2i(1280, 768));
-    // resolutions.push_back(V2i(1280, 800));
-    // resolutions.push_back(V2i(1280,1024));
-    // resolutions.push_back(V2i(1440, 900));
-    // resolutions.push_back(V2i(1600,1200));
-    // resolutions.push_back(V2i(1680,1050));
-    // resolutions.push_back(V2i(1920,1080));
-    // resolutions.push_back(V2i(2560,1440));
-    // resolutions.push_back(V2i(2560,1600));
 
     if(!config->use_particles) {
         particle_setting = 0;
@@ -187,7 +176,7 @@ void Menu::setup_settings(void)
         particle_setting = 3;
     }
 
-    if (config->window_mode == GLFW_WINDOW) {
+    if (config->window_mode == WINDOW) {
         fullscreen_setting = 0;
     } else {
         fullscreen_setting = 1;
@@ -242,10 +231,10 @@ void Menu::load_settings(void)
 
     if (fullscreen_setting == 0) {
         fullscreen_text.set_text("Window");
-        config->window_mode = GLFW_WINDOW;
+        config->window_mode = WINDOW;
     } else {
         fullscreen_text.set_text("Fullscreen");
-        config->window_mode = GLFW_FULLSCREEN;
+        config->window_mode = FULLSCREEN;
     }
 
     if (minimap_setting == 0) {
@@ -693,17 +682,16 @@ void Menu::reload_level(string level)
 
 Menu::MenuStatus Menu::run(void)
 {
-    if (config->window_mode == GLFW_FULLSCREEN)
-        glfwEnable(GLFW_MOUSE_CURSOR);
+    if (config->window_mode == FULLSCREEN)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     status = START;
     running = true;
 
     callback_menu = this;
-    glfwSetMouseButtonCallback(menu_mouse_callback);
-    glfwSetWindowSizeCallback(menu_resize_callback);
-    glfwSetKeyCallback(menu_key_callback);
-
+    glfwSetMouseButtonCallback(window, menu_mouse_callback);
+    glfwSetWindowSizeCallback(window, menu_resize_callback);
+    glfwSetKeyCallback(window, menu_key_callback);
 
     while (running) {
 
@@ -712,26 +700,27 @@ Menu::MenuStatus Menu::run(void)
                 GL_STENCIL_BUFFER_BIT);
 
         draw();
-        
-        glfwSwapBuffers();
 
-        if (glfwGetKey( GLFW_KEY_ESC ) || 
-            !glfwGetWindowParam( GLFW_OPENED )) {
+        glfwPollEvents();
+        glfwSwapBuffers(window);
+
+        if (glfwGetKey( window, GLFW_KEY_ESCAPE ) || 
+            glfwWindowShouldClose( window )) {
             status = QUIT;
             running = false;
-        } else if (glfwGetKey(GLFW_KEY_ENTER)) {
+        } else if (glfwGetKey( window, GLFW_KEY_ENTER)) {
             status = START;
             running = false;
         }
     }
 
-    glfwSetMouseButtonCallback(NULL);
-    glfwSetWindowSizeCallback(NULL);
-    glfwSetKeyCallback(NULL);
+    glfwSetMouseButtonCallback(window, NULL);
+    glfwSetWindowSizeCallback(window, NULL);
+    glfwSetKeyCallback(window, NULL);
     callback_menu = NULL;
 
-    if (config->window_mode == GLFW_FULLSCREEN)
-        glfwDisable(GLFW_MOUSE_CURSOR);
+    if (config->window_mode == FULLSCREEN)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return status;
 }

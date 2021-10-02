@@ -3,7 +3,8 @@
 #define ILUT_USE_OPENGL
 
 #include "flextGL.h"
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
+#include <GL/glu.h>
 #include <string>
 #include <iostream>
 #include <vector>

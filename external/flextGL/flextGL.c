@@ -2,7 +2,7 @@
 /* Do not edit. */
 
 #include "flextGL.h"
-#include "GL/glfw.h"
+#include "GLFW/glfw3.h"
 
 #include <stdio.h>
 
@@ -14,18 +14,18 @@ extern "C" {
 
 void flextLoadOpenGLFunctions(void);
 
-int flextInit(void)
+int flextInit(GLFWwindow* window)
 {
   
-    int major = glfwGetWindowParam(GLFW_OPENGL_VERSION_MAJOR);
-    int minor = glfwGetWindowParam(GLFW_OPENGL_VERSION_MINOR);
+    int major = glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR);
+    int minor = glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR);
 
     flextLoadOpenGLFunctions();
     
     /* --- Check for minimal version and profile --- */
 
     if (major * 10 + minor < 20) {
-	fprintf(stderr, "Error: OpenGL version 2.0 not supported.\n");
+        fprintf(stderr, "Error: OpenGL version 2.0 not supported.\n");
         fprintf(stderr, "       Your version is %d.%d.\n", major, minor);
         fprintf(stderr, "       Try updating your graphics driver.\n");
         return GL_FALSE;
@@ -36,6 +36,12 @@ int flextInit(void)
 
     if (!glfwExtensionSupported("GL_EXT_framebuffer_object")) {
         fprintf(stderr, "Error: OpenGL extension EXT_framebuffer_object not supported.\n");
+        fprintf(stderr, "       Try updating your graphics driver.\n");
+        return GL_FALSE;
+    }
+
+    if (!glfwExtensionSupported("GL_ARB_texture_float")) {
+        fprintf(stderr, "Error: OpenGL extension ARB_texture_float not supported.\n");
         fprintf(stderr, "       Try updating your graphics driver.\n");
         return GL_FALSE;
     }
@@ -65,98 +71,75 @@ void flextLoadOpenGLFunctions(void)
 
     /* GL_ARB_geometry_shader4 */
 
-    glpfProgramParameteriARB = (PFNGLPROGRAMPARAMETERIARB_PROC*)glfwGetProcAddress("glProgramParameteriARB");
     glpfFramebufferTextureARB = (PFNGLFRAMEBUFFERTEXTUREARB_PROC*)glfwGetProcAddress("glFramebufferTextureARB");
-    glpfFramebufferTextureLayerARB = (PFNGLFRAMEBUFFERTEXTURELAYERARB_PROC*)glfwGetProcAddress("glFramebufferTextureLayerARB");
     glpfFramebufferTextureFaceARB = (PFNGLFRAMEBUFFERTEXTUREFACEARB_PROC*)glfwGetProcAddress("glFramebufferTextureFaceARB");
+    glpfFramebufferTextureLayerARB = (PFNGLFRAMEBUFFERTEXTURELAYERARB_PROC*)glfwGetProcAddress("glFramebufferTextureLayerARB");
+    glpfProgramParameteriARB = (PFNGLPROGRAMPARAMETERIARB_PROC*)glfwGetProcAddress("glProgramParameteriARB");
+
+
+    /* GL_ARB_texture_float */
+
 
 
     /* GL_EXT_framebuffer_object */
 
-    glpfIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXT_PROC*)glfwGetProcAddress("glIsRenderbufferEXT");
-    glpfBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXT_PROC*)glfwGetProcAddress("glBindRenderbufferEXT");
-    glpfDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXT_PROC*)glfwGetProcAddress("glDeleteRenderbuffersEXT");
-    glpfGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXT_PROC*)glfwGetProcAddress("glGenRenderbuffersEXT");
-    glpfRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXT_PROC*)glfwGetProcAddress("glRenderbufferStorageEXT");
-    glpfGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXT_PROC*)glfwGetProcAddress("glGetRenderbufferParameterivEXT");
-    glpfIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXT_PROC*)glfwGetProcAddress("glIsFramebufferEXT");
     glpfBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXT_PROC*)glfwGetProcAddress("glBindFramebufferEXT");
-    glpfDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXT_PROC*)glfwGetProcAddress("glDeleteFramebuffersEXT");
-    glpfGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXT_PROC*)glfwGetProcAddress("glGenFramebuffersEXT");
+    glpfBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXT_PROC*)glfwGetProcAddress("glBindRenderbufferEXT");
     glpfCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXT_PROC*)glfwGetProcAddress("glCheckFramebufferStatusEXT");
+    glpfDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXT_PROC*)glfwGetProcAddress("glDeleteFramebuffersEXT");
+    glpfDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXT_PROC*)glfwGetProcAddress("glDeleteRenderbuffersEXT");
+    glpfFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXT_PROC*)glfwGetProcAddress("glFramebufferRenderbufferEXT");
     glpfFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXT_PROC*)glfwGetProcAddress("glFramebufferTexture1DEXT");
     glpfFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXT_PROC*)glfwGetProcAddress("glFramebufferTexture2DEXT");
     glpfFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXT_PROC*)glfwGetProcAddress("glFramebufferTexture3DEXT");
-    glpfFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXT_PROC*)glfwGetProcAddress("glFramebufferRenderbufferEXT");
-    glpfGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXT_PROC*)glfwGetProcAddress("glGetFramebufferAttachmentParameterivEXT");
+    glpfGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXT_PROC*)glfwGetProcAddress("glGenFramebuffersEXT");
+    glpfGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXT_PROC*)glfwGetProcAddress("glGenRenderbuffersEXT");
     glpfGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXT_PROC*)glfwGetProcAddress("glGenerateMipmapEXT");
+    glpfGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXT_PROC*)glfwGetProcAddress("glGetFramebufferAttachmentParameterivEXT");
+    glpfGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXT_PROC*)glfwGetProcAddress("glGetRenderbufferParameterivEXT");
+    glpfIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXT_PROC*)glfwGetProcAddress("glIsFramebufferEXT");
+    glpfIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXT_PROC*)glfwGetProcAddress("glIsRenderbufferEXT");
+    glpfRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXT_PROC*)glfwGetProcAddress("glRenderbufferStorageEXT");
+
+
+    /* GL_EXT_texture_filter_anisotropic */
+
 
 
     /* GL_EXT_transform_feedback */
 
     glpfBeginTransformFeedbackEXT = (PFNGLBEGINTRANSFORMFEEDBACKEXT_PROC*)glfwGetProcAddress("glBeginTransformFeedbackEXT");
-    glpfEndTransformFeedbackEXT = (PFNGLENDTRANSFORMFEEDBACKEXT_PROC*)glfwGetProcAddress("glEndTransformFeedbackEXT");
-    glpfBindBufferRangeEXT = (PFNGLBINDBUFFERRANGEEXT_PROC*)glfwGetProcAddress("glBindBufferRangeEXT");
-    glpfBindBufferOffsetEXT = (PFNGLBINDBUFFEROFFSETEXT_PROC*)glfwGetProcAddress("glBindBufferOffsetEXT");
     glpfBindBufferBaseEXT = (PFNGLBINDBUFFERBASEEXT_PROC*)glfwGetProcAddress("glBindBufferBaseEXT");
-    glpfTransformFeedbackVaryingsEXT = (PFNGLTRANSFORMFEEDBACKVARYINGSEXT_PROC*)glfwGetProcAddress("glTransformFeedbackVaryingsEXT");
+    glpfBindBufferOffsetEXT = (PFNGLBINDBUFFEROFFSETEXT_PROC*)glfwGetProcAddress("glBindBufferOffsetEXT");
+    glpfBindBufferRangeEXT = (PFNGLBINDBUFFERRANGEEXT_PROC*)glfwGetProcAddress("glBindBufferRangeEXT");
+    glpfEndTransformFeedbackEXT = (PFNGLENDTRANSFORMFEEDBACKEXT_PROC*)glfwGetProcAddress("glEndTransformFeedbackEXT");
     glpfGetTransformFeedbackVaryingEXT = (PFNGLGETTRANSFORMFEEDBACKVARYINGEXT_PROC*)glfwGetProcAddress("glGetTransformFeedbackVaryingEXT");
+    glpfTransformFeedbackVaryingsEXT = (PFNGLTRANSFORMFEEDBACKVARYINGSEXT_PROC*)glfwGetProcAddress("glTransformFeedbackVaryingsEXT");
 
 
     /* GL_VERSION_1_2 */
 
-    glpfBlendColor = (PFNGLBLENDCOLOR_PROC*)glfwGetProcAddress("glBlendColor");
-    glpfBlendEquation = (PFNGLBLENDEQUATION_PROC*)glfwGetProcAddress("glBlendEquation");
+    glpfCopyTexSubImage3D = (PFNGLCOPYTEXSUBIMAGE3D_PROC*)glfwGetProcAddress("glCopyTexSubImage3D");
     glpfDrawRangeElements = (PFNGLDRAWRANGEELEMENTS_PROC*)glfwGetProcAddress("glDrawRangeElements");
     glpfTexImage3D = (PFNGLTEXIMAGE3D_PROC*)glfwGetProcAddress("glTexImage3D");
     glpfTexSubImage3D = (PFNGLTEXSUBIMAGE3D_PROC*)glfwGetProcAddress("glTexSubImage3D");
-    glpfCopyTexSubImage3D = (PFNGLCOPYTEXSUBIMAGE3D_PROC*)glfwGetProcAddress("glCopyTexSubImage3D");
-    glpfColorTable = (PFNGLCOLORTABLE_PROC*)glfwGetProcAddress("glColorTable");
-    glpfColorTableParameterfv = (PFNGLCOLORTABLEPARAMETERFV_PROC*)glfwGetProcAddress("glColorTableParameterfv");
-    glpfColorTableParameteriv = (PFNGLCOLORTABLEPARAMETERIV_PROC*)glfwGetProcAddress("glColorTableParameteriv");
-    glpfCopyColorTable = (PFNGLCOPYCOLORTABLE_PROC*)glfwGetProcAddress("glCopyColorTable");
-    glpfGetColorTable = (PFNGLGETCOLORTABLE_PROC*)glfwGetProcAddress("glGetColorTable");
-    glpfGetColorTableParameterfv = (PFNGLGETCOLORTABLEPARAMETERFV_PROC*)glfwGetProcAddress("glGetColorTableParameterfv");
-    glpfGetColorTableParameteriv = (PFNGLGETCOLORTABLEPARAMETERIV_PROC*)glfwGetProcAddress("glGetColorTableParameteriv");
-    glpfColorSubTable = (PFNGLCOLORSUBTABLE_PROC*)glfwGetProcAddress("glColorSubTable");
-    glpfCopyColorSubTable = (PFNGLCOPYCOLORSUBTABLE_PROC*)glfwGetProcAddress("glCopyColorSubTable");
-    glpfConvolutionFilter1D = (PFNGLCONVOLUTIONFILTER1D_PROC*)glfwGetProcAddress("glConvolutionFilter1D");
-    glpfConvolutionFilter2D = (PFNGLCONVOLUTIONFILTER2D_PROC*)glfwGetProcAddress("glConvolutionFilter2D");
-    glpfConvolutionParameterf = (PFNGLCONVOLUTIONPARAMETERF_PROC*)glfwGetProcAddress("glConvolutionParameterf");
-    glpfConvolutionParameterfv = (PFNGLCONVOLUTIONPARAMETERFV_PROC*)glfwGetProcAddress("glConvolutionParameterfv");
-    glpfConvolutionParameteri = (PFNGLCONVOLUTIONPARAMETERI_PROC*)glfwGetProcAddress("glConvolutionParameteri");
-    glpfConvolutionParameteriv = (PFNGLCONVOLUTIONPARAMETERIV_PROC*)glfwGetProcAddress("glConvolutionParameteriv");
-    glpfCopyConvolutionFilter1D = (PFNGLCOPYCONVOLUTIONFILTER1D_PROC*)glfwGetProcAddress("glCopyConvolutionFilter1D");
-    glpfCopyConvolutionFilter2D = (PFNGLCOPYCONVOLUTIONFILTER2D_PROC*)glfwGetProcAddress("glCopyConvolutionFilter2D");
-    glpfGetConvolutionFilter = (PFNGLGETCONVOLUTIONFILTER_PROC*)glfwGetProcAddress("glGetConvolutionFilter");
-    glpfGetConvolutionParameterfv = (PFNGLGETCONVOLUTIONPARAMETERFV_PROC*)glfwGetProcAddress("glGetConvolutionParameterfv");
-    glpfGetConvolutionParameteriv = (PFNGLGETCONVOLUTIONPARAMETERIV_PROC*)glfwGetProcAddress("glGetConvolutionParameteriv");
-    glpfGetSeparableFilter = (PFNGLGETSEPARABLEFILTER_PROC*)glfwGetProcAddress("glGetSeparableFilter");
-    glpfSeparableFilter2D = (PFNGLSEPARABLEFILTER2D_PROC*)glfwGetProcAddress("glSeparableFilter2D");
-    glpfGetHistogram = (PFNGLGETHISTOGRAM_PROC*)glfwGetProcAddress("glGetHistogram");
-    glpfGetHistogramParameterfv = (PFNGLGETHISTOGRAMPARAMETERFV_PROC*)glfwGetProcAddress("glGetHistogramParameterfv");
-    glpfGetHistogramParameteriv = (PFNGLGETHISTOGRAMPARAMETERIV_PROC*)glfwGetProcAddress("glGetHistogramParameteriv");
-    glpfGetMinmax = (PFNGLGETMINMAX_PROC*)glfwGetProcAddress("glGetMinmax");
-    glpfGetMinmaxParameterfv = (PFNGLGETMINMAXPARAMETERFV_PROC*)glfwGetProcAddress("glGetMinmaxParameterfv");
-    glpfGetMinmaxParameteriv = (PFNGLGETMINMAXPARAMETERIV_PROC*)glfwGetProcAddress("glGetMinmaxParameteriv");
-    glpfHistogram = (PFNGLHISTOGRAM_PROC*)glfwGetProcAddress("glHistogram");
-    glpfMinmax = (PFNGLMINMAX_PROC*)glfwGetProcAddress("glMinmax");
-    glpfResetHistogram = (PFNGLRESETHISTOGRAM_PROC*)glfwGetProcAddress("glResetHistogram");
-    glpfResetMinmax = (PFNGLRESETMINMAX_PROC*)glfwGetProcAddress("glResetMinmax");
 
 
     /* GL_VERSION_1_3 */
 
     glpfActiveTexture = (PFNGLACTIVETEXTURE_PROC*)glfwGetProcAddress("glActiveTexture");
-    glpfSampleCoverage = (PFNGLSAMPLECOVERAGE_PROC*)glfwGetProcAddress("glSampleCoverage");
-    glpfCompressedTexImage3D = (PFNGLCOMPRESSEDTEXIMAGE3D_PROC*)glfwGetProcAddress("glCompressedTexImage3D");
-    glpfCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2D_PROC*)glfwGetProcAddress("glCompressedTexImage2D");
-    glpfCompressedTexImage1D = (PFNGLCOMPRESSEDTEXIMAGE1D_PROC*)glfwGetProcAddress("glCompressedTexImage1D");
-    glpfCompressedTexSubImage3D = (PFNGLCOMPRESSEDTEXSUBIMAGE3D_PROC*)glfwGetProcAddress("glCompressedTexSubImage3D");
-    glpfCompressedTexSubImage2D = (PFNGLCOMPRESSEDTEXSUBIMAGE2D_PROC*)glfwGetProcAddress("glCompressedTexSubImage2D");
-    glpfCompressedTexSubImage1D = (PFNGLCOMPRESSEDTEXSUBIMAGE1D_PROC*)glfwGetProcAddress("glCompressedTexSubImage1D");
-    glpfGetCompressedTexImage = (PFNGLGETCOMPRESSEDTEXIMAGE_PROC*)glfwGetProcAddress("glGetCompressedTexImage");
     glpfClientActiveTexture = (PFNGLCLIENTACTIVETEXTURE_PROC*)glfwGetProcAddress("glClientActiveTexture");
+    glpfCompressedTexImage1D = (PFNGLCOMPRESSEDTEXIMAGE1D_PROC*)glfwGetProcAddress("glCompressedTexImage1D");
+    glpfCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2D_PROC*)glfwGetProcAddress("glCompressedTexImage2D");
+    glpfCompressedTexImage3D = (PFNGLCOMPRESSEDTEXIMAGE3D_PROC*)glfwGetProcAddress("glCompressedTexImage3D");
+    glpfCompressedTexSubImage1D = (PFNGLCOMPRESSEDTEXSUBIMAGE1D_PROC*)glfwGetProcAddress("glCompressedTexSubImage1D");
+    glpfCompressedTexSubImage2D = (PFNGLCOMPRESSEDTEXSUBIMAGE2D_PROC*)glfwGetProcAddress("glCompressedTexSubImage2D");
+    glpfCompressedTexSubImage3D = (PFNGLCOMPRESSEDTEXSUBIMAGE3D_PROC*)glfwGetProcAddress("glCompressedTexSubImage3D");
+    glpfGetCompressedTexImage = (PFNGLGETCOMPRESSEDTEXIMAGE_PROC*)glfwGetProcAddress("glGetCompressedTexImage");
+    glpfLoadTransposeMatrixd = (PFNGLLOADTRANSPOSEMATRIXD_PROC*)glfwGetProcAddress("glLoadTransposeMatrixd");
+    glpfLoadTransposeMatrixf = (PFNGLLOADTRANSPOSEMATRIXF_PROC*)glfwGetProcAddress("glLoadTransposeMatrixf");
+    glpfMultTransposeMatrixd = (PFNGLMULTTRANSPOSEMATRIXD_PROC*)glfwGetProcAddress("glMultTransposeMatrixd");
+    glpfMultTransposeMatrixf = (PFNGLMULTTRANSPOSEMATRIXF_PROC*)glfwGetProcAddress("glMultTransposeMatrixf");
     glpfMultiTexCoord1d = (PFNGLMULTITEXCOORD1D_PROC*)glfwGetProcAddress("glMultiTexCoord1d");
     glpfMultiTexCoord1dv = (PFNGLMULTITEXCOORD1DV_PROC*)glfwGetProcAddress("glMultiTexCoord1dv");
     glpfMultiTexCoord1f = (PFNGLMULTITEXCOORD1F_PROC*)glfwGetProcAddress("glMultiTexCoord1f");
@@ -189,26 +172,25 @@ void flextLoadOpenGLFunctions(void)
     glpfMultiTexCoord4iv = (PFNGLMULTITEXCOORD4IV_PROC*)glfwGetProcAddress("glMultiTexCoord4iv");
     glpfMultiTexCoord4s = (PFNGLMULTITEXCOORD4S_PROC*)glfwGetProcAddress("glMultiTexCoord4s");
     glpfMultiTexCoord4sv = (PFNGLMULTITEXCOORD4SV_PROC*)glfwGetProcAddress("glMultiTexCoord4sv");
-    glpfLoadTransposeMatrixf = (PFNGLLOADTRANSPOSEMATRIXF_PROC*)glfwGetProcAddress("glLoadTransposeMatrixf");
-    glpfLoadTransposeMatrixd = (PFNGLLOADTRANSPOSEMATRIXD_PROC*)glfwGetProcAddress("glLoadTransposeMatrixd");
-    glpfMultTransposeMatrixf = (PFNGLMULTTRANSPOSEMATRIXF_PROC*)glfwGetProcAddress("glMultTransposeMatrixf");
-    glpfMultTransposeMatrixd = (PFNGLMULTTRANSPOSEMATRIXD_PROC*)glfwGetProcAddress("glMultTransposeMatrixd");
+    glpfSampleCoverage = (PFNGLSAMPLECOVERAGE_PROC*)glfwGetProcAddress("glSampleCoverage");
 
 
     /* GL_VERSION_1_4 */
 
+    glpfBlendColor = (PFNGLBLENDCOLOR_PROC*)glfwGetProcAddress("glBlendColor");
+    glpfBlendEquation = (PFNGLBLENDEQUATION_PROC*)glfwGetProcAddress("glBlendEquation");
     glpfBlendFuncSeparate = (PFNGLBLENDFUNCSEPARATE_PROC*)glfwGetProcAddress("glBlendFuncSeparate");
+    glpfFogCoordPointer = (PFNGLFOGCOORDPOINTER_PROC*)glfwGetProcAddress("glFogCoordPointer");
+    glpfFogCoordd = (PFNGLFOGCOORDD_PROC*)glfwGetProcAddress("glFogCoordd");
+    glpfFogCoorddv = (PFNGLFOGCOORDDV_PROC*)glfwGetProcAddress("glFogCoorddv");
+    glpfFogCoordf = (PFNGLFOGCOORDF_PROC*)glfwGetProcAddress("glFogCoordf");
+    glpfFogCoordfv = (PFNGLFOGCOORDFV_PROC*)glfwGetProcAddress("glFogCoordfv");
     glpfMultiDrawArrays = (PFNGLMULTIDRAWARRAYS_PROC*)glfwGetProcAddress("glMultiDrawArrays");
     glpfMultiDrawElements = (PFNGLMULTIDRAWELEMENTS_PROC*)glfwGetProcAddress("glMultiDrawElements");
     glpfPointParameterf = (PFNGLPOINTPARAMETERF_PROC*)glfwGetProcAddress("glPointParameterf");
     glpfPointParameterfv = (PFNGLPOINTPARAMETERFV_PROC*)glfwGetProcAddress("glPointParameterfv");
     glpfPointParameteri = (PFNGLPOINTPARAMETERI_PROC*)glfwGetProcAddress("glPointParameteri");
     glpfPointParameteriv = (PFNGLPOINTPARAMETERIV_PROC*)glfwGetProcAddress("glPointParameteriv");
-    glpfFogCoordf = (PFNGLFOGCOORDF_PROC*)glfwGetProcAddress("glFogCoordf");
-    glpfFogCoordfv = (PFNGLFOGCOORDFV_PROC*)glfwGetProcAddress("glFogCoordfv");
-    glpfFogCoordd = (PFNGLFOGCOORDD_PROC*)glfwGetProcAddress("glFogCoordd");
-    glpfFogCoorddv = (PFNGLFOGCOORDDV_PROC*)glfwGetProcAddress("glFogCoorddv");
-    glpfFogCoordPointer = (PFNGLFOGCOORDPOINTER_PROC*)glfwGetProcAddress("glFogCoordPointer");
     glpfSecondaryColor3b = (PFNGLSECONDARYCOLOR3B_PROC*)glfwGetProcAddress("glSecondaryColor3b");
     glpfSecondaryColor3bv = (PFNGLSECONDARYCOLOR3BV_PROC*)glfwGetProcAddress("glSecondaryColor3bv");
     glpfSecondaryColor3d = (PFNGLSECONDARYCOLOR3D_PROC*)glfwGetProcAddress("glSecondaryColor3d");
@@ -246,36 +228,32 @@ void flextLoadOpenGLFunctions(void)
 
     /* GL_VERSION_1_5 */
 
-    glpfGenQueries = (PFNGLGENQUERIES_PROC*)glfwGetProcAddress("glGenQueries");
-    glpfDeleteQueries = (PFNGLDELETEQUERIES_PROC*)glfwGetProcAddress("glDeleteQueries");
-    glpfIsQuery = (PFNGLISQUERY_PROC*)glfwGetProcAddress("glIsQuery");
     glpfBeginQuery = (PFNGLBEGINQUERY_PROC*)glfwGetProcAddress("glBeginQuery");
-    glpfEndQuery = (PFNGLENDQUERY_PROC*)glfwGetProcAddress("glEndQuery");
-    glpfGetQueryiv = (PFNGLGETQUERYIV_PROC*)glfwGetProcAddress("glGetQueryiv");
-    glpfGetQueryObjectiv = (PFNGLGETQUERYOBJECTIV_PROC*)glfwGetProcAddress("glGetQueryObjectiv");
-    glpfGetQueryObjectuiv = (PFNGLGETQUERYOBJECTUIV_PROC*)glfwGetProcAddress("glGetQueryObjectuiv");
     glpfBindBuffer = (PFNGLBINDBUFFER_PROC*)glfwGetProcAddress("glBindBuffer");
-    glpfDeleteBuffers = (PFNGLDELETEBUFFERS_PROC*)glfwGetProcAddress("glDeleteBuffers");
-    glpfGenBuffers = (PFNGLGENBUFFERS_PROC*)glfwGetProcAddress("glGenBuffers");
-    glpfIsBuffer = (PFNGLISBUFFER_PROC*)glfwGetProcAddress("glIsBuffer");
     glpfBufferData = (PFNGLBUFFERDATA_PROC*)glfwGetProcAddress("glBufferData");
     glpfBufferSubData = (PFNGLBUFFERSUBDATA_PROC*)glfwGetProcAddress("glBufferSubData");
-    glpfGetBufferSubData = (PFNGLGETBUFFERSUBDATA_PROC*)glfwGetProcAddress("glGetBufferSubData");
-    glpfMapBuffer = (PFNGLMAPBUFFER_PROC*)glfwGetProcAddress("glMapBuffer");
-    glpfUnmapBuffer = (PFNGLUNMAPBUFFER_PROC*)glfwGetProcAddress("glUnmapBuffer");
+    glpfDeleteBuffers = (PFNGLDELETEBUFFERS_PROC*)glfwGetProcAddress("glDeleteBuffers");
+    glpfDeleteQueries = (PFNGLDELETEQUERIES_PROC*)glfwGetProcAddress("glDeleteQueries");
+    glpfEndQuery = (PFNGLENDQUERY_PROC*)glfwGetProcAddress("glEndQuery");
+    glpfGenBuffers = (PFNGLGENBUFFERS_PROC*)glfwGetProcAddress("glGenBuffers");
+    glpfGenQueries = (PFNGLGENQUERIES_PROC*)glfwGetProcAddress("glGenQueries");
     glpfGetBufferParameteriv = (PFNGLGETBUFFERPARAMETERIV_PROC*)glfwGetProcAddress("glGetBufferParameteriv");
     glpfGetBufferPointerv = (PFNGLGETBUFFERPOINTERV_PROC*)glfwGetProcAddress("glGetBufferPointerv");
+    glpfGetBufferSubData = (PFNGLGETBUFFERSUBDATA_PROC*)glfwGetProcAddress("glGetBufferSubData");
+    glpfGetQueryObjectiv = (PFNGLGETQUERYOBJECTIV_PROC*)glfwGetProcAddress("glGetQueryObjectiv");
+    glpfGetQueryObjectuiv = (PFNGLGETQUERYOBJECTUIV_PROC*)glfwGetProcAddress("glGetQueryObjectuiv");
+    glpfGetQueryiv = (PFNGLGETQUERYIV_PROC*)glfwGetProcAddress("glGetQueryiv");
+    glpfIsBuffer = (PFNGLISBUFFER_PROC*)glfwGetProcAddress("glIsBuffer");
+    glpfIsQuery = (PFNGLISQUERY_PROC*)glfwGetProcAddress("glIsQuery");
+    glpfMapBuffer = (PFNGLMAPBUFFER_PROC*)glfwGetProcAddress("glMapBuffer");
+    glpfUnmapBuffer = (PFNGLUNMAPBUFFER_PROC*)glfwGetProcAddress("glUnmapBuffer");
 
 
     /* GL_VERSION_2_0 */
 
-    glpfBlendEquationSeparate = (PFNGLBLENDEQUATIONSEPARATE_PROC*)glfwGetProcAddress("glBlendEquationSeparate");
-    glpfDrawBuffers = (PFNGLDRAWBUFFERS_PROC*)glfwGetProcAddress("glDrawBuffers");
-    glpfStencilOpSeparate = (PFNGLSTENCILOPSEPARATE_PROC*)glfwGetProcAddress("glStencilOpSeparate");
-    glpfStencilFuncSeparate = (PFNGLSTENCILFUNCSEPARATE_PROC*)glfwGetProcAddress("glStencilFuncSeparate");
-    glpfStencilMaskSeparate = (PFNGLSTENCILMASKSEPARATE_PROC*)glfwGetProcAddress("glStencilMaskSeparate");
     glpfAttachShader = (PFNGLATTACHSHADER_PROC*)glfwGetProcAddress("glAttachShader");
     glpfBindAttribLocation = (PFNGLBINDATTRIBLOCATION_PROC*)glfwGetProcAddress("glBindAttribLocation");
+    glpfBlendEquationSeparate = (PFNGLBLENDEQUATIONSEPARATE_PROC*)glfwGetProcAddress("glBlendEquationSeparate");
     glpfCompileShader = (PFNGLCOMPILESHADER_PROC*)glfwGetProcAddress("glCompileShader");
     glpfCreateProgram = (PFNGLCREATEPROGRAM_PROC*)glfwGetProcAddress("glCreateProgram");
     glpfCreateShader = (PFNGLCREATESHADER_PROC*)glfwGetProcAddress("glCreateShader");
@@ -283,47 +261,51 @@ void flextLoadOpenGLFunctions(void)
     glpfDeleteShader = (PFNGLDELETESHADER_PROC*)glfwGetProcAddress("glDeleteShader");
     glpfDetachShader = (PFNGLDETACHSHADER_PROC*)glfwGetProcAddress("glDetachShader");
     glpfDisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAY_PROC*)glfwGetProcAddress("glDisableVertexAttribArray");
+    glpfDrawBuffers = (PFNGLDRAWBUFFERS_PROC*)glfwGetProcAddress("glDrawBuffers");
     glpfEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAY_PROC*)glfwGetProcAddress("glEnableVertexAttribArray");
     glpfGetActiveAttrib = (PFNGLGETACTIVEATTRIB_PROC*)glfwGetProcAddress("glGetActiveAttrib");
     glpfGetActiveUniform = (PFNGLGETACTIVEUNIFORM_PROC*)glfwGetProcAddress("glGetActiveUniform");
     glpfGetAttachedShaders = (PFNGLGETATTACHEDSHADERS_PROC*)glfwGetProcAddress("glGetAttachedShaders");
     glpfGetAttribLocation = (PFNGLGETATTRIBLOCATION_PROC*)glfwGetProcAddress("glGetAttribLocation");
-    glpfGetProgramiv = (PFNGLGETPROGRAMIV_PROC*)glfwGetProcAddress("glGetProgramiv");
     glpfGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOG_PROC*)glfwGetProcAddress("glGetProgramInfoLog");
-    glpfGetShaderiv = (PFNGLGETSHADERIV_PROC*)glfwGetProcAddress("glGetShaderiv");
+    glpfGetProgramiv = (PFNGLGETPROGRAMIV_PROC*)glfwGetProcAddress("glGetProgramiv");
     glpfGetShaderInfoLog = (PFNGLGETSHADERINFOLOG_PROC*)glfwGetProcAddress("glGetShaderInfoLog");
     glpfGetShaderSource = (PFNGLGETSHADERSOURCE_PROC*)glfwGetProcAddress("glGetShaderSource");
+    glpfGetShaderiv = (PFNGLGETSHADERIV_PROC*)glfwGetProcAddress("glGetShaderiv");
     glpfGetUniformLocation = (PFNGLGETUNIFORMLOCATION_PROC*)glfwGetProcAddress("glGetUniformLocation");
     glpfGetUniformfv = (PFNGLGETUNIFORMFV_PROC*)glfwGetProcAddress("glGetUniformfv");
     glpfGetUniformiv = (PFNGLGETUNIFORMIV_PROC*)glfwGetProcAddress("glGetUniformiv");
+    glpfGetVertexAttribPointerv = (PFNGLGETVERTEXATTRIBPOINTERV_PROC*)glfwGetProcAddress("glGetVertexAttribPointerv");
     glpfGetVertexAttribdv = (PFNGLGETVERTEXATTRIBDV_PROC*)glfwGetProcAddress("glGetVertexAttribdv");
     glpfGetVertexAttribfv = (PFNGLGETVERTEXATTRIBFV_PROC*)glfwGetProcAddress("glGetVertexAttribfv");
     glpfGetVertexAttribiv = (PFNGLGETVERTEXATTRIBIV_PROC*)glfwGetProcAddress("glGetVertexAttribiv");
-    glpfGetVertexAttribPointerv = (PFNGLGETVERTEXATTRIBPOINTERV_PROC*)glfwGetProcAddress("glGetVertexAttribPointerv");
     glpfIsProgram = (PFNGLISPROGRAM_PROC*)glfwGetProcAddress("glIsProgram");
     glpfIsShader = (PFNGLISSHADER_PROC*)glfwGetProcAddress("glIsShader");
     glpfLinkProgram = (PFNGLLINKPROGRAM_PROC*)glfwGetProcAddress("glLinkProgram");
     glpfShaderSource = (PFNGLSHADERSOURCE_PROC*)glfwGetProcAddress("glShaderSource");
-    glpfUseProgram = (PFNGLUSEPROGRAM_PROC*)glfwGetProcAddress("glUseProgram");
+    glpfStencilFuncSeparate = (PFNGLSTENCILFUNCSEPARATE_PROC*)glfwGetProcAddress("glStencilFuncSeparate");
+    glpfStencilMaskSeparate = (PFNGLSTENCILMASKSEPARATE_PROC*)glfwGetProcAddress("glStencilMaskSeparate");
+    glpfStencilOpSeparate = (PFNGLSTENCILOPSEPARATE_PROC*)glfwGetProcAddress("glStencilOpSeparate");
     glpfUniform1f = (PFNGLUNIFORM1F_PROC*)glfwGetProcAddress("glUniform1f");
-    glpfUniform2f = (PFNGLUNIFORM2F_PROC*)glfwGetProcAddress("glUniform2f");
-    glpfUniform3f = (PFNGLUNIFORM3F_PROC*)glfwGetProcAddress("glUniform3f");
-    glpfUniform4f = (PFNGLUNIFORM4F_PROC*)glfwGetProcAddress("glUniform4f");
-    glpfUniform1i = (PFNGLUNIFORM1I_PROC*)glfwGetProcAddress("glUniform1i");
-    glpfUniform2i = (PFNGLUNIFORM2I_PROC*)glfwGetProcAddress("glUniform2i");
-    glpfUniform3i = (PFNGLUNIFORM3I_PROC*)glfwGetProcAddress("glUniform3i");
-    glpfUniform4i = (PFNGLUNIFORM4I_PROC*)glfwGetProcAddress("glUniform4i");
     glpfUniform1fv = (PFNGLUNIFORM1FV_PROC*)glfwGetProcAddress("glUniform1fv");
-    glpfUniform2fv = (PFNGLUNIFORM2FV_PROC*)glfwGetProcAddress("glUniform2fv");
-    glpfUniform3fv = (PFNGLUNIFORM3FV_PROC*)glfwGetProcAddress("glUniform3fv");
-    glpfUniform4fv = (PFNGLUNIFORM4FV_PROC*)glfwGetProcAddress("glUniform4fv");
+    glpfUniform1i = (PFNGLUNIFORM1I_PROC*)glfwGetProcAddress("glUniform1i");
     glpfUniform1iv = (PFNGLUNIFORM1IV_PROC*)glfwGetProcAddress("glUniform1iv");
+    glpfUniform2f = (PFNGLUNIFORM2F_PROC*)glfwGetProcAddress("glUniform2f");
+    glpfUniform2fv = (PFNGLUNIFORM2FV_PROC*)glfwGetProcAddress("glUniform2fv");
+    glpfUniform2i = (PFNGLUNIFORM2I_PROC*)glfwGetProcAddress("glUniform2i");
     glpfUniform2iv = (PFNGLUNIFORM2IV_PROC*)glfwGetProcAddress("glUniform2iv");
+    glpfUniform3f = (PFNGLUNIFORM3F_PROC*)glfwGetProcAddress("glUniform3f");
+    glpfUniform3fv = (PFNGLUNIFORM3FV_PROC*)glfwGetProcAddress("glUniform3fv");
+    glpfUniform3i = (PFNGLUNIFORM3I_PROC*)glfwGetProcAddress("glUniform3i");
     glpfUniform3iv = (PFNGLUNIFORM3IV_PROC*)glfwGetProcAddress("glUniform3iv");
+    glpfUniform4f = (PFNGLUNIFORM4F_PROC*)glfwGetProcAddress("glUniform4f");
+    glpfUniform4fv = (PFNGLUNIFORM4FV_PROC*)glfwGetProcAddress("glUniform4fv");
+    glpfUniform4i = (PFNGLUNIFORM4I_PROC*)glfwGetProcAddress("glUniform4i");
     glpfUniform4iv = (PFNGLUNIFORM4IV_PROC*)glfwGetProcAddress("glUniform4iv");
     glpfUniformMatrix2fv = (PFNGLUNIFORMMATRIX2FV_PROC*)glfwGetProcAddress("glUniformMatrix2fv");
     glpfUniformMatrix3fv = (PFNGLUNIFORMMATRIX3FV_PROC*)glfwGetProcAddress("glUniformMatrix3fv");
     glpfUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FV_PROC*)glfwGetProcAddress("glUniformMatrix4fv");
+    glpfUseProgram = (PFNGLUSEPROGRAM_PROC*)glfwGetProcAddress("glUseProgram");
     glpfValidateProgram = (PFNGLVALIDATEPROGRAM_PROC*)glfwGetProcAddress("glValidateProgram");
     glpfVertexAttrib1d = (PFNGLVERTEXATTRIB1D_PROC*)glfwGetProcAddress("glVertexAttrib1d");
     glpfVertexAttrib1dv = (PFNGLVERTEXATTRIB1DV_PROC*)glfwGetProcAddress("glVertexAttrib1dv");
@@ -368,6 +350,7 @@ void flextLoadOpenGLFunctions(void)
 
 /* ----------------------- Extension flag definitions ---------------------- */
 int FLEXT_EXT_framebuffer_object = GL_FALSE;
+int FLEXT_ARB_texture_float = GL_FALSE;
 int FLEXT_ARB_geometry_shader4 = GL_FALSE;
 int FLEXT_EXT_transform_feedback = GL_FALSE;
 int FLEXT_EXT_texture_filter_anisotropic = GL_FALSE;
@@ -376,94 +359,63 @@ int FLEXT_EXT_texture_filter_anisotropic = GL_FALSE;
 
 /* GL_ARB_geometry_shader4 */
 
-PFNGLPROGRAMPARAMETERIARB_PROC* glpfProgramParameteriARB = NULL;
 PFNGLFRAMEBUFFERTEXTUREARB_PROC* glpfFramebufferTextureARB = NULL;
-PFNGLFRAMEBUFFERTEXTURELAYERARB_PROC* glpfFramebufferTextureLayerARB = NULL;
 PFNGLFRAMEBUFFERTEXTUREFACEARB_PROC* glpfFramebufferTextureFaceARB = NULL;
+PFNGLFRAMEBUFFERTEXTURELAYERARB_PROC* glpfFramebufferTextureLayerARB = NULL;
+PFNGLPROGRAMPARAMETERIARB_PROC* glpfProgramParameteriARB = NULL;
 
 /* GL_EXT_framebuffer_object */
 
-PFNGLISRENDERBUFFEREXT_PROC* glpfIsRenderbufferEXT = NULL;
-PFNGLBINDRENDERBUFFEREXT_PROC* glpfBindRenderbufferEXT = NULL;
-PFNGLDELETERENDERBUFFERSEXT_PROC* glpfDeleteRenderbuffersEXT = NULL;
-PFNGLGENRENDERBUFFERSEXT_PROC* glpfGenRenderbuffersEXT = NULL;
-PFNGLRENDERBUFFERSTORAGEEXT_PROC* glpfRenderbufferStorageEXT = NULL;
-PFNGLGETRENDERBUFFERPARAMETERIVEXT_PROC* glpfGetRenderbufferParameterivEXT = NULL;
-PFNGLISFRAMEBUFFEREXT_PROC* glpfIsFramebufferEXT = NULL;
 PFNGLBINDFRAMEBUFFEREXT_PROC* glpfBindFramebufferEXT = NULL;
-PFNGLDELETEFRAMEBUFFERSEXT_PROC* glpfDeleteFramebuffersEXT = NULL;
-PFNGLGENFRAMEBUFFERSEXT_PROC* glpfGenFramebuffersEXT = NULL;
+PFNGLBINDRENDERBUFFEREXT_PROC* glpfBindRenderbufferEXT = NULL;
 PFNGLCHECKFRAMEBUFFERSTATUSEXT_PROC* glpfCheckFramebufferStatusEXT = NULL;
+PFNGLDELETEFRAMEBUFFERSEXT_PROC* glpfDeleteFramebuffersEXT = NULL;
+PFNGLDELETERENDERBUFFERSEXT_PROC* glpfDeleteRenderbuffersEXT = NULL;
+PFNGLFRAMEBUFFERRENDERBUFFEREXT_PROC* glpfFramebufferRenderbufferEXT = NULL;
 PFNGLFRAMEBUFFERTEXTURE1DEXT_PROC* glpfFramebufferTexture1DEXT = NULL;
 PFNGLFRAMEBUFFERTEXTURE2DEXT_PROC* glpfFramebufferTexture2DEXT = NULL;
 PFNGLFRAMEBUFFERTEXTURE3DEXT_PROC* glpfFramebufferTexture3DEXT = NULL;
-PFNGLFRAMEBUFFERRENDERBUFFEREXT_PROC* glpfFramebufferRenderbufferEXT = NULL;
-PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXT_PROC* glpfGetFramebufferAttachmentParameterivEXT = NULL;
+PFNGLGENFRAMEBUFFERSEXT_PROC* glpfGenFramebuffersEXT = NULL;
+PFNGLGENRENDERBUFFERSEXT_PROC* glpfGenRenderbuffersEXT = NULL;
 PFNGLGENERATEMIPMAPEXT_PROC* glpfGenerateMipmapEXT = NULL;
+PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXT_PROC* glpfGetFramebufferAttachmentParameterivEXT = NULL;
+PFNGLGETRENDERBUFFERPARAMETERIVEXT_PROC* glpfGetRenderbufferParameterivEXT = NULL;
+PFNGLISFRAMEBUFFEREXT_PROC* glpfIsFramebufferEXT = NULL;
+PFNGLISRENDERBUFFEREXT_PROC* glpfIsRenderbufferEXT = NULL;
+PFNGLRENDERBUFFERSTORAGEEXT_PROC* glpfRenderbufferStorageEXT = NULL;
 
 /* GL_EXT_transform_feedback */
 
 PFNGLBEGINTRANSFORMFEEDBACKEXT_PROC* glpfBeginTransformFeedbackEXT = NULL;
-PFNGLENDTRANSFORMFEEDBACKEXT_PROC* glpfEndTransformFeedbackEXT = NULL;
-PFNGLBINDBUFFERRANGEEXT_PROC* glpfBindBufferRangeEXT = NULL;
-PFNGLBINDBUFFEROFFSETEXT_PROC* glpfBindBufferOffsetEXT = NULL;
 PFNGLBINDBUFFERBASEEXT_PROC* glpfBindBufferBaseEXT = NULL;
-PFNGLTRANSFORMFEEDBACKVARYINGSEXT_PROC* glpfTransformFeedbackVaryingsEXT = NULL;
+PFNGLBINDBUFFEROFFSETEXT_PROC* glpfBindBufferOffsetEXT = NULL;
+PFNGLBINDBUFFERRANGEEXT_PROC* glpfBindBufferRangeEXT = NULL;
+PFNGLENDTRANSFORMFEEDBACKEXT_PROC* glpfEndTransformFeedbackEXT = NULL;
 PFNGLGETTRANSFORMFEEDBACKVARYINGEXT_PROC* glpfGetTransformFeedbackVaryingEXT = NULL;
+PFNGLTRANSFORMFEEDBACKVARYINGSEXT_PROC* glpfTransformFeedbackVaryingsEXT = NULL;
 
 /* GL_VERSION_1_2 */
 
-PFNGLBLENDCOLOR_PROC* glpfBlendColor = NULL;
-PFNGLBLENDEQUATION_PROC* glpfBlendEquation = NULL;
+PFNGLCOPYTEXSUBIMAGE3D_PROC* glpfCopyTexSubImage3D = NULL;
 PFNGLDRAWRANGEELEMENTS_PROC* glpfDrawRangeElements = NULL;
 PFNGLTEXIMAGE3D_PROC* glpfTexImage3D = NULL;
 PFNGLTEXSUBIMAGE3D_PROC* glpfTexSubImage3D = NULL;
-PFNGLCOPYTEXSUBIMAGE3D_PROC* glpfCopyTexSubImage3D = NULL;
-PFNGLCOLORTABLE_PROC* glpfColorTable = NULL;
-PFNGLCOLORTABLEPARAMETERFV_PROC* glpfColorTableParameterfv = NULL;
-PFNGLCOLORTABLEPARAMETERIV_PROC* glpfColorTableParameteriv = NULL;
-PFNGLCOPYCOLORTABLE_PROC* glpfCopyColorTable = NULL;
-PFNGLGETCOLORTABLE_PROC* glpfGetColorTable = NULL;
-PFNGLGETCOLORTABLEPARAMETERFV_PROC* glpfGetColorTableParameterfv = NULL;
-PFNGLGETCOLORTABLEPARAMETERIV_PROC* glpfGetColorTableParameteriv = NULL;
-PFNGLCOLORSUBTABLE_PROC* glpfColorSubTable = NULL;
-PFNGLCOPYCOLORSUBTABLE_PROC* glpfCopyColorSubTable = NULL;
-PFNGLCONVOLUTIONFILTER1D_PROC* glpfConvolutionFilter1D = NULL;
-PFNGLCONVOLUTIONFILTER2D_PROC* glpfConvolutionFilter2D = NULL;
-PFNGLCONVOLUTIONPARAMETERF_PROC* glpfConvolutionParameterf = NULL;
-PFNGLCONVOLUTIONPARAMETERFV_PROC* glpfConvolutionParameterfv = NULL;
-PFNGLCONVOLUTIONPARAMETERI_PROC* glpfConvolutionParameteri = NULL;
-PFNGLCONVOLUTIONPARAMETERIV_PROC* glpfConvolutionParameteriv = NULL;
-PFNGLCOPYCONVOLUTIONFILTER1D_PROC* glpfCopyConvolutionFilter1D = NULL;
-PFNGLCOPYCONVOLUTIONFILTER2D_PROC* glpfCopyConvolutionFilter2D = NULL;
-PFNGLGETCONVOLUTIONFILTER_PROC* glpfGetConvolutionFilter = NULL;
-PFNGLGETCONVOLUTIONPARAMETERFV_PROC* glpfGetConvolutionParameterfv = NULL;
-PFNGLGETCONVOLUTIONPARAMETERIV_PROC* glpfGetConvolutionParameteriv = NULL;
-PFNGLGETSEPARABLEFILTER_PROC* glpfGetSeparableFilter = NULL;
-PFNGLSEPARABLEFILTER2D_PROC* glpfSeparableFilter2D = NULL;
-PFNGLGETHISTOGRAM_PROC* glpfGetHistogram = NULL;
-PFNGLGETHISTOGRAMPARAMETERFV_PROC* glpfGetHistogramParameterfv = NULL;
-PFNGLGETHISTOGRAMPARAMETERIV_PROC* glpfGetHistogramParameteriv = NULL;
-PFNGLGETMINMAX_PROC* glpfGetMinmax = NULL;
-PFNGLGETMINMAXPARAMETERFV_PROC* glpfGetMinmaxParameterfv = NULL;
-PFNGLGETMINMAXPARAMETERIV_PROC* glpfGetMinmaxParameteriv = NULL;
-PFNGLHISTOGRAM_PROC* glpfHistogram = NULL;
-PFNGLMINMAX_PROC* glpfMinmax = NULL;
-PFNGLRESETHISTOGRAM_PROC* glpfResetHistogram = NULL;
-PFNGLRESETMINMAX_PROC* glpfResetMinmax = NULL;
 
 /* GL_VERSION_1_3 */
 
 PFNGLACTIVETEXTURE_PROC* glpfActiveTexture = NULL;
-PFNGLSAMPLECOVERAGE_PROC* glpfSampleCoverage = NULL;
-PFNGLCOMPRESSEDTEXIMAGE3D_PROC* glpfCompressedTexImage3D = NULL;
-PFNGLCOMPRESSEDTEXIMAGE2D_PROC* glpfCompressedTexImage2D = NULL;
-PFNGLCOMPRESSEDTEXIMAGE1D_PROC* glpfCompressedTexImage1D = NULL;
-PFNGLCOMPRESSEDTEXSUBIMAGE3D_PROC* glpfCompressedTexSubImage3D = NULL;
-PFNGLCOMPRESSEDTEXSUBIMAGE2D_PROC* glpfCompressedTexSubImage2D = NULL;
-PFNGLCOMPRESSEDTEXSUBIMAGE1D_PROC* glpfCompressedTexSubImage1D = NULL;
-PFNGLGETCOMPRESSEDTEXIMAGE_PROC* glpfGetCompressedTexImage = NULL;
 PFNGLCLIENTACTIVETEXTURE_PROC* glpfClientActiveTexture = NULL;
+PFNGLCOMPRESSEDTEXIMAGE1D_PROC* glpfCompressedTexImage1D = NULL;
+PFNGLCOMPRESSEDTEXIMAGE2D_PROC* glpfCompressedTexImage2D = NULL;
+PFNGLCOMPRESSEDTEXIMAGE3D_PROC* glpfCompressedTexImage3D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE1D_PROC* glpfCompressedTexSubImage1D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE2D_PROC* glpfCompressedTexSubImage2D = NULL;
+PFNGLCOMPRESSEDTEXSUBIMAGE3D_PROC* glpfCompressedTexSubImage3D = NULL;
+PFNGLGETCOMPRESSEDTEXIMAGE_PROC* glpfGetCompressedTexImage = NULL;
+PFNGLLOADTRANSPOSEMATRIXD_PROC* glpfLoadTransposeMatrixd = NULL;
+PFNGLLOADTRANSPOSEMATRIXF_PROC* glpfLoadTransposeMatrixf = NULL;
+PFNGLMULTTRANSPOSEMATRIXD_PROC* glpfMultTransposeMatrixd = NULL;
+PFNGLMULTTRANSPOSEMATRIXF_PROC* glpfMultTransposeMatrixf = NULL;
 PFNGLMULTITEXCOORD1D_PROC* glpfMultiTexCoord1d = NULL;
 PFNGLMULTITEXCOORD1DV_PROC* glpfMultiTexCoord1dv = NULL;
 PFNGLMULTITEXCOORD1F_PROC* glpfMultiTexCoord1f = NULL;
@@ -496,25 +448,24 @@ PFNGLMULTITEXCOORD4I_PROC* glpfMultiTexCoord4i = NULL;
 PFNGLMULTITEXCOORD4IV_PROC* glpfMultiTexCoord4iv = NULL;
 PFNGLMULTITEXCOORD4S_PROC* glpfMultiTexCoord4s = NULL;
 PFNGLMULTITEXCOORD4SV_PROC* glpfMultiTexCoord4sv = NULL;
-PFNGLLOADTRANSPOSEMATRIXF_PROC* glpfLoadTransposeMatrixf = NULL;
-PFNGLLOADTRANSPOSEMATRIXD_PROC* glpfLoadTransposeMatrixd = NULL;
-PFNGLMULTTRANSPOSEMATRIXF_PROC* glpfMultTransposeMatrixf = NULL;
-PFNGLMULTTRANSPOSEMATRIXD_PROC* glpfMultTransposeMatrixd = NULL;
+PFNGLSAMPLECOVERAGE_PROC* glpfSampleCoverage = NULL;
 
 /* GL_VERSION_1_4 */
 
+PFNGLBLENDCOLOR_PROC* glpfBlendColor = NULL;
+PFNGLBLENDEQUATION_PROC* glpfBlendEquation = NULL;
 PFNGLBLENDFUNCSEPARATE_PROC* glpfBlendFuncSeparate = NULL;
+PFNGLFOGCOORDPOINTER_PROC* glpfFogCoordPointer = NULL;
+PFNGLFOGCOORDD_PROC* glpfFogCoordd = NULL;
+PFNGLFOGCOORDDV_PROC* glpfFogCoorddv = NULL;
+PFNGLFOGCOORDF_PROC* glpfFogCoordf = NULL;
+PFNGLFOGCOORDFV_PROC* glpfFogCoordfv = NULL;
 PFNGLMULTIDRAWARRAYS_PROC* glpfMultiDrawArrays = NULL;
 PFNGLMULTIDRAWELEMENTS_PROC* glpfMultiDrawElements = NULL;
 PFNGLPOINTPARAMETERF_PROC* glpfPointParameterf = NULL;
 PFNGLPOINTPARAMETERFV_PROC* glpfPointParameterfv = NULL;
 PFNGLPOINTPARAMETERI_PROC* glpfPointParameteri = NULL;
 PFNGLPOINTPARAMETERIV_PROC* glpfPointParameteriv = NULL;
-PFNGLFOGCOORDF_PROC* glpfFogCoordf = NULL;
-PFNGLFOGCOORDFV_PROC* glpfFogCoordfv = NULL;
-PFNGLFOGCOORDD_PROC* glpfFogCoordd = NULL;
-PFNGLFOGCOORDDV_PROC* glpfFogCoorddv = NULL;
-PFNGLFOGCOORDPOINTER_PROC* glpfFogCoordPointer = NULL;
 PFNGLSECONDARYCOLOR3B_PROC* glpfSecondaryColor3b = NULL;
 PFNGLSECONDARYCOLOR3BV_PROC* glpfSecondaryColor3bv = NULL;
 PFNGLSECONDARYCOLOR3D_PROC* glpfSecondaryColor3d = NULL;
@@ -551,35 +502,31 @@ PFNGLWINDOWPOS3SV_PROC* glpfWindowPos3sv = NULL;
 
 /* GL_VERSION_1_5 */
 
-PFNGLGENQUERIES_PROC* glpfGenQueries = NULL;
-PFNGLDELETEQUERIES_PROC* glpfDeleteQueries = NULL;
-PFNGLISQUERY_PROC* glpfIsQuery = NULL;
 PFNGLBEGINQUERY_PROC* glpfBeginQuery = NULL;
-PFNGLENDQUERY_PROC* glpfEndQuery = NULL;
-PFNGLGETQUERYIV_PROC* glpfGetQueryiv = NULL;
-PFNGLGETQUERYOBJECTIV_PROC* glpfGetQueryObjectiv = NULL;
-PFNGLGETQUERYOBJECTUIV_PROC* glpfGetQueryObjectuiv = NULL;
 PFNGLBINDBUFFER_PROC* glpfBindBuffer = NULL;
-PFNGLDELETEBUFFERS_PROC* glpfDeleteBuffers = NULL;
-PFNGLGENBUFFERS_PROC* glpfGenBuffers = NULL;
-PFNGLISBUFFER_PROC* glpfIsBuffer = NULL;
 PFNGLBUFFERDATA_PROC* glpfBufferData = NULL;
 PFNGLBUFFERSUBDATA_PROC* glpfBufferSubData = NULL;
-PFNGLGETBUFFERSUBDATA_PROC* glpfGetBufferSubData = NULL;
-PFNGLMAPBUFFER_PROC* glpfMapBuffer = NULL;
-PFNGLUNMAPBUFFER_PROC* glpfUnmapBuffer = NULL;
+PFNGLDELETEBUFFERS_PROC* glpfDeleteBuffers = NULL;
+PFNGLDELETEQUERIES_PROC* glpfDeleteQueries = NULL;
+PFNGLENDQUERY_PROC* glpfEndQuery = NULL;
+PFNGLGENBUFFERS_PROC* glpfGenBuffers = NULL;
+PFNGLGENQUERIES_PROC* glpfGenQueries = NULL;
 PFNGLGETBUFFERPARAMETERIV_PROC* glpfGetBufferParameteriv = NULL;
 PFNGLGETBUFFERPOINTERV_PROC* glpfGetBufferPointerv = NULL;
+PFNGLGETBUFFERSUBDATA_PROC* glpfGetBufferSubData = NULL;
+PFNGLGETQUERYOBJECTIV_PROC* glpfGetQueryObjectiv = NULL;
+PFNGLGETQUERYOBJECTUIV_PROC* glpfGetQueryObjectuiv = NULL;
+PFNGLGETQUERYIV_PROC* glpfGetQueryiv = NULL;
+PFNGLISBUFFER_PROC* glpfIsBuffer = NULL;
+PFNGLISQUERY_PROC* glpfIsQuery = NULL;
+PFNGLMAPBUFFER_PROC* glpfMapBuffer = NULL;
+PFNGLUNMAPBUFFER_PROC* glpfUnmapBuffer = NULL;
 
 /* GL_VERSION_2_0 */
 
-PFNGLBLENDEQUATIONSEPARATE_PROC* glpfBlendEquationSeparate = NULL;
-PFNGLDRAWBUFFERS_PROC* glpfDrawBuffers = NULL;
-PFNGLSTENCILOPSEPARATE_PROC* glpfStencilOpSeparate = NULL;
-PFNGLSTENCILFUNCSEPARATE_PROC* glpfStencilFuncSeparate = NULL;
-PFNGLSTENCILMASKSEPARATE_PROC* glpfStencilMaskSeparate = NULL;
 PFNGLATTACHSHADER_PROC* glpfAttachShader = NULL;
 PFNGLBINDATTRIBLOCATION_PROC* glpfBindAttribLocation = NULL;
+PFNGLBLENDEQUATIONSEPARATE_PROC* glpfBlendEquationSeparate = NULL;
 PFNGLCOMPILESHADER_PROC* glpfCompileShader = NULL;
 PFNGLCREATEPROGRAM_PROC* glpfCreateProgram = NULL;
 PFNGLCREATESHADER_PROC* glpfCreateShader = NULL;
@@ -587,47 +534,51 @@ PFNGLDELETEPROGRAM_PROC* glpfDeleteProgram = NULL;
 PFNGLDELETESHADER_PROC* glpfDeleteShader = NULL;
 PFNGLDETACHSHADER_PROC* glpfDetachShader = NULL;
 PFNGLDISABLEVERTEXATTRIBARRAY_PROC* glpfDisableVertexAttribArray = NULL;
+PFNGLDRAWBUFFERS_PROC* glpfDrawBuffers = NULL;
 PFNGLENABLEVERTEXATTRIBARRAY_PROC* glpfEnableVertexAttribArray = NULL;
 PFNGLGETACTIVEATTRIB_PROC* glpfGetActiveAttrib = NULL;
 PFNGLGETACTIVEUNIFORM_PROC* glpfGetActiveUniform = NULL;
 PFNGLGETATTACHEDSHADERS_PROC* glpfGetAttachedShaders = NULL;
 PFNGLGETATTRIBLOCATION_PROC* glpfGetAttribLocation = NULL;
-PFNGLGETPROGRAMIV_PROC* glpfGetProgramiv = NULL;
 PFNGLGETPROGRAMINFOLOG_PROC* glpfGetProgramInfoLog = NULL;
-PFNGLGETSHADERIV_PROC* glpfGetShaderiv = NULL;
+PFNGLGETPROGRAMIV_PROC* glpfGetProgramiv = NULL;
 PFNGLGETSHADERINFOLOG_PROC* glpfGetShaderInfoLog = NULL;
 PFNGLGETSHADERSOURCE_PROC* glpfGetShaderSource = NULL;
+PFNGLGETSHADERIV_PROC* glpfGetShaderiv = NULL;
 PFNGLGETUNIFORMLOCATION_PROC* glpfGetUniformLocation = NULL;
 PFNGLGETUNIFORMFV_PROC* glpfGetUniformfv = NULL;
 PFNGLGETUNIFORMIV_PROC* glpfGetUniformiv = NULL;
+PFNGLGETVERTEXATTRIBPOINTERV_PROC* glpfGetVertexAttribPointerv = NULL;
 PFNGLGETVERTEXATTRIBDV_PROC* glpfGetVertexAttribdv = NULL;
 PFNGLGETVERTEXATTRIBFV_PROC* glpfGetVertexAttribfv = NULL;
 PFNGLGETVERTEXATTRIBIV_PROC* glpfGetVertexAttribiv = NULL;
-PFNGLGETVERTEXATTRIBPOINTERV_PROC* glpfGetVertexAttribPointerv = NULL;
 PFNGLISPROGRAM_PROC* glpfIsProgram = NULL;
 PFNGLISSHADER_PROC* glpfIsShader = NULL;
 PFNGLLINKPROGRAM_PROC* glpfLinkProgram = NULL;
 PFNGLSHADERSOURCE_PROC* glpfShaderSource = NULL;
-PFNGLUSEPROGRAM_PROC* glpfUseProgram = NULL;
+PFNGLSTENCILFUNCSEPARATE_PROC* glpfStencilFuncSeparate = NULL;
+PFNGLSTENCILMASKSEPARATE_PROC* glpfStencilMaskSeparate = NULL;
+PFNGLSTENCILOPSEPARATE_PROC* glpfStencilOpSeparate = NULL;
 PFNGLUNIFORM1F_PROC* glpfUniform1f = NULL;
-PFNGLUNIFORM2F_PROC* glpfUniform2f = NULL;
-PFNGLUNIFORM3F_PROC* glpfUniform3f = NULL;
-PFNGLUNIFORM4F_PROC* glpfUniform4f = NULL;
-PFNGLUNIFORM1I_PROC* glpfUniform1i = NULL;
-PFNGLUNIFORM2I_PROC* glpfUniform2i = NULL;
-PFNGLUNIFORM3I_PROC* glpfUniform3i = NULL;
-PFNGLUNIFORM4I_PROC* glpfUniform4i = NULL;
 PFNGLUNIFORM1FV_PROC* glpfUniform1fv = NULL;
-PFNGLUNIFORM2FV_PROC* glpfUniform2fv = NULL;
-PFNGLUNIFORM3FV_PROC* glpfUniform3fv = NULL;
-PFNGLUNIFORM4FV_PROC* glpfUniform4fv = NULL;
+PFNGLUNIFORM1I_PROC* glpfUniform1i = NULL;
 PFNGLUNIFORM1IV_PROC* glpfUniform1iv = NULL;
+PFNGLUNIFORM2F_PROC* glpfUniform2f = NULL;
+PFNGLUNIFORM2FV_PROC* glpfUniform2fv = NULL;
+PFNGLUNIFORM2I_PROC* glpfUniform2i = NULL;
 PFNGLUNIFORM2IV_PROC* glpfUniform2iv = NULL;
+PFNGLUNIFORM3F_PROC* glpfUniform3f = NULL;
+PFNGLUNIFORM3FV_PROC* glpfUniform3fv = NULL;
+PFNGLUNIFORM3I_PROC* glpfUniform3i = NULL;
 PFNGLUNIFORM3IV_PROC* glpfUniform3iv = NULL;
+PFNGLUNIFORM4F_PROC* glpfUniform4f = NULL;
+PFNGLUNIFORM4FV_PROC* glpfUniform4fv = NULL;
+PFNGLUNIFORM4I_PROC* glpfUniform4i = NULL;
 PFNGLUNIFORM4IV_PROC* glpfUniform4iv = NULL;
 PFNGLUNIFORMMATRIX2FV_PROC* glpfUniformMatrix2fv = NULL;
 PFNGLUNIFORMMATRIX3FV_PROC* glpfUniformMatrix3fv = NULL;
 PFNGLUNIFORMMATRIX4FV_PROC* glpfUniformMatrix4fv = NULL;
+PFNGLUSEPROGRAM_PROC* glpfUseProgram = NULL;
 PFNGLVALIDATEPROGRAM_PROC* glpfValidateProgram = NULL;
 PFNGLVERTEXATTRIB1D_PROC* glpfVertexAttrib1d = NULL;
 PFNGLVERTEXATTRIB1DV_PROC* glpfVertexAttrib1dv = NULL;

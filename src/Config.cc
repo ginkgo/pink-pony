@@ -4,7 +4,7 @@
 Config::Config()
     : width(800),
       height(600),
-      window_mode(GLFW_FULLSCREEN),
+      window_mode(FULLSCREEN),
       fsaa_samples(4),
       swap_interval(1),
       polygon_mode(GL_FILL),
@@ -108,7 +108,7 @@ void Config::set_value(string name, string value)
     
     int ival = 0;
     float fval = 0.0f;
-    int winmodeval = GLFW_WINDOW;
+    WindowMode winmodeval = WINDOW;
     GLenum polymodeval = GL_FILL;
     string sval = "";
     V2f vec2val;
@@ -151,11 +151,11 @@ void Config::set_value(string name, string value)
         bval = ival; // Try to parse as integer (0/1)
     }
 
-    if (value.find("window") != string::npos &&
-        value.find("window") < value.find(';')) {
-        winmodeval = GLFW_WINDOW;
+    if (value.find("fullscreen") != string::npos &&
+        value.find("fullscreen") < value.find(';')) {
+        winmodeval = FULLSCREEN;
     } else {
-        winmodeval = GLFW_FULLSCREEN;
+        winmodeval = WINDOW;
     }
 
     if (value.find("fill") != string::npos &&
@@ -321,7 +321,7 @@ bool Config::write_file(string filename)
     os << "height = " << height << ";" << endl;
     os << "swap_interval = " << swap_interval <<  ";" << endl;
     os << "window_mode = ";
-    if (window_mode == GLFW_WINDOW)
+    if (window_mode == WINDOW)
         os << "window;" << endl;
     else
         os << "fullscreen;" << endl;

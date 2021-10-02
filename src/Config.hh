@@ -3,6 +3,11 @@
 
 #include "cinquo.hh"
 
+enum WindowMode {
+    FULLSCREEN,
+    WINDOW
+};
+
 class Config
 {
     public:
@@ -10,7 +15,7 @@ class Config
     
     // Window properties:
     int width, height;
-    int window_mode;
+    WindowMode window_mode;
     int fsaa_samples;
     int swap_interval;
     GLenum polygon_mode;

@@ -99,21 +99,6 @@ void type_convert( GLenum in_type, GLsizei in_size,
         out_size = in_size * 1;
         break;
 
-    case GL_UNSIGNED_INT_VEC2_EXT:
-        out_type = GL_UNSIGNED_INT;
-        out_size = in_size * 2;
-        break;
-
-    case GL_UNSIGNED_INT_VEC3_EXT:
-        out_type = GL_UNSIGNED_INT;
-        out_size = in_size * 3;
-        break;
-
-    case GL_UNSIGNED_INT_VEC4_EXT:
-        out_type = GL_UNSIGNED_INT;
-        out_size = in_size * 4;
-        break;
-
     case GL_FLOAT_MAT2:
         out_type = GL_FLOAT;
         out_size = in_size * 4;

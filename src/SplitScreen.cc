@@ -2,16 +2,17 @@
 
 SplitScreen* active_screen = NULL;
 
-void GLFWCALL screen_size_callback(int width, int height)
+void screen_size_callback(GLFWwindow* window, int width, int height)
 {
     if (active_screen != NULL)
         active_screen->resize(width, height);
 }
 
-SplitScreen::SplitScreen(int width, int height, int subscreens)
+SplitScreen::SplitScreen(GLFWwindow* window, int width, int height, int subscreens)
     : size(width, height),
       subscreen_count(subscreens),
-      current(0)
+      current(0),
+      window(window)
 {
     split(subscreens);
 }
@@ -20,14 +21,14 @@ SplitScreen::~SplitScreen()
 {
     if (active_screen == this) {
         active_screen = NULL;
-        glfwSetWindowSizeCallback(NULL);
+        glfwSetWindowSizeCallback(window, NULL);
     }
 }
 
 void SplitScreen::set_glfw_callback()
 {
     active_screen = this;
-    glfwSetWindowSizeCallback(screen_size_callback);
+    glfwSetWindowSizeCallback(window, screen_size_callback);
 }
 
 void SplitScreen::split(int subscreens)

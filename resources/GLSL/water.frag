@@ -26,7 +26,7 @@ float dispf(vec2 p)
 
 vec3 displacement(vec3 wp, float dist)
 {
-    return wp + normal * (dispf(wp.xz) * min(1.0,2.0/pow(dist,1)) * 0.5 + 0.5) * 4.0;
+    return wp + normal * (dispf(wp.xz) * min(1.0,2.0/dist) * 0.5 + 0.5) * 4.0;
 }
 
 void main (void)

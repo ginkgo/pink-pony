@@ -145,7 +145,7 @@ void Texture2D::send_to_GPU()
     } else {
         glTexImage2D(GL_TEXTURE_2D,   // target
                      0,               // level
-                     GL_RGBA32F,  // internalFormat
+                     GL_RGBA32F_ARB,  // internalFormat
                      size.x,          // width
                      size.y,          // height
                      0,               // border
