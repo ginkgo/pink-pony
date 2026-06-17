@@ -1,7 +1,7 @@
 // Window properties
 
-width = 1600;
-height = 900;
+width = 2188;
+height = 1450;
 swap_interval = 1;
 window_mode = window;
 fsaa_samples = 2;
@@ -21,10 +21,10 @@ use_particles = true;
 // Level properties
 
 levels_file = "levels.xml";
-selected_level = 4;
-heightmap_file = "levels/ring.png";
-level_size = (1500 90 1500);
-water_level = 30;
+selected_level = 1;
+heightmap_file = "levels/flower.png";
+level_size = (1500 80 1500);
+water_level = 45;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);
 heightmap_shininess = 50;
@@ -55,7 +55,7 @@ pony_height = 3;
 
 // Game properties
 
-ai_count = 0;
+ai_count = 3;
 player_count = 4;
 heart_count = 10;
 pony_start_speed = 15;

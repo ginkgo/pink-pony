@@ -11,6 +11,7 @@
 #include "Widget.hh"
 
 #include <map>
+#include <memory>
 
 class Menu
 {
@@ -28,7 +29,7 @@ class Menu
     Config* config;
     Skydome* skydome;
 
-    auto_ptr<Heightmap> heightmap;
+	std::unique_ptr<Heightmap> heightmap;
 
     Camera camera;
 
@@ -39,23 +40,23 @@ class Menu
         string filename;
         V3f size;
         float water_level;
-        
+
         Level() {};
 
         Level(string n, string f, V3f s, float w)
-            : name(n), 
-              filename(f), 
-              size(s), 
+            : name(n),
+              filename(f),
+              size(s),
               water_level(w) {};
     };
 
     map<string, Level> levels;
     vector<string> level_names;
-    
+
     void load_levels(string levels_file);
     void reload_level(string level);
     void draw(void);
-    
+
     Button logo_button;
     TextArea start_button;
     Button quit_button;
@@ -69,7 +70,7 @@ class Menu
     SimpleLayout mainscreen_layout;
 
     SimpleLayout settings_layout;
-    
+
     TextArea settings_text;
     Button settings_done;
     TextArea particles_text;
@@ -86,8 +87,8 @@ class Menu
     Button next_resolution, prev_resolution;
     TextArea water_text;
     Button next_water, prev_water;
-    
-    
+
+
     V2f screen_size;
 
     void setup_layout(void);
@@ -132,13 +133,13 @@ class Menu
     bool needs_reset;
 
     GLFWwindow* window;
-    
+
     public:
 
     void toggle_fullscreen(void);
     void toggle_music(void);
 
-    Menu(Config* config, 
+    Menu(Config* config,
          Skydome* skydome,
          GLFWwindow* window);
 

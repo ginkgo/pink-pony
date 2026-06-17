@@ -21,7 +21,7 @@ void menu_resize_callback(GLFWwindow* window, int width, int height)
 
 void menu_key_callback(GLFWwindow* window, int key, int scancode, int state, int mods)
 {
-    if (state != GLFW_PRESS || Menu::callback_menu == NULL ) 
+    if (state != GLFW_PRESS || Menu::callback_menu == NULL )
         return;
 
     if (key == GLFW_KEY_SPACE)
@@ -36,7 +36,7 @@ void Menu::toggle_fullscreen(void)
 {
     config->window_mode = (config->window_mode == WINDOW)?FULLSCREEN:WINDOW;
     status = RESET;
-    running = false;    
+    running = false;
 }
 
 void Menu::toggle_music(void)
@@ -54,7 +54,7 @@ void Menu::mouse_callback(int button, int action)
 
     if (action == GLFW_PRESS) {
         V2f pos(x,screen_size.y - y);
-        
+
         switch (active_screen) {
         case MAIN_SCREEN:
             mainscreen_layout.area_clicked(pos);
@@ -86,13 +86,13 @@ void Menu::resize_callback(int width, int height)
 
 #define TEXT_COLOR Color4f(1,1,1,0.5)
 
-Menu::Menu (Config* config, 
+Menu::Menu (Config* config,
             Skydome* skydome,
             GLFWwindow* window)
     : active_screen(MAIN_SCREEN),
       config(config),
       skydome(skydome),
-      heightmap(NULL),
+      heightmap(nullptr),
       logo_button(config->resource_dir + "textures/logo.png"),
       start_button("Start", config),
       quit_button(config->resource_dir + "textures/quit.png"),
@@ -133,10 +133,10 @@ Menu::Menu (Config* config,
       window(window),
       computer_slider(config),
       human_slider(config)
-    
+
 {
     getErrors();
-    
+
     // Some static test data
     load_levels(config->resource_dir + config->levels_file);
 
@@ -147,7 +147,7 @@ Menu::Menu (Config* config,
     next_level(0);
 
     setup_layout();
-    
+
     computer_no.set_text(to_string(computers));
     human_no.set_text(to_string(humans));
 
@@ -158,7 +158,7 @@ void Menu::setup_settings(void)
 {
     int modes_found;
     const GLFWvidmode* vidmodes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &modes_found);
-    
+
     resolutions.resize(modes_found);
 
     for (int i = 0; i < modes_found; ++i) {
@@ -200,8 +200,8 @@ void Menu::setup_settings(void)
     }
 
     water_setting = config->use_water_fallback ? 0 : 1;
-    
-    load_settings();    
+
+    load_settings();
 }
 
 void Menu::load_settings(void)
@@ -220,13 +220,13 @@ void Menu::load_settings(void)
         config->use_particles = true;
         config->heart_explosion_particles = 10000;
         config->pony_explosion_particles = 50000;
-        config->pony_particle_rate = 100.0;    
+        config->pony_particle_rate = 100.0;
     } else {
         particles_text.set_text("Too many particles");
         config->use_particles = true;
         config->heart_explosion_particles = 40000;
         config->pony_explosion_particles = 200000;
-        config->pony_particle_rate = 400.0;        
+        config->pony_particle_rate = 400.0;
     }
 
     if (fullscreen_setting == 0) {
@@ -286,10 +286,10 @@ void Menu::load_levels(string levels_file)
         cerr << "Could not load levels file " << levels_file << ".\n";
         assert(0);
     }
-    
+
     TiXmlNode* levels_node = doc.FirstChild();
 
-    if (levels_node->Type() != TiXmlNode::ELEMENT ||
+    if (levels_node->Type() != TiXmlNode::TINYXML_ELEMENT ||
         string(levels_node->Value()) != "levels") {
         cerr << "Could not find 'levels' element in " << levels_file << endl;
         assert(0);
@@ -297,8 +297,8 @@ void Menu::load_levels(string levels_file)
 
     for (TiXmlNode* level_node = levels_node->ToElement()->FirstChild(); level_node != NULL;
          level_node = level_node->NextSibling()) {
-        
-        if (level_node->Type() != TiXmlNode::ELEMENT ||
+
+        if (level_node->Type() != TiXmlNode::TINYXML_ELEMENT ||
             string(level_node->Value()) != "level") {
             cerr << "Could not find 'level' element in " << levels_file << endl;
             assert(0);
@@ -359,7 +359,7 @@ void Menu::change_humans(int dir)
     config->player_count = humans+computers;
 
     computer_no.set_text(to_string(computers));
-    human_no.set_text(to_string(humans));    
+    human_no.set_text(to_string(humans));
 }
 
 void Menu::change_computers(int dir)
@@ -386,7 +386,7 @@ void Menu::change_computers(int dir)
     config->player_count = humans+computers;
 
     computer_no.set_text(to_string(computers));
-    human_no.set_text(to_string(humans));    
+    human_no.set_text(to_string(humans));
 }
 
 void Menu::setup_layout(void)
@@ -424,19 +424,19 @@ void Menu::setup_layout(void)
                                                         V2f(47.0/48.0, 5.0/32.0)));
 
     next_level_button.on_click()
-        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1)); 
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1));
     prev_level_button.on_click()
-        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), -1)); 
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), -1));
     level_name_text.on_click()
-        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1)); 
+        .connect(sigc::bind(sigc::mem_fun(this,&Menu::next_level), 1));
     start_button.on_click()
-        .connect(sigc::mem_fun(this,&Menu::start));  
+        .connect(sigc::mem_fun(this,&Menu::start));
     quit_button.on_click()
-        .connect(sigc::mem_fun(this,&Menu::quit)); 
+        .connect(sigc::mem_fun(this,&Menu::quit));
     computer_slider.on_click()
-        .connect(sigc::mem_fun(this,&Menu::change_computers)); 
+        .connect(sigc::mem_fun(this,&Menu::change_computers));
     human_slider.on_click()
-        .connect(sigc::mem_fun(this,&Menu::change_humans)); 
+        .connect(sigc::mem_fun(this,&Menu::change_humans));
     options_button.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::go_to_screen), SETTINGS_SCREEN));
 
@@ -548,7 +548,7 @@ void Menu::setup_layout(void)
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_water),-1));
     next_water.on_click()
         .connect(sigc::bind(sigc::mem_fun(this,&Menu::change_water), 1));
-    
+
 }
 
 void Menu::change_particles(int direction)
@@ -560,12 +560,12 @@ void Menu::change_particles(int direction)
 }
 
 void Menu::change_fullscreen(int direction) {
-    
+
     if (fullscreen_setting == 0)
         fullscreen_setting = 1;
-    else 
+    else
         fullscreen_setting = 0;
-    
+
     needs_reset = true;
 
 
@@ -573,10 +573,10 @@ void Menu::change_fullscreen(int direction) {
 }
 
 void Menu::change_minimap(int direction) {
-    
+
     if (minimap_setting == 0)
         minimap_setting = 1;
-    else 
+    else
         minimap_setting = 0;
 
 
@@ -601,7 +601,7 @@ void Menu::change_antialiasing(int direction) {
 
     needs_reset = true;
 
-    load_settings();    
+    load_settings();
 }
 
 void Menu::change_hearts(int direction) {
@@ -613,13 +613,13 @@ void Menu::change_hearts(int direction) {
 }
 
 void Menu::change_resolution(int direction) {
-    resolution_setting = (resolution_setting + 
-                          resolutions.size() + 
+    resolution_setting = (resolution_setting +
+                          resolutions.size() +
                           direction) % resolutions.size();
 
     needs_reset = true;
 
-    load_settings();    
+    load_settings();
 }
 
 void Menu::change_water(int direction) {
@@ -627,7 +627,7 @@ void Menu::change_water(int direction) {
 
     needs_reset = true;
 
-    load_settings();    
+    load_settings();
 }
 
 void Menu::go_to_screen(ScreenType screen)
@@ -646,7 +646,7 @@ void Menu::next_level(int d)
     config->selected_level = config->selected_level + level_names.size() + d;
     config->selected_level = config->selected_level % level_names.size();
 
-    cout << "Selected level " << config->selected_level 
+    cout << "Selected level " << config->selected_level
          << ": " << level_names[config->selected_level] << endl;
 
     reload_level(level_names[config->selected_level]);
@@ -655,10 +655,10 @@ void Menu::next_level(int d)
 void Menu::reload_level(string level)
 {
     getErrors();
-    
+
     config->heightmap_file = levels[level].filename;
     config->water_level = levels[level].water_level;
-    
+
     V3f s = levels[level].size;
 
     config->level_size = Box3f(V3f(-s.x/2,   0,-s.z/2),
@@ -678,7 +678,7 @@ void Menu::reload_level(string level)
 
 
     level_name_text.set_text(level);
-}    
+}
 
 Menu::MenuStatus Menu::run(void)
 {
@@ -704,7 +704,7 @@ Menu::MenuStatus Menu::run(void)
         glfwPollEvents();
         glfwSwapBuffers(window);
 
-        if (glfwGetKey( window, GLFW_KEY_ESCAPE ) || 
+        if (glfwGetKey( window, GLFW_KEY_ESCAPE ) ||
             glfwWindowShouldClose( window )) {
             status = QUIT;
             running = false;
@@ -762,7 +762,7 @@ void Menu::draw(void)
 
     switch (active_screen) {
     case MAIN_SCREEN:
-        mainscreen_layout.draw();    
+        mainscreen_layout.draw();
         break;
     case SETTINGS_SCREEN:
         settings_layout.draw();

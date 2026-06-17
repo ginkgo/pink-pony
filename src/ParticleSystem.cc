@@ -93,31 +93,31 @@ void CPUParticleSystem::step_simulation(float time_diff)
 }
 
 bool CPUParticleSystem::step_particle(float time_diff,
-                                      Particle& in, 
-                                      Particle& out) 
+                                      Particle& in,
+                                      Particle& out)
 {
     // Take care: in can reference the same position as out!
-    
+
     if (in.life <= time_diff) return false;
-    
-    
+
+
     out.vel = in.vel + time_diff * V3f(0,-9.81 * 2, 0);
     out.pos = in.pos + out.vel * time_diff;
     out.color = in.color / in.life * (in.life - time_diff);
     out.life = in.life-time_diff;
-    
+
     V3f rel_pos = box_unmap(level_size, out.pos);
 
-    V2f uv(rel_pos.x, 1-rel_pos.z); 
+    V2f uv(rel_pos.x, 1-rel_pos.z);
     float rel_level = heightmap.get_value(uv);
 
     if (rel_water_level > rel_level && rel_pos.y < rel_water_level) {
         out.pos.y = water_level;
-        out.vel = (reflect(out.vel.normalized(), V3f(0,1,0)) * 
+        out.vel = (reflect(out.vel.normalized(), V3f(0,1,0)) *
                    out.vel.length() * 0.25);
     } else if (rel_pos.y < rel_level) {
         out.pos.y = (rel_level * level_size.size().y) + level_size.min.y;
-        
+
         V3f dx = rel_pos + V3f(0.01,0,0);
         V3f dy = rel_pos + V3f(0,0,0.01);
         dx.y = heightmap.get_value(V2f(dx.x,1-dx.z));
@@ -128,11 +128,11 @@ bool CPUParticleSystem::step_particle(float time_diff,
         V3f normal = (dx % dy);
         normal.normalize();
 
-        out.vel = (reflect(out.vel.normalized(), normal) * 
+        out.vel = (reflect(out.vel.normalized(), normal) *
                    out.vel.length() * 0.75);
     }
 
-    return true;    
+    return true;
 }
 
 void CPUParticleSystem::draw(Camera& camera)
@@ -228,7 +228,7 @@ void CPUParticleSystem::draw(Camera& camera)
     glTexCoordPointer(2, GL_FLOAT, 0, &(uv_coordinates[0]));
     glVertexPointer(3, GL_FLOAT, 0, &(positions[0]));
 
-    
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE);
     glBlendEquation(GL_FUNC_ADD);
@@ -240,10 +240,10 @@ void CPUParticleSystem::draw(Camera& camera)
     glDisable(GL_BLEND);
 
     glDepthMask(GL_TRUE);
-    
+
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);    
+    glDisableClientState(GL_VERTEX_ARRAY);
 
     draw_shader.unbind();
 
@@ -310,7 +310,7 @@ void TransformFeedbackParticleSystem::step_simulation(float time_diff)
             glVertex(p.pos);
         }
     }
-    
+
     glEnd();
 
     feedback.draw(step_shader);
@@ -339,19 +339,19 @@ void TransformFeedbackParticleSystem::draw(Camera& camera)
         feedback.swap();
         calculating = false;
     }
-    
+
     V3f up, right;
-    
+
     camera.get_billboard_axes(up, right);
-    
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE);
     glBlendEquation(GL_FUNC_ADD);
 
     glDepthMask(GL_FALSE);
-    
+
     draw_shader.bind();
-    
+
     particle_tex.bind(GL_TEXTURE0);
 
     draw_shader.set_uniform("up", up);
@@ -370,19 +370,19 @@ void TransformFeedbackParticleSystem::draw(Camera& camera)
     glDepthMask(GL_TRUE);
 }
 
-void ParticleSystem::add_source(ParticleSource* source) 
+void ParticleSystem::add_source(ParticleSource* source)
 {
     sources.insert(source);
 }
 
-void ParticleSystem::del_source(ParticleSource* source) 
+void ParticleSystem::del_source(ParticleSource* source)
 {
     sources.erase(source);
 }
 
 StaticParticleSource::StaticParticleSource(ParticleSystem* system,
                                            V3f position,
-                                           double rate, 
+                                           double rate,
                                            Color4f color)
     : ParticleSource(system),
       time(0.0), rate(1.0/rate), position(position), color(color),
@@ -402,26 +402,26 @@ void StaticParticleSource::get_particle(Particle& p) {
                         rand.nextf(0.4,0.6)));
     p.color = Color4f(c.x,c.y,c.z,1);
     p.life = 10.0f + rand.nextf(0.0,20.0);
-    
+
     p.vel = V3f(0,0,0);
 
-    p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
+    p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)
              * (fabs(Imath::gaussRand(rand)) + 2)
              * 50);
 
 
-} 
+}
 
 PonyParticleSource::PonyParticleSource(ParticleSystem* system)
     : ParticleSource(system),
-      time(0.0), rate(1.0/rate),
+      time(0.0), rate(0.0),
       pos(0,0,0), dir(0,1,0), color(1,0,0,1),
       explosion_particles(0),
       rand((unsigned long)(100000*glfwGetTime())){}
 
 bool PonyParticleSource::has_particle()
 {
-    return (explosion_particles > 0 || 
+    return (explosion_particles > 0 ||
             (rate > 0.0 && time > rate));
 }
 
@@ -430,33 +430,33 @@ void PonyParticleSource::get_particle(Particle& p) {
         --explosion_particles;
         p.pos = pos - V3f(0,4,0) + Imath::solidSphereRand<V3f, Rand32>(rand) * 2;
         V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
-        
+
         V3f c   = hsv2rgb(V3f(frac(hsv.x + gaussRand(rand) / 8.0),
                               1.0,
                               rand.nextf(0.4,0.6)));
         p.color = Color4f(c.x,c.y,c.z,1);
         p.life = 10.0f + rand.nextf(0.0,20.0);
-        
+
         p.vel = V3f(0,0,0);
-        
-        p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
+
+        p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)
                  * (fabs(Imath::gaussRand(rand)) + 2)
                  * 10);
 
     } else if (rate > 0.0) {
         time -= rate;
-        
+
         V3f offset = Imath::solidSphereRand<V3f, Rand32>(rand) * 3;
 
-        p.pos   = pos + offset;   
+        p.pos   = pos + offset;
         V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
-        
+
         V3f c   = hsv2rgb(V3f(frac(hsv.x + gaussRand(rand) / 8.0),
                               1.0,
                               rand.nextf(0.4,0.6)));
         p.color = Color4f(c.x,c.y,c.z,1);
         p.life  = 10.0f + rand.nextf(0.0,20.0);
-    
+
         p.vel   = -dir * 10 + offset * 1;
 
     }
@@ -508,20 +508,20 @@ void ParticleExplosionSource::get_particle(Particle& p)
 
         p.pos = pos - V3f(0,4,0) + Imath::solidSphereRand<V3f, Rand32>(rand) * 2;
         V3f hsv = rgb2hsv(V3f(color.r,color.g,color.b));
-        
+
         V3f c   = hsv2rgb(V3f(frac(hsv.x + gaussRand(rand) * var),
                               1.0,
                               rand.nextf(0.4,0.6)));
         p.color = Color4f(c.x,c.y,c.z,1);
         p.life = 10.0f + rand.nextf(0.0,20.0);
-        
+
         p.vel = V3f(0,0,0);
-        
-        p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)  
+
+        p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)
                  * (fabs(Imath::gaussRand(rand)) + 2)
                  * 10);
 
-        
+
         --count;
         if (count < 1) {
             explosions.resize(s);
