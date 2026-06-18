@@ -9,11 +9,11 @@ Color4f hsvColor(const Color4f& rgbColor)
     float Max   = max(max(rgbColor.r, rgbColor.g), rgbColor.b);
     float Delta = Max - Min;
 
-    hsv.b = Max;                               
-    	
+    hsv.b = Max;
+
     if(Max != float(0))
 	    {
-		    hsv.g = Delta / hsv.b;    
+		    hsv.g = Delta / hsv.b;
 			float h = float(0);
 
 		    if(rgbColor.r == Max)
@@ -25,8 +25,8 @@ Color4f hsvColor(const Color4f& rgbColor)
 		    else
 			    // between magenta & cyan
 			    h = float(240) + float(60) * (rgbColor.r - rgbColor.g) / Delta;
-            
-		    if(h < float(0)) 
+
+		    if(h < float(0))
                 hsv.r = h + float(360);
 			else
 				hsv.r = h;
@@ -82,13 +82,13 @@ Color4f rgbColor(const Color4f& hsvColor)
                     rgbColor.b = hsv.b;
                     break;
                 case 4:
-                    rgbColor.r = q; 
-                    rgbColor.g = o; 
+                    rgbColor.r = q;
+                    rgbColor.g = o;
                     rgbColor.b = hsv.b;
                     break;
                 case 5:
-                    rgbColor.r = hsv.b; 
-                    rgbColor.g = o; 
+                    rgbColor.r = hsv.b;
+                    rgbColor.g = o;
                     rgbColor.b = p;
                     break;
                 }
@@ -136,7 +136,7 @@ Pony::Pony(int i, Config* config, ParticleSystem* particle_system)
         for (pos.y = 0; pos.y < size.y; ++pos.y) {
             Color4f c = texture.get_color(pos);
             c = hsvColor(c);
-            
+
             c.r += pony_hue;
 
             if (c.r > 360) c.r -= 360;
@@ -159,7 +159,7 @@ Pony::Decision PlayerPony::decide(PonyGame* game, int i)
     float& steer = decision.steer;
 
     GLFWwindow* window = game->get_window();
-    
+
     if (glfwGetKey(window, up) == GLFW_PRESS)
         accel += 1.0;
     if (glfwGetKey(window, down) == GLFW_PRESS)
@@ -177,7 +177,7 @@ Pony::Decision PlayerPony::decide(PonyGame* game, int i)
         float axes[10];
 
         std::copy(axes_c, axes_c+n, axes);
-        
+
         if (n >= 2) {
 
             if (fabs(axes[0]) < 0.2) axes[0] = 0.0;
@@ -346,7 +346,7 @@ void Pony::move(PonyGame* game, double timeDiff, int i)
         V3f pos3 = game->terrain()->get_pos(pos,false);
         V3f dir3 = game->terrain()->get_pos(pos+dir,false)-pos3;
 
-        particle_source.set_pos(pos3 + V3f(0,2,0) + dir3 * 4);
+        particle_source.set_pos(pos3 + V3f(0,2,0));
         particle_source.set_dir(dir3);
         particle_source.set_rate(pow(speed/5.0,3)
                                  * game->config()->pony_particle_rate / 100.0);

@@ -19,10 +19,6 @@ ParticleSystem* ParticleSystem::make_particle_system(GLuint max_particles,
 {
     if (!config->use_particles) {
         return new InactiveParticleSystem(max_particles, config);
-    } else if (!FLEXT_ARB_geometry_shader4 || !FLEXT_EXT_transform_feedback) {
-        cout << "No hardware accelerated particles. :("
-             << " Using CPU fallback." << endl;
-        return new CPUParticleSystem(max_particles/10, config);
     } else {
         cout << "Hardware accelerated particles supported! :D" << endl;
         return new TransformFeedbackParticleSystem(max_particles, config);
@@ -255,12 +251,10 @@ TransformFeedbackParticleSystem::TransformFeedbackParticleSystem
         : last_stat_print(glfwGetTime()), calculating(false),
           step_shader(config->resource_dir + "GLSL/step_particles",
                       config->resource_dir + "GLSL/step_particles",
-                      config->resource_dir + "GLSL/step_particles",
-                      GL_POINTS, GL_POINTS, 1),
+                      config->resource_dir + "GLSL/step_particles"),
           draw_shader(config->resource_dir + "GLSL/draw_particles",
                       config->resource_dir + "GLSL/draw_particles",
-                      config->resource_dir + "GLSL/draw_particles",
-                      GL_POINTS, GL_TRIANGLE_STRIP, 4),
+                      config->resource_dir + "GLSL/draw_particles"),
           feedback(step_shader, GL_POINTS,
                    "out_pos out_color out_vel out_life",
                    max_particles, true),
@@ -270,13 +264,18 @@ TransformFeedbackParticleSystem::TransformFeedbackParticleSystem
     heightmap.normalize();
     heightmap.send_to_GPU();
 
-    feedback.add_draw_bindings(step_shader,
-                               "gl_Vertex gl_Color vel life");
-    feedback.add_draw_bindings(draw_shader,
-                               "gl_Vertex gl_Color _ _");
+    pos_attrib = step_shader.bind_attribute_location(0, "pos");
+    color_attrib = step_shader.bind_attribute_location(1, "color");
+    vel_attrib = step_shader.bind_attribute_location(2, "vel");
+    life_attrib = step_shader.bind_attribute_location(3, "life");
 
-    vel_attrib = step_shader.get_attribute_location("vel");
-    life_attrib = step_shader.get_attribute_location("life");
+    draw_shader.bind_attribute_location(pos_attrib, "pos");
+    draw_shader.bind_attribute_location(color_attrib, "color");
+
+    feedback.add_draw_bindings(step_shader,
+                               "pos color vel life");
+    feedback.add_draw_bindings(draw_shader,
+                               "pos color _ _");
 
     step_shader.bind();
     step_shader.set_uniform("water_level", config->water_level);
@@ -306,8 +305,8 @@ void TransformFeedbackParticleSystem::step_simulation(float time_diff)
 
             glVertexAttrib3f(vel_attrib, p.vel.x, p.vel.y, p.vel.z);
             glVertexAttrib1f(life_attrib, p.life);
-            glColor(p.color);
-            glVertex(p.pos);
+            glVertexAttrib4fv(color_attrib, p.color.getValue());
+            glVertexAttrib4f(pos_attrib, p.pos.x, p.pos.y, p.pos.z, 1.0f);
         }
     }
 
@@ -357,6 +356,7 @@ void TransformFeedbackParticleSystem::draw(Camera& camera)
     draw_shader.set_uniform("up", up);
     draw_shader.set_uniform("right", right);
     draw_shader.set_uniform("texture", 0);
+    draw_shader.set_uniform("mvp", camera.gen_mvp());
 
     feedback.draw(draw_shader);
 
@@ -436,8 +436,6 @@ void PonyParticleSource::get_particle(Particle& p) {
                               rand.nextf(0.4,0.6)));
         p.color = Color4f(c.x,c.y,c.z,1);
         p.life = 10.0f + rand.nextf(0.0,20.0);
-
-        p.vel = V3f(0,0,0);
 
         p.vel = (Imath::hollowSphereRand<V3f, Rand32>(rand)
                  * (fabs(Imath::gaussRand(rand)) + 2)

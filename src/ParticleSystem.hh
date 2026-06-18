@@ -24,7 +24,7 @@ struct Particle
 class ParticleSystem
 {
     friend class ParticleSource;
-    
+
     protected:
     std::set<ParticleSource*> sources;
 
@@ -70,7 +70,7 @@ class CPUParticleSystem : public ParticleSystem
 
     double last_stat_print;
     Shader draw_shader;
-    
+
     Texture2D particle_tex;
     Texture2D heightmap;
 
@@ -100,7 +100,11 @@ class TransformFeedbackParticleSystem : public ParticleSystem
 
     Shader step_shader, draw_shader;
 
-    GLint vel_attrib, life_attrib;
+    GLuint pos_attrib;
+    GLuint color_attrib;
+    GLuint vel_attrib;
+    GLuint life_attrib;
+
     TransformFeedback feedback;
 
     Texture2D particle_tex;
@@ -123,18 +127,18 @@ class ParticleSource
 
     public:
 
-    ParticleSource(ParticleSystem* system) 
+    ParticleSource(ParticleSystem* system)
         : system(system) { system->add_source(this);};
     virtual ~ParticleSource() { if (system!=NULL)system->del_source(this);};
 
     protected:
-    
+
     virtual bool has_particle() = 0;
     virtual void get_particle(Particle& p) = 0;
 
     private:
-    
-    void remove_link() {system = NULL;}; 
+
+    void remove_link() {system = NULL;};
 };
 
 class StaticParticleSource : ParticleSource

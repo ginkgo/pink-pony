@@ -192,6 +192,7 @@ void Menu::setup_settings(void)
 
     heart_setting = config->heart_count;
 
+	resolution_setting = 0;
     for (unsigned i = 0; i < resolutions.size(); ++i) {
         if ((int)(resolutions[i].x * resolutions[i].y) >= config->width*config->height) {
             resolution_setting = i;

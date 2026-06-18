@@ -24,10 +24,7 @@ class Shader
 
     Shader(std::string vertex_shader_file,
            std::string geometry_shader_file,
-           std::string fragment_shader_file,
-           GLenum geometry_input_type,
-           GLenum geometry_output_type,
-           GLint  geometry_max_vertex_out);
+           std::string fragment_shader_file);
 
     ~Shader();
 
@@ -44,16 +41,22 @@ class Shader
     {
         std::cout << program << " " << vertex_shader << " " << fragment_shader << std::endl;
     }
-  
+
     void release()
     {
         glUseProgram(0);
     };
 
-    GLint get_attribute_location(std::string name)
+    GLint get_attribute_location(const std::string &name)
     {
         return glGetAttribLocation(program, name.c_str());
     }
+
+	GLuint bind_attribute_location(GLuint index, const std::string &name)
+	{
+		glBindAttribLocation(program, index, name.c_str());
+		return index;
+	}
 
     void set_uniform(const char* uniform, GLint value)
     {
@@ -95,7 +98,7 @@ class Shader
     void set_uniform(const char* uniform, const M44f &matrix)
     {
         GLint uniformLocation = glGetUniformLocation(program, uniform);
-        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, (GLfloat*)&matrix);
+        glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, matrix.getValue());
     };
 
     void set_uniform1(const char* uniform, float *elements, int count)
@@ -125,7 +128,7 @@ class Shader
     void set_uniform(const char* uniform, const vector<M44f>& matrices)
     {
         GLint uniformLocation = glGetUniformLocation(program, uniform);
-        glUniformMatrix4fv(uniformLocation, matrices.size(), 
+        glUniformMatrix4fv(uniformLocation, matrices.size(),
                            GL_FALSE, (GLfloat*)&matrices[0]);
 
     }

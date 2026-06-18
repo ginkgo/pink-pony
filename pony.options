@@ -1,7 +1,7 @@
 // Window properties
 
-width = 2188;
-height = 1450;
+width = 2560;
+height = 1440;
 swap_interval = 1;
 window_mode = window;
 fsaa_samples = 2;
@@ -13,17 +13,17 @@ resource_dir = "resources/";
 
 // Particles
 
-pony_explosion_particles = 5000;
-heart_explosion_particles = 1000;
-pony_particle_rate = 10;
+pony_explosion_particles = 50000;
+heart_explosion_particles = 10000;
+pony_particle_rate = 100;
 use_particles = true;
 
 // Level properties
 
 levels_file = "levels.xml";
-selected_level = 1;
-heightmap_file = "levels/flower.png";
-level_size = (1500 80 1500);
+selected_level = 2;
+heightmap_file = "levels/heart.png";
+level_size = (1500 90 1500);
 water_level = 45;
 heightmap_specular = (1 1 1 1);
 heightmap_diffuse = (0 0 0 0);

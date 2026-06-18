@@ -22,24 +22,24 @@ int main(int argc, char** argv)
 {
     string config_file = "pony.options";
     bool running = true;
-    
+
     if (argc > 1) {
         config_file = string(argv[1]);
     }
-    
+
     if (!config.read_file(config_file)) {
         cerr << "Could not read config file." << endl;
         return 1;
     }
-    
+
     glfwInit();
 
     glfwWindowHint(GLFW_SAMPLES, config.fsaa_samples);
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-    
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
     GLFWwindow* window = glfwCreateWindow(config.width, config.height,
                                           "Pink Pony <3",
                                           config.window_mode==FULLSCREEN ? glfwGetPrimaryMonitor() : NULL,
@@ -47,21 +47,21 @@ int main(int argc, char** argv)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(config.swap_interval);
 
-    if (!flextInit(window)) {
+    if (!flextInit()) {
         return 1;
     }
-    
+
     bool reset_video = false;
 
     Mix_Music* music = NULL;
     start_music(&music, config.resource_dir + config.background_music);
-    
+
     while (running) {
 
         if (reset_video) {
 
             glfwDestroyWindow(window);
-            
+
             window = glfwCreateWindow(config.width, config.height,
                                       "Pink Pony <3",
                                       config.window_mode==FULLSCREEN ? glfwGetPrimaryMonitor() : NULL,
@@ -79,9 +79,9 @@ int main(int argc, char** argv)
             Skydome skydome(config.resource_dir + config.sky_texture);
 
             getErrors();
-            
+
             Menu::MenuStatus menu_status;
-        
+
             {
                 Menu menu(&config, &skydome, window);
 
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
                 continue;
             }
 
-            if (menu_status == Menu::START) {        
+            if (menu_status == Menu::START) {
                 Heightmap heightmap(config.resource_dir + config.heightmap_file,
                                     config.level_size,
                                     config.water_level,
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
                                     config.noise_texture,
                                     config.sky_texture,
                                     &config);
-    
+
                 PonyPoints points(config.player_count, &config);
 
                 bool run_game = true;
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
                     else if (config.permute_start_positions)
                         permute_start_positions(config);
 
-                    
+
                     int human_count = config.player_count - config.ai_count;
                     if (human_count == 0) human_count = config.player_count;
 
@@ -137,7 +137,7 @@ int main(int argc, char** argv)
                 cout << "Quit game." << endl;
                 running = false;
             }
-        
+
             if (glfwWindowShouldClose( window )) {
                 running = false;
             }
@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 
     glfwTerminate();
 
-    return 0;   
+    return 0;
 }
 
 
@@ -166,7 +166,7 @@ void randomize_start_positions(Config& config, Heightmap& heightmap)
 
     Rand32 rand((unsigned long int)(glfwGetTime() * 100000));
 
-    V2f size = V2f(config.level_size.size().x, 
+    V2f size = V2f(config.level_size.size().x,
                    config.level_size.size().z);
 
     for (int i = 0; i < config.player_count; i++) {
@@ -193,9 +193,9 @@ void randomize_start_positions(Config& config, Heightmap& heightmap)
             if (!found) continue;
 
             V2f dir = V2f(sin(angle),cos(angle));
-                          
+
             for (int j = 0; j < config.min_start_distance; j++) {
-                if (heightmap.below_water(pos + (dir * j), 
+                if (heightmap.below_water(pos + (dir * j),
                                           config.water_tolerance)) {
                     found = false;
                     break;
@@ -205,17 +205,17 @@ void randomize_start_positions(Config& config, Heightmap& heightmap)
             if (found) {
                 config.pony_start[i] = pos;
                 config.pony_start_angle[i] = angle;
-            }                          
-            
+            }
+
         }
-        
+
     }
 }
 
 
 void start_music(Mix_Music** music, const string& music_file)
 {
-    
+
     int audio_rate = 44100;
     Uint16 audio_format = MIX_DEFAULT_FORMAT; /* 16-bit stereo */
     int audio_channels = 2;
@@ -243,9 +243,9 @@ void start_music(Mix_Music** music, const string& music_file)
     // Play music in infinite loop
     Mix_PlayMusic(*music, -1);
 
-    
+
     Mix_VolumeMusic(config.music_volume);
-    
+
 }
 
 

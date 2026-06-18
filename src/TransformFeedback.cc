@@ -20,7 +20,7 @@ TransformFeedback::TransformFeedback(GLuint program,
       attributes()
 {
     glGenQueries(1, &query);
-    
+
     glGenBuffers(1, &back_buffer);
     if (swappable) {
         glGenBuffers(1, &front_buffer);
@@ -31,32 +31,32 @@ TransformFeedback::TransformFeedback(GLuint program,
     vector<const char*> varying_list;
     read_tokens(varyings, varying_list);
 
-    glTransformFeedbackVaryingsEXT(program, varying_list.size(), varying_list.data(), GL_INTERLEAVED_ATTRIBS_EXT);
+    glTransformFeedbackVaryings(program, varying_list.size(), varying_list.data(), GL_INTERLEAVED_ATTRIBS);
     getErrors();
     glLinkProgram(program);
     getErrors();
-    
+
     GLint varying_count;
-    glGetProgramiv(program, GL_TRANSFORM_FEEDBACK_VARYINGS_EXT, &varying_count);
+    glGetProgramiv(program, GL_TRANSFORM_FEEDBACK_VARYINGS, &varying_count);
     for (GLuint i = 0; i < (GLuint)varying_count; ++i) {
         Parameter varying;
-        
+
         char name[100];
         GLsizei size;
         GLenum type;
 
-        glGetTransformFeedbackVaryingEXT(program, i, sizeof(name), NULL, &size, &type, name);
-        
+        glGetTransformFeedbackVarying(program, i, sizeof(name), NULL, &size, &type, name);
+
         varying.name = string(name);
         type_convert(type, size, varying.type, varying.size, varying.mem_size);
-        
-        this->varyings.push_back(varying);        
+
+        this->varyings.push_back(varying);
     }
-    
+
     free_tokens(varying_list);
 
     getErrors();
-    
+
     GLsizei size = 0;
     vector<GLint> locations;
     for (unsigned int i = 0; i < this->varyings.size(); ++i) {
@@ -94,7 +94,7 @@ TransformFeedback::TransformFeedback(GLuint program,
 TransformFeedback::~TransformFeedback()
 {
     glDeleteQueries(1, &query);
-    
+
     glDeleteBuffers(1, &back_buffer);
     if (swappable) {
         glDeleteBuffers(1, &front_buffer);
@@ -103,18 +103,18 @@ TransformFeedback::~TransformFeedback()
 
 void TransformFeedback::begin()
 {
-    glBindBufferOffsetEXT(GL_TRANSFORM_FEEDBACK_BUFFER_EXT, 0, back_buffer, 0);
-    glBeginTransformFeedbackEXT(primitive_type);
-    glEnable(GL_RASTERIZER_DISCARD_EXT);
-    glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_EXT, query);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, back_buffer);
+    glBeginTransformFeedback(primitive_type);
+    glEnable(GL_RASTERIZER_DISCARD);
+    glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, query);
     getErrors();
 }
 
 void TransformFeedback::end()
 {
-    glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_EXT);
-    glEndTransformFeedbackEXT();
-    glDisable(GL_RASTERIZER_DISCARD_EXT);
+    glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+    glEndTransformFeedback();
+    glDisable(GL_RASTERIZER_DISCARD);
     getErrors();
 }
 
@@ -123,7 +123,7 @@ GLuint TransformFeedback::finish()
     glGetQueryObjectuiv(query, GL_QUERY_RESULT, &primitive_count);
 
     return primitive_count;
-} 
+}
 
 GLuint TransformFeedback::get_buffer() {
     return front_buffer;
@@ -137,14 +137,14 @@ void TransformFeedback::swap() {
     std::swap(back_buffer,front_buffer);
 }
 
-void TransformFeedback::add_draw_bindings(GLuint program, 
+void TransformFeedback::add_draw_bindings(GLuint program,
                                           string attributes)
 {
     stringstream ss(attributes);
 
     vector<Parameter>& att = this->attributes[program];
     att.clear();
-    
+
     GLint active_attributes;
     glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &active_attributes);
 
@@ -154,7 +154,7 @@ void TransformFeedback::add_draw_bindings(GLuint program,
     while(!ss.eof()) {
         Parameter attribute;
         ss >> attribute.name;
-        attribute.location = 
+        attribute.location =
             glGetAttribLocation(program, attribute.name.c_str());
 
         bool found = false;
@@ -163,7 +163,7 @@ void TransformFeedback::add_draw_bindings(GLuint program,
             char name[100];
             GLsizei size;
             GLenum type;
-            
+
             glGetActiveAttrib(program, i,
                               100, NULL, &size, &type, name);
 
@@ -176,13 +176,13 @@ void TransformFeedback::add_draw_bindings(GLuint program,
             }
 
         }
-        
+
         if (!found) {
             if (attribute.name != "_" &&
-                attribute.name != "gl_Vertex" && 
-                attribute.name != "gl_Color" && 
-                attribute.name != "gl_Normal") 
-                cerr << "Could not find vertex attrib " 
+                attribute.name != "gl_Vertex" &&
+                attribute.name != "gl_Color" &&
+                attribute.name != "gl_Normal")
+                cerr << "Could not find vertex attrib "
                      << "\"" << attribute.name << "\"" << "." << endl;
             attribute.type = var[att.size()].type;
             attribute.size = var[att.size()].size;
@@ -191,8 +191,8 @@ void TransformFeedback::add_draw_bindings(GLuint program,
 
         att.push_back(attribute);
     }
-       
-    getErrors(); 
+
+    getErrors();
     GLsizei size = 0;
     for (unsigned int i = 0; i < att.size(); ++i) {
         att[i].offset = size;
@@ -212,12 +212,12 @@ void TransformFeedback::add_draw_bindings(GLuint program,
             att[i].mem_size != var[i].mem_size ||
             att[i].stride != var[i].stride ||
             att[i].offset != var[i].offset) {
-            
-            cerr << "TransformFeedback: varying " 
+
+            cerr << "TransformFeedback: varying "
                  << var[i].name << " and attribute " << att[i].name
                  << " are incompatible." << endl;
         }
-    } 
+    }
 
     getErrors();
 }
@@ -243,15 +243,15 @@ void TransformFeedback::draw(GLuint program)
                                   ((char*)0) + att[i].offset);
         } else if (att[i].name == "gl_Vertex") {
             glEnableClientState(GL_VERTEX_ARRAY);
-            glVertexPointer(att[i].size, att[i].type, att[i].stride, 
+            glVertexPointer(att[i].size, att[i].type, att[i].stride,
                             ((char*)0) + att[i].offset);
         } else if (att[i].name == "gl_Color") {
             glEnableClientState(GL_COLOR_ARRAY);
-            glColorPointer(att[i].size, att[i].type, att[i].stride, 
+            glColorPointer(att[i].size, att[i].type, att[i].stride,
                            ((char*)0) + att[i].offset);
         } else if (att[i].name == "gl_Normal") {
             glEnableClientState(GL_NORMAL_ARRAY);
-            glNormalPointer(att[i].type, att[i].stride, 
+            glNormalPointer(att[i].type, att[i].stride,
                             ((char*)0) + att[i].offset);
         }
         getErrors();
@@ -283,6 +283,6 @@ void TransformFeedback::draw(GLuint program)
     }
     getErrors();
 
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

@@ -11,7 +11,7 @@ string read_file(string file_name)
     ifstream is;
     string tmp;
     stringstream buffer;
- 
+
     is.open(file_name.c_str());
 
     while(getline(is, tmp)) {
@@ -19,18 +19,18 @@ string read_file(string file_name)
     };
 
     is.close();
-  
-    return buffer.str(); 
+
+    return buffer.str();
 };
 
 void program_log(GLuint program)
 {
     char logBuffer[LOG_BUFFER_SIZE];
     GLsizei length;
-  
+
     logBuffer[0] = '\0';
     glGetProgramInfoLog(program, LOG_BUFFER_SIZE, &length,logBuffer);
-  
+
     if (length > 0) {
         cout << logBuffer << endl;
     }
@@ -40,7 +40,7 @@ void shader_log(GLuint shader)
 {
     char logBuffer[LOG_BUFFER_SIZE];
     GLsizei length;
-  
+
     logBuffer[0] = '\0';
     glGetShaderInfoLog(shader, LOG_BUFFER_SIZE, &length,logBuffer);
 
@@ -53,7 +53,7 @@ GLuint compile_shader(const char* source, string name, GLenum type)
 {
     GLint status;
     GLuint shader = GL_FALSE;
-  
+
     shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, NULL);
     glCompileShader(shader);
@@ -82,30 +82,30 @@ Shader::Shader(string file_name)
     fragment_shader = 0;
 
     getErrors();
-    
+
     GLint status = GL_FALSE;
-  
+
     getErrors();
-    
+
     vertex_source = read_file(file_name + string(".vert"));
     fragment_source = read_file(file_name + string(".frag"));
 
     vertex_shader = compile_shader(vertex_source.c_str(),
                                    file_name + string(".vert"),
                                    GL_VERTEX_SHADER);
-  
+
     fragment_shader = compile_shader(fragment_source.c_str(),
                                      file_name + string(".frag"),
                                      GL_FRAGMENT_SHADER);
-  
+
     getErrors();
-    
+
     program = glCreateProgram();
     glAttachShader(program, vertex_shader);
     glAttachShader(program, fragment_shader);
 
     getErrors();
-    
+
     glLinkProgram(program);
 
     glGetProgramiv(program, GL_LINK_STATUS, &status);
@@ -131,20 +131,20 @@ Shader::Shader(string vertex_shader_file,
     program = 0;
     vertex_shader = 0;
     fragment_shader = 0;
- 
+
     GLint status = GL_FALSE;
-  
+
     vertex_source = read_file(vertex_shader_file + string(".vert"));
     fragment_source = read_file(fragment_shader_file + string(".frag"));
 
     vertex_shader = compile_shader(vertex_source.c_str(),
                                    vertex_shader_file + string(".vert"),
                                    GL_VERTEX_SHADER);
-  
+
     fragment_shader = compile_shader(fragment_source.c_str(),
                                      fragment_shader_file + string(".frag"),
                                      GL_FRAGMENT_SHADER);
-  
+
     program = glCreateProgram();
     glAttachShader(program, vertex_shader);
     glAttachShader(program, fragment_shader);
@@ -163,10 +163,7 @@ Shader::Shader(string vertex_shader_file,
 
 Shader::Shader(string vertex_shader_file,
                string geometry_shader_file,
-               string fragment_shader_file,
-               GLenum geometry_input_type,
-               GLenum geometry_output_type,
-               GLint  geometry_vertex_out)
+               string fragment_shader_file)
     : vertex_source(""),
       geometry_source(""),
       fragment_source(""),
@@ -178,9 +175,9 @@ Shader::Shader(string vertex_shader_file,
     program = 0;
     vertex_shader = 0;
     fragment_shader = 0;
- 
+
     GLint status = GL_FALSE;
-  
+
     vertex_source = read_file(vertex_shader_file + string(".vert"));
     geometry_source = read_file(geometry_shader_file + string(".geom"));
     fragment_source = read_file(fragment_shader_file + string(".frag"));
@@ -189,29 +186,19 @@ Shader::Shader(string vertex_shader_file,
     vertex_shader = compile_shader(vertex_source.c_str(),
                                    vertex_shader_file + string(".vert"),
                                    GL_VERTEX_SHADER);
-  
+
     geometry_shader = compile_shader(geometry_source.c_str(),
                                      geometry_shader_file + string(".geom"),
-                                     GL_GEOMETRY_SHADER_ARB);
-  
+                                     GL_GEOMETRY_SHADER);
+
     fragment_shader = compile_shader(fragment_source.c_str(),
                                      fragment_shader_file + string(".frag"),
                                      GL_FRAGMENT_SHADER);
-  
+
     program = glCreateProgram();
     glAttachShader(program, vertex_shader);
     glAttachShader(program, geometry_shader);
     glAttachShader(program, fragment_shader);
-
-    glProgramParameteriARB(program, 
-                           GL_GEOMETRY_INPUT_TYPE_ARB, 
-                           geometry_input_type);
-    glProgramParameteriARB(program, 
-                           GL_GEOMETRY_OUTPUT_TYPE_ARB, 
-                           geometry_output_type);
-    glProgramParameteriARB(program,
-                           GL_GEOMETRY_VERTICES_OUT_ARB, 
-                           geometry_vertex_out);
 
     glLinkProgram(program);
 

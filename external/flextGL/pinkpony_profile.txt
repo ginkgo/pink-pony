@@ -1,0 +1,3 @@
+version 3.3 compatibility
+extension EXT_framebuffer_object optional
+extension EXT_texture_filter_anisotropic optional

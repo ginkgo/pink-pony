@@ -12,13 +12,13 @@ class Camera
     float fov;
     float near_plane;
 	float far_plane;
-    
+
     public:
 
     Camera() {};
     Camera(float aspect, float fov,
            float near_plane, float far_plane);
-    
+
     void init(float aspect, float fov,
               float near_plane, float far_plane) {
         this->aspect = aspect;
@@ -26,13 +26,13 @@ class Camera
         this->near_plane = near_plane;
         this->fov = fov;
     };
-    
+
     void look_at(V3f position, V3f focus)
     {
         this->position = position;
         this->focus = focus;
     }
-    
+
     V3f get_position()
     {
         return position;
@@ -86,9 +86,11 @@ class Camera
     {
         this->fov = fov;
     }
-    
+
     void set_matrices();
-    
+
+    M44f gen_mvp();
+
 };
 
 #endif
