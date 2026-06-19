@@ -192,11 +192,13 @@ void Menu::setup_settings(void)
 
     heart_setting = config->heart_count;
 
-	resolution_setting = 0;
-    for (unsigned i = 0; i < resolutions.size(); ++i) {
-        if ((int)(resolutions[i].x * resolutions[i].y) >= config->width*config->height) {
-            resolution_setting = i;
-            break;
+    if (config->window_mode == FULLSCREEN) {
+        resolution_setting = 0;
+        for (unsigned i = 0; i < resolutions.size(); ++i) {
+            if ((int)(resolutions[i].x * resolutions[i].y) >= config->width*config->height) {
+                resolution_setting = i;
+                break;
+            }
         }
     }
 
@@ -262,10 +264,12 @@ void Menu::load_settings(void)
         config->heart_count = heart_setting;
     }
 
-    resolution_text.set_text(to_string(resolutions[resolution_setting].x) + "x" +
-                             to_string(resolutions[resolution_setting].y));
-    config->width = resolutions[resolution_setting].x;
-    config->height = resolutions[resolution_setting].y;
+    if (config->window_mode == FULLSCREEN) {
+        resolution_text.set_text(to_string(resolutions[resolution_setting].x) + "x" +
+                                 to_string(resolutions[resolution_setting].y));
+        config->width = resolutions[resolution_setting].x;
+        config->height = resolutions[resolution_setting].y;
+    }
 
     if (water_setting == 0) {
         water_text.set_text("Simple water");

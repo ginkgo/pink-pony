@@ -1,7 +1,7 @@
 // Window properties
 
-width = 2560;
-height = 1440;
+width = 2252;
+height = 1335;
 swap_interval = 1;
 window_mode = window;
 fsaa_samples = 2;

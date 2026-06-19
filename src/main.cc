@@ -122,7 +122,12 @@ int main(int argc, char** argv)
                     int human_count = config.player_count - config.ai_count;
                     if (human_count == 0) human_count = config.player_count;
 
-                    SplitScreen screen(window, config.width, config.height, human_count);
+                    int w,h;
+                    glfwGetWindowSize(window, &w, &h);
+                    config.width = w;
+                    config.height = h;
+
+                    SplitScreen screen(window, w, h, human_count);
                     screen.set_glfw_callback();
 
                     PonyGame game(&screen,
